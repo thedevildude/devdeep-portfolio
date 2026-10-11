@@ -1,11 +1,12 @@
 import { CONTACT, LINKS, SITE } from "@/lib/constants";
+import CurrentYear from "./CurrentYear";
 import Container from "./Container";
 
 const Footer = () => (
   <footer className="border-t border-border py-10 text-sm text-muted">
     <Container className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <p>
-        © {new Date().getFullYear()} {SITE.name}
+        © <CurrentYear /> {SITE.name}
       </p>
       <div className="flex gap-6">
         <a href={CONTACT.emailHref} className="hover:text-foreground">
