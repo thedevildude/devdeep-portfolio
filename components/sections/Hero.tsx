@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
-import { HeroImage, SITE } from "@/lib/constants";
+import { HeroImage } from "@/lib/constants";
 
 const Hero = () => (
-  <section id="hero" className="relative flex min-h-svh items-center">
+  <section id="hero" className="sticky top-0 z-0 flex min-h-svh items-center">
     <Image
       src={HeroImage}
       alt=""
@@ -14,15 +14,17 @@ const Hero = () => (
       className="object-cover"
     />
     <div className="absolute inset-0" />
-    <Container className="relative py-24">
-      <Reveal className="max-w-md rounded-xl bg-foreground p-8 sm:p-10">
+    <Container className="relative">
+      <Reveal className="max-w-md rounded-xl bg-foreground p-10 sm:p-10">
         <div>
           <h1 className="text-6xl font-semibold sm:text-6xl text-background uppercase">
             Software Engineer +<br />
-            Systems Architect
+            Product Thinker
           </h1>
         </div>
-        <p className="mt-4 text-background">{SITE.description}</p>
+        <p className="mt-8 text-background text-3xl font-medium font-slab">
+          Helping startups and engineering teams move at light speed.
+        </p>
       </Reveal>
     </Container>
   </section>

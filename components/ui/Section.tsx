@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import Container from "./Container";
 import Reveal from "./Reveal";
 
@@ -10,7 +11,10 @@ type SectionProps = {
 };
 
 const Section = ({ id, title, fullScreen = true, children }: SectionProps) => (
-  <section id={id} className={`flex items-center py-24 ${fullScreen ? "min-h-svh" : ""}`}>
+  <section
+    id={id}
+    className={cn("flex items-center py-24", fullScreen && "min-h-svh")}
+  >
     <Container>
       <Reveal>
         {title && (

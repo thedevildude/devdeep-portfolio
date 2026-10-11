@@ -3,24 +3,12 @@
 /* Default theme: dark (black / deep blue) with white text. */
 :root {
   --background: #05070d;
-  --foreground: #ffffff;
+  --foreground: #ffebeb;
   --muted: #9aa4b8;
   --border: #1c2438;
   --surface: #0b1324;
   --accent: #2f6bff;
-  --accent-foreground: #ffffff;
-}
-
-/* White section/card, black text. */
-@utility theme-light {
-  --background: #ffffff;
-  --foreground: #05070d;
-  --muted: #5b6475;
-  --border: #e4e7ee;
-  --surface: #f4f6fa;
-  --accent: #2f6bff;
-  --accent-foreground: #ffffff;
-  @apply bg-background text-foreground;
+  --accent-foreground: #ffebeb;
 }
 
 @theme inline {
@@ -54,4 +42,13 @@ html.lenis body {
 
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* Brand palette — e.g. bg-royal-azure, text-lavender-veil. */
+@theme {
+  --color-royal-azure: #2f57df;
+  --color-bright-indigo: #033ff2;
+  --color-lavender-veil: #fde5f4;
+  --color-full-spectrum-blue: #0145fd;
+  --color-petal-frost: #fedff5;
 }

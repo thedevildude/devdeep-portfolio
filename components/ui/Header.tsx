@@ -22,12 +22,12 @@ const Header = () => {
       transition={{ type: "spring", stiffness: 260, damping: 32, mass: 0.8 }}
       className="fixed top-4 left-0 z-50 w-full"
     >
-      <Container>
+      <Container isHeader>
         <div className="flex flex-row items-center justify-between py-3 text-xl">
-          <a href="#">
-            {SITE.name}
+          <a href="#" className="lowercase font-bold text-2xl">
+            {SITE.name}.
           </a>
-          <nav className="flex flex-row gap-6 text-muted">
+          <nav className="flex flex-row gap-6 font-bold">
             {NAV_LINKS.map((link) => (
               <motion.a
                 key={link.label}

@@ -24,10 +24,12 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Intro />
-        <BrandCarousel />
-        <Open />
-        <Works />
+        <div className="relative z-10 bg-background">
+          <Intro />
+          <BrandCarousel />
+          <Open />
+          <Works />
+        </div>
       </main>
       <Footer />
     </>

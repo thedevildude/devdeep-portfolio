@@ -1,7 +1,19 @@
 import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-const Container = ({ className = "", ...props }: ComponentProps<"div">) => (
-  <div className={`mx-auto w-full max-w-none px-6 sm:px-10 lg:px-16 ${className}`} {...props} />
+const Container = ({
+  className,
+  isHeader,
+  ...props
+}: ComponentProps<"div"> & { isHeader?: boolean }) => (
+  <div
+    className={cn(
+      "mx-auto w-full max-w-none px-6 sm:px-25 lg:px-32",
+      isHeader && "sm:px-10 lg:px-15",
+      className,
+    )}
+    {...props}
+  />
 );
 
 export default Container;

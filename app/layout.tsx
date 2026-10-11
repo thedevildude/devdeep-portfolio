@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow_Semi_Condensed, Hepta_Slab } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -34,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${barlow.variable} ${heptaSlab.variable} h-full antialiased`}
+      className={cn(barlow.variable, heptaSlab.variable, "h-full antialiased")}
     >
       <body className="flex min-h-svh w-full flex-col">
         <SmoothScroll>{children}</SmoothScroll>

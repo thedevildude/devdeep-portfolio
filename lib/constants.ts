@@ -49,7 +49,7 @@ export const NAV_LINKS = [
 ] as const;
 
 export const PLACEHOLDER_IMAGE = "/placeholder.svg";
-export const HeroImage = "/hero-image.png";
+export const HeroImage = "/hero-image2.png";
 
 export const INTRO_POINTS = [
   { title: "Point one", text: "Placeholder text for the first point." },
