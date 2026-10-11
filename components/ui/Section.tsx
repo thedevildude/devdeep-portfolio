@@ -5,11 +5,12 @@ import Reveal from "./Reveal";
 type SectionProps = {
   id: string;
   title?: string;
+  fullScreen?: boolean;
   children: ReactNode;
 };
 
-const Section = ({ id, title, children }: SectionProps) => (
-  <section id={id} className="flex min-h-svh items-center py-24">
+const Section = ({ id, title, fullScreen = true, children }: SectionProps) => (
+  <section id={id} className={`flex items-center py-24 ${fullScreen ? "min-h-svh" : ""}`}>
     <Container>
       <Reveal>
         {title && (

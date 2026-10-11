@@ -1,36 +1,48 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import Container from "./Container";
 
 const Header = () => {
+  const { scrollY } = useScroll();
+  const [hidden, setHidden] = useState(false);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    if (latest > prev && latest > 80) setHidden(true);
+    else if (latest < prev) setHidden(false);
+  });
+
   return (
     <motion.header
-      initial={{ y: -64, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 left-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur"
+      initial={{ y: -80 }}
+      animate={{ y: hidden ? -100 : 0 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed top-4 left-0 z-50 w-full"
     >
-      <Container className="flex flex-row items-center justify-between py-4">
-        <a href="#" className="font-semibold tracking-tight">
-          {SITE.name}
-        </a>
-        <nav className="flex flex-row gap-6 text-sm text-muted">
-          {NAV_LINKS.map((link) => (
-            <motion.a
-              key={link.label}
-              href={link.href}
-              whileHover={{ y: -2 }}
-              {...("external" in link && link.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-              className="transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </motion.a>
-          ))}
-        </nav>
+      <Container>
+        <div className="flex flex-row items-center justify-between rounded-full bg-background/80 px-6 py-3 backdrop-blur">
+          <a href="#" className="font-semibold tracking-tight">
+            {SITE.name}
+          </a>
+          <nav className="flex flex-row gap-6 text-sm text-muted">
+            {NAV_LINKS.map((link) => (
+              <motion.a
+                key={link.label}
+                href={link.href}
+                whileHover={{ y: -2 }}
+                {...("external" in link && link.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </motion.a>
+            ))}
+          </nav>
+        </div>
       </Container>
     </motion.header>
   );
