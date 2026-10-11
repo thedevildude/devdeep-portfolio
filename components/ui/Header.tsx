@@ -24,7 +24,7 @@ const Header = () => {
     >
       <Container>
         <div className="flex flex-row items-center justify-between py-3 text-xl">
-          <a href="#" className="tracking-tight">
+          <a href="#">
             {SITE.name}
           </a>
           <nav className="flex flex-row gap-6 text-muted">

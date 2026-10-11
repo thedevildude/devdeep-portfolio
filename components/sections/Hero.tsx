@@ -16,10 +16,13 @@ const Hero = () => (
     <div className="absolute inset-0" />
     <Container className="relative py-24">
       <Reveal className="max-w-md rounded-xl bg-foreground p-8 sm:p-10">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl text-background">
-          {SITE.name}
-        </h1>
-        <p className="mt-4 text-muted text-background">{SITE.description}</p>
+        <div>
+          <h1 className="text-6xl font-semibold sm:text-6xl text-background uppercase">
+            Software Engineer +<br />
+            Systems Architect
+          </h1>
+        </div>
+        <p className="mt-4 text-background">{SITE.description}</p>
       </Reveal>
     </Container>
   </section>

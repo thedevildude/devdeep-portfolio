@@ -15,7 +15,7 @@ const WorkItem = ({ id, title, category, image }: WorkItemProps) => (
         <Image src={image} alt={title} fill sizes="100vw" className="object-cover" />
       </div>
       <div className="mt-6 flex items-baseline justify-between">
-        <h3 className="text-3xl font-semibold tracking-tight">{title}</h3>
+        <h3 className="text-3xl font-semibold">{title}</h3>
         <span className="text-sm text-muted">{category}</span>
       </div>
     </div>

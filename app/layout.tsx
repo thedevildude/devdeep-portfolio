@@ -36,7 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${barlow.variable} ${heptaSlab.variable} h-full antialiased`}
     >
-      <body className="flex min-h-svh w-full flex-col"><SmoothScroll>{children}</SmoothScroll></body>
+      <body className="flex min-h-svh w-full flex-col">
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

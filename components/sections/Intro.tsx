@@ -3,7 +3,7 @@ import { INTRO_POINTS } from "@/lib/constants";
 
 const Intro = () => (
   <Section id="intro">
-    <h2 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
+    <h2 className="max-w-3xl text-4xl font-semibold sm:text-5xl">
       Placeholder hero text for the second section.
     </h2>
     <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-3">
