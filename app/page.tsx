@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="flex-1 pt-16">
+      <main className="flex-1">
         <Section id="hero">
-          <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
+          <h1 className="text-6xl font-semibold tracking-tight sm:text-8xl lg:text-9xl">
             {SITE.name}
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted">{SITE.description}</p>

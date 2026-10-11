@@ -9,7 +9,7 @@ type SectionProps = {
 };
 
 const Section = ({ id, title, children }: SectionProps) => (
-  <section id={id} className="scroll-mt-20 py-24">
+  <section id={id} className="flex min-h-svh items-center py-24">
     <Container>
       <Reveal>
         {title && (
