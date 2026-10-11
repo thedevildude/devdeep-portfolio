@@ -14,7 +14,7 @@ const Section = ({ id, title, fullScreen = true, children }: SectionProps) => (
     <Container>
       <Reveal>
         {title && (
-          <h2 className="mb-8 font-mono text-sm uppercase tracking-widest text-muted">
+          <h2 className="mb-8 text-sm uppercase tracking-widest text-muted">
             {title}
           </h2>
         )}

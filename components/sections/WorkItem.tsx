@@ -16,7 +16,7 @@ const WorkItem = ({ id, title, category, image }: WorkItemProps) => (
       </div>
       <div className="mt-6 flex items-baseline justify-between">
         <h3 className="text-3xl font-semibold tracking-tight">{title}</h3>
-        <span className="font-mono text-sm text-muted">{category}</span>
+        <span className="text-sm text-muted">{category}</span>
       </div>
     </div>
   </Section>

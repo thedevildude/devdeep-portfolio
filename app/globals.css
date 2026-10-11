@@ -1,23 +1,26 @@
 @import "tailwindcss";
 
+/* Default theme: dark (black / deep blue) with white text. */
 :root {
-  --background: #fafafa;
-  --foreground: #0a0a0a;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --accent: #4f46e5;
+  --background: #05070d;
+  --foreground: #ffffff;
+  --muted: #9aa4b8;
+  --border: #1c2438;
+  --surface: #0b1324;
+  --accent: #2f6bff;
   --accent-foreground: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #9ca3af;
-    --border: #262626;
-    --accent: #818cf8;
-    --accent-foreground: #0a0a0a;
-  }
+/* White section/card, black text. */
+@utility theme-light {
+  --background: #ffffff;
+  --foreground: #05070d;
+  --muted: #5b6475;
+  --border: #e4e7ee;
+  --surface: #f4f6fa;
+  --accent: #2f6bff;
+  --accent-foreground: #ffffff;
+  @apply bg-background text-foreground;
 }
 
 @theme inline {
@@ -25,22 +28,19 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-surface: var(--surface);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-slab: var(--font-hepta-slab), ui-serif, Georgia, serif;
 }
 
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  @apply bg-background font-sans text-foreground;
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--accent-foreground);
+  @apply bg-accent text-accent-foreground;
 }
 
 html.lenis,
