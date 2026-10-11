@@ -23,11 +23,11 @@ const Header = () => {
       className="fixed top-4 left-0 z-50 w-full"
     >
       <Container>
-        <div className="flex flex-row items-center justify-between py-3">
-          <a href="#" className="font-semibold tracking-tight">
+        <div className="flex flex-row items-center justify-between py-3 text-xl">
+          <a href="#" className="tracking-tight">
             {SITE.name}
           </a>
-          <nav className="flex flex-row gap-6 text-sm text-muted">
+          <nav className="flex flex-row gap-6 text-muted">
             {NAV_LINKS.map((link) => (
               <motion.a
                 key={link.label}
