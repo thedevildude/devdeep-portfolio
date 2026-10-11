@@ -31,9 +31,6 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-html {
-  scroll-behavior: smooth;
-}
 
 body {
   background: var(--background);
@@ -44,4 +41,17 @@ body {
 ::selection {
   background: var(--accent);
   color: var(--accent-foreground);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

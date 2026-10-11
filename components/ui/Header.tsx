@@ -17,13 +17,13 @@ const Header = () => {
 
   return (
     <motion.header
-      initial={{ y: -80 }}
-      animate={{ y: hidden ? -100 : 0 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: hidden ? -100 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 32, mass: 0.8 }}
       className="fixed top-4 left-0 z-50 w-full"
     >
       <Container>
-        <div className="flex flex-row items-center justify-between rounded-full bg-background/80 px-6 py-3 backdrop-blur">
+        <div className="flex flex-row items-center justify-between py-3">
           <a href="#" className="font-semibold tracking-tight">
             {SITE.name}
           </a>
