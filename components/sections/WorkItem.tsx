@@ -78,9 +78,7 @@ const WorkItem = ({
                   className="h-10 w-auto brightness-0 invert"
                 />
               ) : (
-                <span className="text-2xl font-semibold uppercase">
-                  {title}
-                </span>
+                <span className="text-xl font-semibold uppercase">{title}</span>
               )}
             </div>
             <Reveal>{children}</Reveal>

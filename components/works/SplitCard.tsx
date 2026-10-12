@@ -7,13 +7,13 @@ type CardProps = { headline: string; description: string; href?: string };
 const SplitCard = ({ headline, description, href = "#" }: CardProps) => (
   <div className="grid items-center gap-10 md:grid-cols-2">
     <div>
-      <h3 className="text-4xl font-semibold uppercase sm:text-5xl">
+      <h3 className="text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
         {headline}
       </h3>
-      <p className="mt-6 max-w-md font-slab text-lg">{description}</p>
+      <p className="mt-6 max-w-md font-slab text-base">{description}</p>
       <a
         href={href}
-        className="mt-8 inline-flex items-center gap-3 rounded-md bg-white/10 px-5 py-3 font-slab text-base transition-colors hover:bg-white/20"
+        className="mt-8 inline-flex items-center gap-3 rounded-md bg-white/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-white/20"
       >
         Read the case study <span aria-hidden>→</span>
       </a>

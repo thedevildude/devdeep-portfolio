@@ -88,7 +88,7 @@ export const DEEP_DIVES = {
 /** Shell data only: each work's card content lives in components/works/. */
 export const WORKS = [
   { id: "boomshare", title: "Boomshare", logo: "/boom-logo.png" },
-  { id: "work-2", title: "Work Two" },
-  { id: "work-3", title: "Work Three" },
+  { id: "signalfoundry", title: "SignalFoundry" },
+  { id: "verity", title: "Verity" },
   { id: "work-4", title: "Work Four" },
 ] as const;

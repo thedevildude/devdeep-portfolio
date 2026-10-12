@@ -3,9 +3,9 @@
 import { useReducedMotion } from "motion/react";
 
 const FEATURES = [
-  "AI editing",
-  "Auto captions",
-  "50+ language dubbing",
+  "Screen recording",
+  "Transcripts and captions",
+  "Voice dubbing",
 ] as const;
 
 /** Full-width, left-aligned headline on top; below, a third of the width for copy and two thirds for the demo. */
@@ -13,32 +13,35 @@ const BoomshareCard = () => {
   const reduce = useReducedMotion();
   return (
     <div>
-      <h3 className="text-left text-3xl font-semibold uppercase sm:text-4xl lg:text-5xl">
-        Skip the meeting. Record, don&apos;t meet.
+      <h3 className="text-left text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
+        Async screen recorder and AI video editor
       </h3>
 
-      <div className="mt-8 grid items-center gap-8 md:grid-cols-3">
-        <div>
-          <p className="font-slab text-lg">
-            Boomshare is an AI screen recorder and video editor built to replace
-            meetings with recordings. It trims silences, cleans up audio, writes
-            captions and summaries, and dubs your voice into 50+ languages.
-          </p>
-          <ul className="mt-6 flex flex-wrap gap-2">
-            {FEATURES.map((feature) => (
-              <li
-                key={feature}
-                className="rounded-full bg-white/10 px-3 py-1 text-sm"
-              >
-                {feature}
-              </li>
-            ))}
-          </ul>
+      <div className="mt-8 grid items-stretch gap-8 md:grid-cols-3">
+        <div className="flex flex-col justify-between gap-6">
+          <div>
+            <p className="font-slab text-base">
+              Designed and developed Boomshare. Record the screen and share it
+              as video instead of holding a meeting. The AI editor removes
+              silences, cleans up audio, generates transcripts and captions, and
+              dubs speech into other languages.
+            </p>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {FEATURES.map((feature) => (
+                <li
+                  key={feature}
+                  className="rounded-full bg-white/10 px-2 py-0.5 text-xs"
+                >
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
           <a
             href="https://boomshare.ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-3 rounded-md bg-white/10 px-5 py-3 font-slab text-base transition-colors hover:bg-white/20"
+            className="inline-flex items-center gap-3 self-start rounded-md bg-white/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-white/20"
           >
             Visit boomshare.ai <span aria-hidden>→</span>
           </a>
@@ -46,7 +49,7 @@ const BoomshareCard = () => {
 
         <video
           src="/boom-demo.mp4"
-          className="aspect-video w-full rounded-xl object-cover ring-1 ring-white/15 md:col-span-2"
+          className="aspect-video w-full object-cover ring-1 ring-white/15 md:col-span-2"
           autoPlay={!reduce}
           controls={!!reduce}
           muted

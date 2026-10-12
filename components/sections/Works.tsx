@@ -6,7 +6,8 @@ import { WORKS } from "@/lib/constants";
 import DeepDivesHero from "./DeepDivesHero";
 import BoomshareCard from "@/components/works/BoomshareCard";
 import SplitCard from "@/components/works/SplitCard";
-import StackedCard from "@/components/works/StackedCard";
+import SignalFoundryCard from "@/components/works/SignalFoundryCard";
+import VerityCard from "@/components/works/VerityCard";
 import WorkItem from "./WorkItem";
 
 const PLACEHOLDER_COPY =
@@ -15,10 +16,8 @@ const PLACEHOLDER_COPY =
 /** Each work lays out its own card; the shell (logo, wave, background) is shared. */
 const CARDS: Record<string, ReactNode> = {
   boomshare: <BoomshareCard />,
-  "work-2": <SplitCard headline="Work Two" description={PLACEHOLDER_COPY} />,
-  "work-3": (
-    <StackedCard headline="Work Three" description={PLACEHOLDER_COPY} />
-  ),
+  signalfoundry: <SignalFoundryCard />,
+  verity: <VerityCard />,
   "work-4": <SplitCard headline="Work Four" description={PLACEHOLDER_COPY} />,
 };
 
