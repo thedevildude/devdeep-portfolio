@@ -4,13 +4,22 @@ import { useRef, type ReactNode } from "react";
 import { useScroll } from "motion/react";
 import { WORKS } from "@/lib/constants";
 import DeepDivesHero from "./DeepDivesHero";
-import BoomshareVisual from "@/components/works/BoomshareVisual";
-import PlaceholderVisual from "@/components/works/PlaceholderVisual";
+import BoomshareCard from "@/components/works/BoomshareCard";
+import SplitCard from "@/components/works/SplitCard";
+import StackedCard from "@/components/works/StackedCard";
 import WorkItem from "./WorkItem";
 
-/** Custom right-hand component per work; anything unlisted gets the placeholder. */
-const VISUALS: Record<string, ReactNode> = {
-  boomshare: <BoomshareVisual />,
+const PLACEHOLDER_COPY =
+  "A short summary of the problem, what I built, and the result it had.";
+
+/** Each work lays out its own card; the shell (logo, wave, background) is shared. */
+const CARDS: Record<string, ReactNode> = {
+  boomshare: <BoomshareCard />,
+  "work-2": <SplitCard headline="Work Two" description={PLACEHOLDER_COPY} />,
+  "work-3": (
+    <StackedCard headline="Work Three" description={PLACEHOLDER_COPY} />
+  ),
+  "work-4": <SplitCard headline="Work Four" description={PLACEHOLDER_COPY} />,
 };
 
 const Works = () => {
@@ -28,11 +37,12 @@ const Works = () => {
           <WorkItem
             key={work.id}
             {...work}
-            visual={VISUALS[work.id] ?? <PlaceholderVisual alt={work.title} />}
             index={index}
             total={WORKS.length}
             progress={scrollYProgress}
-          />
+          >
+            {CARDS[work.id]}
+          </WorkItem>
         ))}
       </div>
     </div>

@@ -26,7 +26,12 @@ const CUSP_Y = 40;
  * side of the crests. `dir` -1 makes crests rise (filled below), +1 makes them hang
  * (filled above). A cubic with both handles at k peaks at 0.75k, hence the 1/0.75.
  */
-const scallops = (count: number, dir: -1 | 1, width: () => number, height: () => number) => {
+const scallops = (
+  count: number,
+  dir: -1 | 1,
+  width: () => number,
+  height: () => number,
+) => {
   const widths = Array.from({ length: count }, width);
   const total = widths.reduce((a, b) => a + b, 0);
   let x = 0;
@@ -59,14 +64,21 @@ const softWave = (periods: number, amp: number) => {
  * Fills with `currentColor`, so set the colour with a text-* class.
  * "soft" hangs down from the top edge of its parent; "ocean" rises above it.
  */
-const WaveDivider = ({ variant = "soft", seed = 0, className }: WaveDividerProps) => {
+const WaveDivider = ({
+  variant = "soft",
+  seed = 0,
+  className,
+}: WaveDividerProps) => {
   if (variant === "soft") {
     return (
       <svg
         aria-hidden
         viewBox="0 0 1440 100"
         preserveAspectRatio="none"
-        className={cn("pointer-events-none absolute inset-x-0 top-0 h-20 w-full sm:h-28", className)}
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 h-20 w-full sm:h-28",
+          className,
+        )}
       >
         <path d={softWave(3, 26)} fill="currentColor" />
       </svg>
@@ -75,7 +87,12 @@ const WaveDivider = ({ variant = "soft", seed = 0, className }: WaveDividerProps
 
   const rand = rng(seed);
   const count = 7 + Math.floor(rand() * 6);
-  const d = scallops(count, -1, () => 0.6 + rand() * 0.9, () => 26 + rand() * 30);
+  const d = scallops(
+    count,
+    -1,
+    () => 0.6 + rand() * 0.9,
+    () => 26 + rand() * 30,
+  );
   return (
     <svg
       aria-hidden

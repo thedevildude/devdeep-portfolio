@@ -15,10 +15,20 @@ const Footer = () => (
         <a href={CONTACT.phoneHref} className="hover:text-foreground">
           Phone
         </a>
-        <a href={LINKS.github} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+        <a
+          href={LINKS.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-foreground"
+        >
           GitHub
         </a>
-        <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+        <a
+          href={LINKS.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-foreground"
+        >
           LinkedIn
         </a>
       </div>

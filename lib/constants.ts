@@ -81,36 +81,14 @@ export const BRANDS = [
 
 export const DEEP_DIVES = {
   title: "Deep Dives",
-  subtitle: "A closer look at the systems I have architected, led, and shipped.",
+  subtitle:
+    "A closer look at the systems I have architected, led, and shipped.",
 } as const;
 
+/** Shell data only: each work's card content lives in components/works/. */
 export const WORKS = [
-  {
-    id: "boomshare",
-    title: "Boomshare",
-    logo: "/boom-logo.png",
-    headline: "Skip the meeting. Record, don't meet.",
-    description:
-      "Boomshare is an AI screen recorder and video editor built to replace meetings with recordings. Record once and it trims silences, cleans up audio, writes the transcript and captions, pulls out summaries and action items, and can dub your voice into 50+ languages.",
-    cta: "Visit boomshare.ai",
-    href: "https://boomshare.ai",
-  },
-  {
-    id: "work-2",
-    title: "Work Two",
-    headline: "Work Two",
-    description:
-      "A short summary of the problem, what I built, and the result it had.",
-    cta: "Read the case study",
-    href: "#",
-  },
-  {
-    id: "work-3",
-    title: "Work Three",
-    headline: "Work Three",
-    description:
-      "A short summary of the problem, what I built, and the result it had.",
-    cta: "Read the case study",
-    href: "#",
-  },
+  { id: "boomshare", title: "Boomshare", logo: "/boom-logo.png" },
+  { id: "work-2", title: "Work Two" },
+  { id: "work-3", title: "Work Three" },
+  { id: "work-4", title: "Work Four" },
 ] as const;

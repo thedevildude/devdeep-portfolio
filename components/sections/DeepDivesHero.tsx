@@ -13,7 +13,7 @@ const DeepDivesHero = () => (
     <Container>
       <Reveal className="flex flex-col items-start justify-between gap-12 md:flex-row md:items-center">
         <div className="max-w-2xl">
-          <h2 className="font-hindi text-4xl font-semibold uppercase sm:text-6xl lg:text-7xl">
+          <h2 className="text-4xl font-semibold uppercase sm:text-6xl lg:text-7xl">
             {DEEP_DIVES.title}
           </h2>
           <p className="mt-6 font-slab text-xl sm:text-2xl">

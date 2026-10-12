@@ -16,12 +16,8 @@ type WorkItemProps = {
   id: string;
   title: string;
   logo?: string;
-  headline: string;
-  description: string;
-  cta: string;
-  href: string;
-  /** The right-hand column: a custom component per work. */
-  visual: ReactNode;
+  /** This work's own card content, laid out however that work needs. */
+  children: ReactNode;
   index: number;
   total: number;
   /** 0 → 1 as the stack scrolls from the first card pinned to the last. */
@@ -40,11 +36,7 @@ const WorkItem = ({
   id,
   title,
   logo,
-  headline,
-  description,
-  cta,
-  href,
-  visual,
+  children,
   index,
   total,
   progress,
@@ -63,7 +55,7 @@ const WorkItem = ({
   return (
     <section
       id={id}
-      className={`sticky top-0 flex min-h-svh items-center py-12 sm:py-16 ${bg}`}
+      className={`sticky top-0 flex min-h-svh items-center py-8 sm:py-10 ${bg}`}
     >
       {/* First item shares the hero's indigo, so it needs no divider. */}
       {index > 0 && (
@@ -74,34 +66,24 @@ const WorkItem = ({
           style={{ scale, transformOrigin: "50% 0%" }}
           className="relative rounded-[2rem] bg-black text-foreground"
         >
-          <div className="grid items-center gap-10 px-6 py-10 sm:px-12 md:grid-cols-2 lg:px-16">
-            <Reveal>
-              {logo && (
+          <div className="px-6 py-8 sm:px-12 lg:px-16">
+            {/* Same spot on every card: the logo, or the title as a wordmark. */}
+            <div className="mb-8 flex h-10 items-center">
+              {logo ? (
                 <Image
                   src={logo}
                   alt={title}
                   width={160}
                   height={43}
-                  className="mb-8 h-10 w-auto brightness-0 invert"
+                  className="h-10 w-auto brightness-0 invert"
                 />
+              ) : (
+                <span className="text-2xl font-semibold uppercase">
+                  {title}
+                </span>
               )}
-              <h3 className="font-hindi text-4xl font-semibold uppercase sm:text-5xl">
-                {headline}
-              </h3>
-              <p className="mt-6 max-w-md font-slab text-lg">{description}</p>
-              <a
-                href={href}
-                {...(href.startsWith("http") && {
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                })}
-                className="mt-8 inline-flex items-center gap-3 rounded-md bg-white/10 px-5 py-3 font-slab text-base transition-colors hover:bg-white/20"
-              >
-                <span>{cta}</span>
-                <span aria-hidden>→</span>
-              </a>
-            </Reveal>
-            <Reveal delay={0.1}>{visual}</Reveal>
+            </div>
+            <Reveal>{children}</Reveal>
           </div>
         </motion.div>
       </Container>
