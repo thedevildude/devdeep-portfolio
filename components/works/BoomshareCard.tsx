@@ -12,12 +12,12 @@ const FEATURES = [
 const BoomshareCard = () => {
   const reduce = useReducedMotion();
   return (
-    <div className="flex-1 px-6 pt-26 pb-8 sm:px-12 lg:px-16">
+    <div className="flex flex-1 flex-col px-6 pt-24 pb-6 sm:px-12 lg:px-16">
       <h3 className="text-left text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
         Async screen recorder and AI video editor
       </h3>
 
-      <div className="mt-8 grid items-stretch gap-8 md:grid-cols-3">
+      <div className="mt-6 grid flex-1 items-stretch gap-8 md:grid-cols-3">
         <div className="flex flex-col justify-between gap-6">
           <div>
             <p className="font-slab text-base">
@@ -47,17 +47,19 @@ const BoomshareCard = () => {
           </a>
         </div>
 
-        <video
-          src="/boom-demo.mp4"
-          className="aspect-video w-full object-cover ring-1 ring-current/15 md:col-span-2"
-          autoPlay={!reduce}
-          controls={!!reduce}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label="Boomshare product demo"
-        />
+        <div className="relative min-h-52 overflow-hidden ring-1 ring-current/15 md:col-span-2">
+          <video
+            src="/boom-demo.mp4"
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay={!reduce}
+            controls={!!reduce}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="Boomshare product demo"
+          />
+        </div>
       </div>
     </div>
   );

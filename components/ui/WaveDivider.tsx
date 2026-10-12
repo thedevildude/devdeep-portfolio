@@ -1,48 +1,41 @@
 import { cn } from "@/lib/utils";
 
 type WaveDividerProps = {
-  /** "soft": a smooth, gentle wave hanging down from the top edge. "ocean": uneven scallops rising above it. */
+  /** "soft": a gentle wave hanging down from the top edge of its parent. "ocean": a smooth wave that sits in the flow above a section's body. */
   variant?: "soft" | "ocean";
-  /** Seeds the ocean scallops' widths and heights so each divider differs. */
+  /** Picks the ocean wave's swell count, phase and height so each divider differs. */
   seed?: number;
   className?: string;
 };
 
-/** Deterministic PRNG, so server and client render the same "random" wave. */
-const rng = (seed: number) => {
-  let a = (seed + 1) * 0x9e3779b9;
-  return () => {
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-};
-
-const CUSP_Y = 40;
+/** Height in px of the ocean wave for a seed, so the body below can size itself around it. */
+export const oceanHeight = (seed: number) => 72 + 16 * (seed % 3);
 
 /**
- * A row of scallops between sharp cusps, as a closed path filling the area on the far
- * side of the crests. `dir` -1 makes crests rise (filled below), +1 makes them hang
- * (filled above). A cubic with both handles at k peaks at 0.75k, hence the 1/0.75.
+ * A smooth wave as a closed path filled below the crest line: two sine waves summed.
+ * The seed picks the swell counts (2–4 and 4–7 across the width) and the phases, so
+ * neighbouring dividers look related but never identical. The whole curve is shifted so
+ * its highest crest sits at y = 0 and touches the top edge of the svg.
  */
-const scallops = (
-  count: number,
-  dir: -1 | 1,
-  width: () => number,
-  height: () => number,
-) => {
-  const widths = Array.from({ length: count }, width);
-  const total = widths.reduce((a, b) => a + b, 0);
-  let x = 0;
-  let d = `M0 ${CUSP_Y}`;
-  for (const w of widths) {
-    const nx = x + (w / total) * 1440;
-    const handle = CUSP_Y + (dir * height()) / 0.75;
-    d += `C${x.toFixed(1)} ${handle.toFixed(1)} ${nx.toFixed(1)} ${handle.toFixed(1)} ${nx.toFixed(1)} ${CUSP_Y}`;
-    x = nx;
+const oceanPath = (seed: number) => {
+  const f1 = 2 + (seed % 3);
+  const f2 = f1 * 2 + (seed % 2);
+  const phase1 = (seed * Math.PI) / 3;
+  const phase2 = (seed * Math.PI) / 2;
+  const STEP = 8;
+  const raw: number[] = [];
+  for (let x = 0; x <= 1440; x += STEP) {
+    const t = x / 1440;
+    raw.push(
+      0.65 * Math.sin(2 * Math.PI * f1 * t + phase1) +
+        0.35 * Math.sin(2 * Math.PI * f2 * t + phase2),
+    );
   }
-  return dir === 1 ? `${d}V0H0Z` : `${d}V100H0Z`;
+  const top = Math.max(...raw);
+  const points = raw.map(
+    (r, i) => `${i * STEP} ${((top - r) * 45).toFixed(1)}`,
+  );
+  return `M${points.join("L")}V101H0Z`;
 };
 
 /** A smooth S-curve wave (no cusps) hanging from the top edge. */
@@ -85,26 +78,15 @@ const WaveDivider = ({
     );
   }
 
-  const rand = rng(seed);
-  const count = 7 + Math.floor(rand() * 6);
-  const d = scallops(
-    count,
-    -1,
-    () => 0.6 + rand() * 0.9,
-    () => 26 + rand() * 30,
-  );
   return (
     <svg
       aria-hidden
       viewBox="0 0 1440 100"
       preserveAspectRatio="none"
-      className={cn(
-        "pointer-events-none absolute inset-x-0 bottom-[calc(100%-1px)] h-14 w-full sm:h-20",
-        className,
-      )}
-      style={{ transform: "translateY(" + CUSP_Y + "%)" }}
+      style={{ height: oceanHeight(seed) }}
+      className={cn("pointer-events-none block w-full", className)}
     >
-      <path d={d} fill="currentColor" />
+      <path d={oceanPath(seed)} fill="currentColor" />
     </svg>
   );
 };

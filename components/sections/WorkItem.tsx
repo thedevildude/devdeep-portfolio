@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
-import WaveDivider from "@/components/ui/WaveDivider";
+import WaveDivider, { oceanHeight } from "@/components/ui/WaveDivider";
 
 type WorkItemProps = {
   id: string;
@@ -55,36 +55,42 @@ const WorkItem = ({
   );
 
   return (
-    <section
-      id={id}
-      className={`sticky top-0 flex min-h-svh items-center py-8 sm:py-10 ${bg}`}
-    >
+    // The section itself is transparent: the wave's top shows the previous card, and
+    // its highest crest touches the top of the screen once this section is pinned.
+    <section id={id} className="sticky top-0">
       {/* First item shares the hero's indigo, so it needs no divider. */}
       {index > 0 && (
         <WaveDivider variant="ocean" seed={index} className={wave} />
       )}
-      <Container>
-        <motion.div
-          style={{
-            scale,
-            transformOrigin: "50% 0%",
-            backgroundColor: theme.bg,
-            color: theme.fg,
-          }}
-          className="relative flex min-h-[min(38rem,calc(100svh-6rem))] flex-col overflow-hidden rounded-[2rem]"
-        >
-          {/* Same spot on every card: the logo, or the title as a wordmark. */}
-          <div className="absolute top-8 left-6 z-10 flex h-12 items-center sm:left-12 lg:left-16">
-            {logo ?? (
-              <span className="text-xl font-semibold uppercase">{title}</span>
-            )}
-          </div>
-          {/* Each card owns its padding, so it can bleed to the card's edges. */}
-          <Reveal y={0} className="flex flex-1 flex-col">
-            {children}
-          </Reveal>
-        </motion.div>
-      </Container>
+      <div
+        className={`flex items-center py-6 ${bg}`}
+        style={{
+          minHeight: `calc(100svh - ${index > 0 ? oceanHeight(index) : 0}px)`,
+        }}
+      >
+        <Container>
+          <motion.div
+            style={{
+              scale,
+              transformOrigin: "50% 0%",
+              backgroundColor: theme.bg,
+              color: theme.fg,
+            }}
+            className="relative flex h-[min(36rem,calc(100svh-10rem))] flex-col overflow-hidden rounded-[2rem]"
+          >
+            {/* Same spot on every card: the logo, or the title as a wordmark. */}
+            <div className="absolute top-8 left-6 z-10 flex h-12 items-center sm:left-12 lg:left-16">
+              {logo ?? (
+                <span className="text-xl font-semibold uppercase">{title}</span>
+              )}
+            </div>
+            {/* Each card owns its padding, so it can bleed to the card's edges. */}
+            <Reveal y={0} className="flex flex-1 flex-col">
+              {children}
+            </Reveal>
+          </motion.div>
+        </Container>
+      </div>
     </section>
   );
 };
