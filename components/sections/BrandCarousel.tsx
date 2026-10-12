@@ -3,7 +3,7 @@ import { BRANDS } from "@/lib/constants";
 import Container from "../ui/Container";
 
 const BrandCarousel = () => (
-  <Container isHeader className="bg-foreground py-12">
+  <Container isHeader className="bg-foreground/95 py-12">
     <section
       id="brands"
       className="flex flex-wrap items-center justify-between gap-x-16 gap-y-8 px-6"

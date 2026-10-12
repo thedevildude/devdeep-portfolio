@@ -5,7 +5,7 @@ import Footer from "@/components/ui/Footer";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
 import BrandCarousel from "@/components/sections/BrandCarousel";
-import Open from "@/components/sections/Open";
+import Name from "@/components/sections/Name";
 import Works from "@/components/sections/Works";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function Home() {
         <div className="relative z-10 bg-background">
           <Intro />
           <BrandCarousel />
-          <Open />
+          <Name />
           <Works />
         </div>
       </main>

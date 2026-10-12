@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Barlow_Semi_Condensed, Hepta_Slab } from "next/font/google";
+import {
+  Barlow_Semi_Condensed,
+  Hepta_Slab,
+  Noto_Sans_Devanagari,
+} from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
@@ -15,6 +19,13 @@ const barlow = Barlow_Semi_Condensed({
 const heptaSlab = Hepta_Slab({
   variable: "--font-hepta-slab",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const devanagari = Noto_Sans_Devanagari({
+  variable: "--font-devanagari",
+  subsets: ["devanagari"],
+  weight: ["600", "700"],
   display: "swap",
 });
 
@@ -35,7 +46,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn(barlow.variable, heptaSlab.variable, "h-full antialiased")}
+      className={cn(
+        barlow.variable,
+        heptaSlab.variable,
+        devanagari.variable,
+        "h-full antialiased",
+      )}
     >
       <body className="flex min-h-svh w-full flex-col">
         <SmoothScroll>{children}</SmoothScroll>

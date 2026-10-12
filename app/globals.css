@@ -20,6 +20,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-hindi: var(--font-devanagari), var(--font-barlow), sans-serif;
   --font-slab: var(--font-hepta-slab), ui-serif, Georgia, serif;
 }
 
@@ -51,4 +52,24 @@ html.lenis body {
   --color-lavender-veil: #fde5f4;
   --color-full-spectrum-blue: #0145fd;
   --color-petal-frost: #fedff5;
+}
+
+/* Marquee: content drifts right → left; 0 → -50% loops seamlessly over two copies. */
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%) ;
+  }
+}
+
+.animate-marquee-rtl {
+  animation: marquee-rtl 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-rtl {
+    animation: none;
+  }
 }

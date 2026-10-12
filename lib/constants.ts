@@ -67,6 +67,11 @@ export const INTRO_POINTS = [
   },
 ] as const;
 
+export const NAME = {
+  hindi: "देवदीप घोष",
+  english: "Devdeep",
+} as const;
+
 export const BRANDS = [
   { name: "Capital Compute", logo: "/capital-compute-logo.png" },
   { name: "Boom", logo: "/boom-logo.png" },
