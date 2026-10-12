@@ -51,19 +51,27 @@ export const NAV_LINKS = [
 export const PLACEHOLDER_IMAGE = "/placeholder.svg";
 export const HeroImage = "/hero-image2.png";
 
+/** Wrap text in **double asterisks** to highlight it in the Intro section. */
 export const INTRO_POINTS = [
-  { title: "Point one", text: "Placeholder text for the first point." },
-  { title: "Point two", text: "Placeholder text for the second point." },
-  { title: "Point three", text: "Placeholder text for the third point." },
+  {
+    title: "Growth",
+    text: "I grew from **SDE Intern to SDE II** at Capital Compute in **under a year**, where I designed complete project architectures, **led multiple teams**, mentored freshers, participated in organizational decisions, and shipped high-performance applications for **global clients**.",
+  },
+  {
+    title: "Impact",
+    text: "Earlier, as an SDE Intern at Open Healthcare Network for over a year, I contributed to **CARE** and **Ayushma**, built tele-ICU software, supporting the 10BedICU project, helping serve **over 200 hospitals** across India.",
+  },
+  {
+    title: "Range",
+    text: "Over the last **3+ years** I have architected and shipped **production systems** spanning cross-platform mobile and desktop apps, **serverless AWS platforms** (Lambda, DynamoDB, Step Functions), agentic marketing engines, and open-source tools at scale",
+  },
 ] as const;
 
 export const BRANDS = [
-  "Brand 1",
-  "Brand 2",
-  "Brand 3",
-  "Brand 4",
-  "Brand 5",
-  "Brand 6",
+  { name: "Capital Compute", logo: "/capital-compute-logo.png" },
+  { name: "Boom", logo: "/boom-logo.png" },
+  { name: "Open Healthcare Network", logo: "/ohc-logo.png" },
+  { name: "eGov Foundation", logo: "/e-gov-foundation-logo.png" },
 ] as const;
 
 export const WORKS = [

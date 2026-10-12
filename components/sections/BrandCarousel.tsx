@@ -1,22 +1,25 @@
-"use client";
-
-import { motion } from "motion/react";
+import Image from "next/image";
 import { BRANDS } from "@/lib/constants";
+import Container from "../ui/Container";
 
 const BrandCarousel = () => (
-  <section id="brands" className="overflow-hidden border-y border-border py-12">
-    <motion.div
-      className="flex w-max gap-16"
-      animate={{ x: ["0%", "-50%"] }}
-      transition={{ duration: 25, ease: "linear", repeat: Infinity }}
+  <Container isHeader className="bg-foreground py-12">
+    <section
+      id="brands"
+      className="flex flex-wrap items-center justify-between gap-x-16 gap-y-8 px-6"
     >
-      {[...BRANDS, ...BRANDS].map((brand, i) => (
-        <span key={i} className="whitespace-nowrap text-2xl font-medium text-muted">
-          {brand}
-        </span>
+      {BRANDS.map((brand) => (
+        <Image
+          key={brand.name}
+          src={brand.logo}
+          alt={brand.name}
+          width={160}
+          height={48}
+          className="h-14 w-auto object-contain"
+        />
       ))}
-    </motion.div>
-  </section>
+    </section>
+  </Container>
 );
 
 export default BrandCarousel;
