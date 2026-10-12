@@ -68,8 +68,28 @@ html.lenis body {
   animation: marquee-rtl 30s linear infinite;
 }
 
+/* Shooting star glides toward the lower left, fading as it goes. */
+@keyframes shooting-star {
+  0%, 100% {
+    transform: translate(24px, -14px);
+    opacity: 0;
+  }
+  20%, 60% {
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-24px, 14px);
+    opacity: 0.4;
+  }
+}
+
+.animate-shooting-star {
+  animation: shooting-star 6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee-rtl {
+  .animate-marquee-rtl,
+  .animate-shooting-star {
     animation: none;
   }
 }

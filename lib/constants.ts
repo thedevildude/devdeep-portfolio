@@ -79,23 +79,38 @@ export const BRANDS = [
   { name: "eGov Foundation", logo: "/e-gov-foundation-logo.png" },
 ] as const;
 
+export const DEEP_DIVES = {
+  title: "Deep Dives",
+  subtitle: "A closer look at the systems I have architected, led, and shipped.",
+} as const;
+
 export const WORKS = [
   {
-    id: "work-1",
-    title: "Work One",
-    category: "Category",
-    image: PLACEHOLDER_IMAGE,
+    id: "boomshare",
+    title: "Boomshare",
+    logo: "/boom-logo.png",
+    headline: "Skip the meeting. Record, don't meet.",
+    description:
+      "Boomshare is an AI screen recorder and video editor built to replace meetings with recordings. Record once and it trims silences, cleans up audio, writes the transcript and captions, pulls out summaries and action items, and can dub your voice into 50+ languages.",
+    cta: "Visit boomshare.ai",
+    href: "https://boomshare.ai",
   },
   {
     id: "work-2",
     title: "Work Two",
-    category: "Category",
-    image: PLACEHOLDER_IMAGE,
+    headline: "Work Two",
+    description:
+      "A short summary of the problem, what I built, and the result it had.",
+    cta: "Read the case study",
+    href: "#",
   },
   {
     id: "work-3",
     title: "Work Three",
-    category: "Category",
-    image: PLACEHOLDER_IMAGE,
+    headline: "Work Three",
+    description:
+      "A short summary of the problem, what I built, and the result it had.",
+    cta: "Read the case study",
+    href: "#",
   },
 ] as const;
