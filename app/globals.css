@@ -102,7 +102,7 @@ html.lenis body {
   animation: wave-drift 18s linear infinite;
 }
 
-/* Hero backdrop: a slow push-in toward the central starburst, and a softly pulsing core. */
+/* Hero backdrop: a slow push-in toward the central starburst. */
 @keyframes hero-drift {
   from {
     transform: scale(1);
@@ -112,29 +112,12 @@ html.lenis body {
   }
 }
 
-@keyframes hero-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.15);
-  }
-}
-
 .animate-hero-drift {
   animation: hero-drift 45s ease-in-out infinite alternate;
 }
 
-.animate-hero-pulse {
-  animation: hero-pulse 4.5s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-drift,
-  .animate-hero-pulse,
   .animate-marquee-rtl,
   .animate-shooting-star,
   .animate-wave-drift {
