@@ -16,14 +16,14 @@ const DESCRIPTION =
 /** Same layout as Boomshare: headline on top; below, a third for copy and two thirds for the visual. */
 const VerityCard = () => (
   <div className="flex flex-1 flex-col px-5 pt-20 pb-6 sm:px-12 sm:pt-24 lg:px-16">
-    <h3 className="text-left text-xl font-semibold uppercase sm:text-3xl lg:text-4xl">
+    <h3 className="text-left text-lg font-semibold uppercase sm:text-3xl lg:text-4xl">
       Serverless QA platform
     </h3>
 
     <div className="mt-6 grid flex-1 items-stretch gap-8 lg:grid-cols-3">
       <div className="flex flex-col justify-between gap-6">
         <div>
-          <p className="font-slab text-base">{DESCRIPTION}</p>
+          <p className="font-slab text-sm sm:text-base">{DESCRIPTION}</p>
           <ul className="mt-6 flex flex-wrap gap-2">
             {STACK.map((tech) => (
               <li
@@ -37,7 +37,7 @@ const VerityCard = () => (
         </div>
         <a
           href="#"
-          className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-current/20"
+          className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
         >
           Read case study <span aria-hidden>→</span>
         </a>

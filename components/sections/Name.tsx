@@ -13,16 +13,16 @@ const Name = () => (
     </Marquee>
 
     <div className="px-6 text-center">
-      <h2 className="text-5xl font-hindi font-semibold sm:text-7xl lg:text-8xl uppercase">
+      <h2 className="text-4xl font-hindi font-semibold sm:text-7xl lg:text-8xl uppercase">
         {NAME.english}
       </h2>
-      <p className="mt-3 text-xl font-light sm:mt-4 sm:text-3xl lg:text-4xl">
+      <p className="mt-3 text-base font-light sm:mt-4 sm:text-3xl lg:text-4xl">
         (<span className="italic mr-3 sm:mr-5">pronounced</span>
         <span className="font-semibold">deyv.</span>deep)
       </p>
     </div>
 
-    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-10 px-6 md:grid-cols-2 mt-6 text-xl sm:mt-15 sm:text-2xl lg:text-3xl font-slab">
+    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-10 px-6 md:grid-cols-2 mt-6 text-base sm:mt-15 sm:text-2xl lg:text-3xl font-slab">
       <p>
         &ldquo;Devdeep&rdquo; translates to the Divine Lamp or Illumination of
         Wisdom, rooted in Sanskrit.

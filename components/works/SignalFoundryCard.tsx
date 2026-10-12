@@ -17,10 +17,10 @@ const SignalFoundryCard = () => (
   <div className="grid flex-1 md:grid-cols-2">
     <div className="flex flex-col justify-between gap-8 px-5 pt-20 pb-8 sm:px-12 sm:pt-26 md:pr-10 lg:pl-16">
       <div>
-        <h3 className="text-xl font-semibold uppercase sm:text-3xl lg:text-4xl">
+        <h3 className="text-lg font-semibold uppercase sm:text-3xl lg:text-4xl">
           Agentic marketing platform
         </h3>
-        <p className="mt-6 font-slab text-base">{DESCRIPTION}</p>
+        <p className="mt-6 font-slab text-sm sm:text-base">{DESCRIPTION}</p>
         <ul className="mt-6 flex flex-wrap gap-2">
           {STACK.map((tech) => (
             <li
@@ -34,7 +34,7 @@ const SignalFoundryCard = () => (
       </div>
       <a
         href="#"
-        className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-current/20"
+        className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
       >
         Read case study <span aria-hidden>→</span>
       </a>

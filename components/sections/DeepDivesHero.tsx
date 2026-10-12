@@ -13,10 +13,10 @@ const DeepDivesHero = () => (
     <Container>
       <Reveal className="flex flex-col items-start justify-between gap-8 md:flex-row md:gap-12 md:items-center">
         <div className="max-w-2xl">
-          <h2 className="text-4xl font-semibold uppercase sm:text-5xl lg:text-6xl">
+          <h2 className="text-3xl font-semibold uppercase sm:text-5xl lg:text-6xl">
             {DEEP_DIVES.title}
           </h2>
-          <p className="mt-6 font-slab text-base sm:text-lg">
+          <p className="mt-4 font-slab text-sm sm:mt-6 sm:text-lg">
             {DEEP_DIVES.subtitle}
           </p>
         </div>

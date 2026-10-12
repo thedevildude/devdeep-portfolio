@@ -51,6 +51,14 @@ const useIsDesktop = () =>
     () => true,
   );
 
+/** Literal class names so Tailwind can see them. Same order as TONES. */
+const PREV_BG = [
+  "max-lg:bg-bright-indigo",
+  "max-lg:bg-royal-azure",
+  "max-lg:bg-petal-frost",
+  "max-lg:bg-full-spectrum-blue",
+] as const;
+
 const WorkItem = ({
   id,
   title,
@@ -64,6 +72,8 @@ const WorkItem = ({
   const reduce = useReducedMotion();
   const desktop = useIsDesktop();
   const [bg, wave] = TONES[index % TONES.length].split(" ");
+  // Below lg the cards don't overlap, so the wave's open top needs the previous card's colour.
+  const prevBg = PREV_BG[(index - 1 + PREV_BG.length) % PREV_BG.length];
 
   // The next card covers this one during [index, index + 1] / (total - 1).
   const span = Math.max(total - 1, 1);
@@ -79,10 +89,14 @@ const WorkItem = ({
     <section id={id} className="lg:sticky lg:top-0">
       {/* First item shares the hero's indigo, so it needs no divider. */}
       {index > 0 && (
-        <WaveDivider variant="ocean" seed={index} className={wave} />
+        <WaveDivider
+          variant="ocean"
+          seed={index}
+          className={`${wave} ${prevBg}`}
+        />
       )}
       <div
-        className={`flex items-center py-6 lg:min-h-[calc(100svh-var(--wave))] ${bg}`}
+        className={`flex items-center py-6 lg:min-h-[calc(100svh_-_var(--wave))] ${bg}`}
         style={
           {
             "--wave": `${index > 0 ? oceanHeight(index) : 0}px`,

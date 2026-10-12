@@ -14,7 +14,7 @@ const Highlighted = ({ text }: { text: string }) =>
 
 const Intro = () => (
   <Section id="intro">
-    <h2 className="max-w-3xl text-2xl font-medium sm:text-4xl lg:text-5xl">
+    <h2 className="max-w-3xl text-xl font-medium sm:text-4xl lg:text-5xl">
       <span className="text-muted">
         HIGH-PERFORMANCE WEB, DESKTOP & MOBILE APPLICATIONS TO AI-POWERED VIDEO
         PIPELINES,
@@ -31,9 +31,11 @@ const Intro = () => (
             <span className="text-sm text-accent">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <h3 className="text-xl font-medium uppercase">{point.title}</h3>
+            <h3 className="text-lg font-medium uppercase sm:text-xl">
+              {point.title}
+            </h3>
           </div>
-          <p className="mt-4 leading-relaxed text-muted">
+          <p className="mt-4 text-sm leading-relaxed sm:text-base text-muted">
             <Highlighted text={point.text} />
           </p>
         </div>

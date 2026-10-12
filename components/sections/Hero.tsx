@@ -8,12 +8,12 @@ const Hero = () => (
     <Container className="relative">
       <Reveal className="max-w-md rounded-xl bg-foreground p-6 sm:p-10">
         <div>
-          <h1 className="text-[1.7rem] leading-tight font-semibold text-background sm:text-5xl lg:text-6xl uppercase">
+          <h1 className="text-2xl leading-tight font-semibold text-background sm:text-5xl lg:text-6xl uppercase">
             Software Engineer +<br />
             Product Thinker
           </h1>
         </div>
-        <p className="mt-5 text-xl text-background sm:mt-8 sm:text-2xl lg:text-3xl font-medium font-slab">
+        <p className="mt-4 text-lg text-background sm:mt-8 sm:text-2xl lg:text-3xl font-medium font-slab">
           Helping startups and engineering teams move at light speed.
         </p>
       </Reveal>
