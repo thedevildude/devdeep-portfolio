@@ -1,19 +1,10 @@
-import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
-import { HeroImage } from "@/lib/constants";
+import HeroBackdrop from "@/components/ui/HeroBackdrop";
 
 const Hero = () => (
   <section id="hero" className="sticky top-0 z-0 flex min-h-svh items-center">
-    <Image
-      src={HeroImage}
-      alt=""
-      fill
-      priority
-      sizes="100vw"
-      className="object-cover"
-    />
-    <div className="absolute inset-0" />
+    <HeroBackdrop />
     <Container className="relative">
       <Reveal className="max-w-md rounded-xl bg-foreground p-10 sm:p-10">
         <div>
