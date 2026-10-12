@@ -21,15 +21,15 @@ const Section = ({
   <section
     id={id}
     className={cn(
-      "flex items-center py-24",
-      fullScreen && "min-h-svh",
+      "flex items-center py-16 sm:py-24",
+      fullScreen && "sm:min-h-svh",
       className,
     )}
   >
     <Container>
       <Reveal>
         {title && (
-          <h2 className="mb-8 text-sm uppercase tracking-widest text-muted">
+          <h2 className="mb-6 text-xs sm:mb-8 sm:text-sm uppercase tracking-widest text-muted">
             {title}
           </h2>
         )}

@@ -8,7 +8,7 @@ export const BoomLogo = () => (
     alt="Boom"
     width={960}
     height={259}
-    className="h-12 w-auto brightness-0 invert"
+    className="h-8 w-auto sm:h-12 brightness-0 invert"
   />
 );
 
@@ -18,7 +18,7 @@ export const SignalFoundryLogo = () => (
     alt="SignalFoundry"
     width={1576}
     height={341}
-    className="h-12 w-auto"
+    className="h-8 w-auto sm:h-12"
   />
 );
 
@@ -28,7 +28,7 @@ export const VerityLogo = () => (
     alt="Verity"
     width={943}
     height={345}
-    className="h-12 w-auto"
+    className="h-8 w-auto sm:h-12"
   />
 );
 
@@ -38,6 +38,6 @@ export const DoctorWeb3Logo = () => (
     alt="DoctorWeb3"
     width={1369}
     height={345}
-    className="h-12 w-auto"
+    className="h-8 w-auto sm:h-12"
   />
 );

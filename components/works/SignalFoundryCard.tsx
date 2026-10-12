@@ -15,9 +15,9 @@ const DESCRIPTION =
 /** Two columns; the visual on the right runs the full height of the card, edge to edge. */
 const SignalFoundryCard = () => (
   <div className="grid flex-1 md:grid-cols-2">
-    <div className="flex flex-col justify-between gap-8 px-6 pt-26 pb-8 sm:pl-12 md:pr-10 lg:pl-16">
+    <div className="flex flex-col justify-between gap-8 px-5 pt-20 pb-8 sm:px-12 sm:pt-26 md:pr-10 lg:pl-16">
       <div>
-        <h3 className="text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
+        <h3 className="text-xl font-semibold uppercase sm:text-3xl lg:text-4xl">
           Agentic marketing platform
         </h3>
         <p className="mt-6 font-slab text-base">{DESCRIPTION}</p>
@@ -40,12 +40,12 @@ const SignalFoundryCard = () => (
       </a>
     </div>
 
-    <div className="relative min-h-60">
+    <div className="relative aspect-video md:aspect-auto md:min-h-60">
       <Image
         src={PLACEHOLDER_IMAGE}
         alt="SignalFoundry"
         fill
-        sizes="50vw"
+        sizes="(min-width: 768px) 50vw, 100vw"
         className="object-cover"
       />
     </div>

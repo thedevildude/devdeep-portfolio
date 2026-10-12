@@ -3,12 +3,12 @@ import CurrentYear from "./CurrentYear";
 import Container from "./Container";
 
 const Footer = () => (
-  <footer className="border-t border-border py-10 text-sm text-muted">
+  <footer className="border-t border-border py-8 text-sm sm:py-10 text-muted">
     <Container className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <p>
         © <CurrentYear /> {SITE.name}
       </p>
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-x-6 gap-y-2">
         <a href={CONTACT.emailHref} className="hover:text-foreground">
           Email
         </a>

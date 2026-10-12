@@ -15,12 +15,12 @@ const DESCRIPTION =
 
 /** Same layout as Boomshare: headline on top; below, a third for copy and two thirds for the visual. */
 const VerityCard = () => (
-  <div className="flex flex-1 flex-col px-6 pt-24 pb-6 sm:px-12 lg:px-16">
-    <h3 className="text-left text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
+  <div className="flex flex-1 flex-col px-5 pt-20 pb-6 sm:px-12 sm:pt-24 lg:px-16">
+    <h3 className="text-left text-xl font-semibold uppercase sm:text-3xl lg:text-4xl">
       Serverless QA platform
     </h3>
 
-    <div className="mt-6 grid flex-1 items-stretch gap-8 md:grid-cols-3">
+    <div className="mt-6 grid flex-1 items-stretch gap-8 lg:grid-cols-3">
       <div className="flex flex-col justify-between gap-6">
         <div>
           <p className="font-slab text-base">{DESCRIPTION}</p>
@@ -43,7 +43,7 @@ const VerityCard = () => (
         </a>
       </div>
 
-      <div className="relative min-h-52 overflow-hidden ring-1 ring-current/15 md:col-span-2">
+      <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">
         <Image
           src={PLACEHOLDER_IMAGE}
           alt="Verity"

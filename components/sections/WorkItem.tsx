@@ -1,6 +1,10 @@
 "use client";
 
-import type { ReactNode } from "react";
+import {
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   motion,
   useReducedMotion,
@@ -33,6 +37,20 @@ const TONES = [
   "bg-full-spectrum-blue text-full-spectrum-blue",
 ] as const;
 
+/** The pinned, stacking-cards layout needs a tall viewport and room for fixed-height cards. */
+const DESKTOP = "(min-width: 1024px)";
+const subscribeDesktop = (cb: () => void) => {
+  const mq = window.matchMedia(DESKTOP);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+const useIsDesktop = () =>
+  useSyncExternalStore(
+    subscribeDesktop,
+    () => window.matchMedia(DESKTOP).matches,
+    () => true,
+  );
+
 const WorkItem = ({
   id,
   title,
@@ -44,6 +62,7 @@ const WorkItem = ({
   progress,
 }: WorkItemProps) => {
   const reduce = useReducedMotion();
+  const desktop = useIsDesktop();
   const [bg, wave] = TONES[index % TONES.length].split(" ");
 
   // The next card covers this one during [index, index + 1] / (total - 1).
@@ -51,22 +70,24 @@ const WorkItem = ({
   const scale = useTransform(
     progress,
     [index / span, (index + 1) / span],
-    [1, index === total - 1 || reduce ? 1 : 0.94],
+    [1, index === total - 1 || reduce || !desktop ? 1 : 0.94],
   );
 
   return (
     // The section itself is transparent: the wave's top shows the previous card, and
     // its highest crest touches the top of the screen once this section is pinned.
-    <section id={id} className="sticky top-0">
+    <section id={id} className="lg:sticky lg:top-0">
       {/* First item shares the hero's indigo, so it needs no divider. */}
       {index > 0 && (
         <WaveDivider variant="ocean" seed={index} className={wave} />
       )}
       <div
-        className={`flex items-center py-6 ${bg}`}
-        style={{
-          minHeight: `calc(100svh - ${index > 0 ? oceanHeight(index) : 0}px)`,
-        }}
+        className={`flex items-center py-6 lg:min-h-[calc(100svh-var(--wave))] ${bg}`}
+        style={
+          {
+            "--wave": `${index > 0 ? oceanHeight(index) : 0}px`,
+          } as CSSProperties
+        }
       >
         <Container>
           <motion.div
@@ -76,10 +97,10 @@ const WorkItem = ({
               backgroundColor: theme.bg,
               color: theme.fg,
             }}
-            className="relative flex h-[min(36rem,calc(100svh-10rem))] flex-col overflow-hidden rounded-[2rem]"
+            className="relative flex flex-col lg:h-[min(36rem,calc(100svh-10rem))] overflow-hidden rounded-3xl lg:rounded-[2rem]"
           >
             {/* Same spot on every card: the logo, or the title as a wordmark. */}
-            <div className="absolute top-8 left-6 z-10 flex h-12 items-center sm:left-12 lg:left-16">
+            <div className="absolute top-6 left-5 z-10 flex h-10 items-center sm:top-8 sm:left-12 sm:h-12 lg:left-16">
               {logo ?? (
                 <span className="text-xl font-semibold uppercase">{title}</span>
               )}

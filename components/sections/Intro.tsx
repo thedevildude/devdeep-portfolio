@@ -14,7 +14,7 @@ const Highlighted = ({ text }: { text: string }) =>
 
 const Intro = () => (
   <Section id="intro">
-    <h2 className="max-w-3xl text-4xl sm:text-5xl font-medium">
+    <h2 className="max-w-3xl text-2xl font-medium sm:text-4xl lg:text-5xl">
       <span className="text-muted">
         HIGH-PERFORMANCE WEB, DESKTOP & MOBILE APPLICATIONS TO AI-POWERED VIDEO
         PIPELINES,
@@ -24,7 +24,7 @@ const Intro = () => (
         I BUILD PLATFORMS THAT POWER MISSION-CRITICAL INFRASTRUCTURE.
       </span>
     </h2>
-    <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-10 font-slab">
+    <div className="mt-10 grid sm:mt-16 grid-cols-1 gap-10 md:grid-cols-3 md:gap-10 font-slab">
       {INTRO_POINTS.map((point, i) => (
         <div key={point.title} className="border-t border-border pt-6">
           <div className="flex items-baseline gap-3">

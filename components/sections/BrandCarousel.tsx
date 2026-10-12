@@ -3,10 +3,10 @@ import { BRANDS } from "@/lib/constants";
 import Container from "../ui/Container";
 
 const BrandCarousel = () => (
-  <Container isHeader className="bg-foreground/95 py-12">
+  <Container isHeader className="bg-foreground/95 py-8 sm:py-12">
     <section
       id="brands"
-      className="flex flex-wrap items-center justify-between gap-x-16 gap-y-8 px-6"
+      className="grid grid-cols-2 items-center justify-items-center gap-x-8 gap-y-6 px-0 sm:flex sm:flex-wrap sm:justify-between sm:gap-x-16 sm:gap-y-8 sm:px-6"
     >
       {BRANDS.map((brand) => (
         <Image
@@ -15,7 +15,7 @@ const BrandCarousel = () => (
           alt={brand.name}
           width={160}
           height={48}
-          className="h-14 w-auto object-contain"
+          className="h-10 w-auto sm:h-14 object-contain"
         />
       ))}
     </section>
