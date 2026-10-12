@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Image from "next/image";
 import {
   motion,
   useReducedMotion,
@@ -15,7 +14,9 @@ import WaveDivider from "@/components/ui/WaveDivider";
 type WorkItemProps = {
   id: string;
   title: string;
-  logo?: string;
+  /** Brand logo for the top-left spot; falls back to the title as text. */
+  logo?: ReactNode;
+  theme: { bg: string; fg: string };
   /** This work's own card content, laid out however that work needs. */
   children: ReactNode;
   index: number;
@@ -36,6 +37,7 @@ const WorkItem = ({
   id,
   title,
   logo,
+  theme,
   children,
   index,
   total,
@@ -63,26 +65,24 @@ const WorkItem = ({
       )}
       <Container>
         <motion.div
-          style={{ scale, transformOrigin: "50% 0%" }}
-          className="relative rounded-[2rem] bg-black text-foreground"
+          style={{
+            scale,
+            transformOrigin: "50% 0%",
+            backgroundColor: theme.bg,
+            color: theme.fg,
+          }}
+          className="relative flex min-h-[min(38rem,calc(100svh-6rem))] flex-col overflow-hidden rounded-[2rem]"
         >
-          <div className="px-6 py-8 sm:px-12 lg:px-16">
-            {/* Same spot on every card: the logo, or the title as a wordmark. */}
-            <div className="mb-8 flex h-10 items-center">
-              {logo ? (
-                <Image
-                  src={logo}
-                  alt={title}
-                  width={160}
-                  height={43}
-                  className="h-10 w-auto brightness-0 invert"
-                />
-              ) : (
-                <span className="text-xl font-semibold uppercase">{title}</span>
-              )}
-            </div>
-            <Reveal>{children}</Reveal>
+          {/* Same spot on every card: the logo, or the title as a wordmark. */}
+          <div className="absolute top-8 left-6 z-10 flex h-12 items-center sm:left-12 lg:left-16">
+            {logo ?? (
+              <span className="text-xl font-semibold uppercase">{title}</span>
+            )}
           </div>
+          {/* Each card owns its padding, so it can bleed to the card's edges. */}
+          <Reveal y={0} className="flex flex-1 flex-col">
+            {children}
+          </Reveal>
         </motion.div>
       </Container>
     </section>

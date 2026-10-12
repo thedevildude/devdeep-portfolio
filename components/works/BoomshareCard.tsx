@@ -12,7 +12,7 @@ const FEATURES = [
 const BoomshareCard = () => {
   const reduce = useReducedMotion();
   return (
-    <div>
+    <div className="flex-1 px-6 pt-26 pb-8 sm:px-12 lg:px-16">
       <h3 className="text-left text-2xl font-semibold uppercase sm:text-3xl lg:text-4xl">
         Async screen recorder and AI video editor
       </h3>
@@ -30,7 +30,7 @@ const BoomshareCard = () => {
               {FEATURES.map((feature) => (
                 <li
                   key={feature}
-                  className="rounded-full bg-white/10 px-2 py-0.5 text-xs"
+                  className="rounded-full bg-current/10 px-2 py-0.5 text-xs"
                 >
                   {feature}
                 </li>
@@ -41,7 +41,7 @@ const BoomshareCard = () => {
             href="https://boomshare.ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 self-start rounded-md bg-white/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-white/20"
+            className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-3 font-slab text-sm transition-colors hover:bg-current/20"
           >
             Visit boomshare.ai <span aria-hidden>→</span>
           </a>
@@ -49,7 +49,7 @@ const BoomshareCard = () => {
 
         <video
           src="/boom-demo.mp4"
-          className="aspect-video w-full object-cover ring-1 ring-white/15 md:col-span-2"
+          className="aspect-video w-full object-cover ring-1 ring-current/15 md:col-span-2"
           autoPlay={!reduce}
           controls={!!reduce}
           muted

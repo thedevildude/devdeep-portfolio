@@ -8,6 +8,11 @@ import BoomshareCard from "@/components/works/BoomshareCard";
 import SplitCard from "@/components/works/SplitCard";
 import SignalFoundryCard from "@/components/works/SignalFoundryCard";
 import VerityCard from "@/components/works/VerityCard";
+import {
+  BoomLogo,
+  SignalFoundryLogo,
+  VerityLogo,
+} from "@/components/works/logos";
 import WorkItem from "./WorkItem";
 
 const PLACEHOLDER_COPY =
@@ -19,6 +24,13 @@ const CARDS: Record<string, ReactNode> = {
   signalfoundry: <SignalFoundryCard />,
   verity: <VerityCard />,
   "work-4": <SplitCard headline="Work Four" description={PLACEHOLDER_COPY} />,
+};
+
+/** Logos shown top-left of each card; works without one show their title. */
+const LOGOS: Record<string, ReactNode> = {
+  boomshare: <BoomLogo />,
+  signalfoundry: <SignalFoundryLogo />,
+  verity: <VerityLogo />,
 };
 
 const Works = () => {
@@ -36,6 +48,7 @@ const Works = () => {
           <WorkItem
             key={work.id}
             {...work}
+            logo={LOGOS[work.id]}
             index={index}
             total={WORKS.length}
             progress={scrollYProgress}

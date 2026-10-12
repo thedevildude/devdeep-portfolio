@@ -85,10 +85,38 @@ export const DEEP_DIVES = {
     "A closer look at the systems I have architected, led, and shipped.",
 } as const;
 
-/** Shell data only: each work's card content lives in components/works/. */
+/**
+ * Shell data only: each work's card content lives in components/works/.
+ * `theme` styles the card to match that product: a solid `bg` and the `fg` text colour.
+ */
 export const WORKS = [
-  { id: "boomshare", title: "Boomshare", logo: "/boom-logo.png" },
-  { id: "signalfoundry", title: "SignalFoundry" },
-  { id: "verity", title: "Verity" },
-  { id: "work-4", title: "Work Four" },
+  {
+    id: "boomshare",
+    title: "Boomshare",
+    theme: { bg: "#000000", fg: "#ffffff" },
+  },
+  {
+    id: "signalfoundry",
+    title: "SignalFoundry",
+    theme: {
+      bg: "#1c1226",
+      fg: "#ffffff",
+    },
+  },
+  {
+    id: "verity",
+    title: "Verity",
+    theme: {
+      bg: "#0b3a3f",
+      fg: "#ffffff",
+    },
+  },
+  {
+    id: "work-4",
+    title: "Work Four",
+    theme: {
+      bg: "#17224a",
+      fg: "#ffffff",
+    },
+  },
 ] as const;
