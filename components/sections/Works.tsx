@@ -5,25 +5,23 @@ import { useScroll } from "motion/react";
 import { WORKS } from "@/lib/constants";
 import DeepDivesHero from "./DeepDivesHero";
 import BoomshareCard from "@/components/works/BoomshareCard";
-import SplitCard from "@/components/works/SplitCard";
+import DoctorWeb3Card from "@/components/works/DoctorWeb3Card";
 import SignalFoundryCard from "@/components/works/SignalFoundryCard";
 import VerityCard from "@/components/works/VerityCard";
 import {
   BoomLogo,
   SignalFoundryLogo,
   VerityLogo,
+  DoctorWeb3Logo,
 } from "@/components/works/logos";
 import WorkItem from "./WorkItem";
-
-const PLACEHOLDER_COPY =
-  "A short summary of the problem, what I built, and the result it had.";
 
 /** Each work lays out its own card; the shell (logo, wave, background) is shared. */
 const CARDS: Record<string, ReactNode> = {
   boomshare: <BoomshareCard />,
   signalfoundry: <SignalFoundryCard />,
   verity: <VerityCard />,
-  "work-4": <SplitCard headline="Work Four" description={PLACEHOLDER_COPY} />,
+  doctorweb3: <DoctorWeb3Card />,
 };
 
 /** Logos shown top-left of each card; works without one show their title. */
@@ -31,6 +29,7 @@ const LOGOS: Record<string, ReactNode> = {
   boomshare: <BoomLogo />,
   signalfoundry: <SignalFoundryLogo />,
   verity: <VerityLogo />,
+  doctorweb3: <DoctorWeb3Logo />,
 };
 
 const Works = () => {

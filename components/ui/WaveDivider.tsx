@@ -1,93 +1,82 @@
 import { cn } from "@/lib/utils";
 
 type WaveDividerProps = {
-  /** "soft": a gentle wave hanging down from the top edge of its parent. "ocean": a smooth wave that sits in the flow above a section's body. */
+  /** "soft": a gentle wave hanging down from the top edge of its parent. "ocean": a wave that sits in the flow above a section's body. */
   variant?: "soft" | "ocean";
-  /** Picks the ocean wave's swell count, phase and height so each divider differs. */
+  /** Picks the ocean wave's swell count, phase, height and drift so each divider differs. */
   seed?: number;
   className?: string;
 };
 
+/** Width of one wave period in svg units; the svg holds two periods and drifts by exactly one. */
+const PERIOD = 1440;
+const STEP = 4;
+
 /** Height in px of the ocean wave for a seed, so the body below can size itself around it. */
 export const oceanHeight = (seed: number) => 72 + 16 * (seed % 3);
 
+/** Samples `y(t)` across two periods (t in periods, 0–2) into "x y" points. */
+const sample = (y: (t: number) => number) => {
+  const points: string[] = [];
+  for (let x = 0; x <= 2 * PERIOD; x += STEP) {
+    points.push(`${x} ${y(x / PERIOD).toFixed(1)}`);
+  }
+  return points.join("L");
+};
+
 /**
- * A smooth wave as a closed path filled below the crest line: two sine waves summed.
- * The seed picks the swell counts (2–4 and 4–7 across the width) and the phases, so
- * neighbouring dividers look related but never identical. The whole curve is shifted so
- * its highest crest sits at y = 0 and touches the top edge of the svg.
+ * Two slow sine waves summed. Their frequencies are whole numbers per period, so the curve
+ * tiles seamlessly and can drift sideways in a loop. The seed picks the swell counts and
+ * phases. The curve is shifted so its highest crest sits at y = 0, touching the top edge.
  */
 const oceanPath = (seed: number) => {
-  const f1 = 2 + (seed % 3);
-  const f2 = f1 * 2 + (seed % 2);
-  const phase1 = (seed * Math.PI) / 3;
-  const phase2 = (seed * Math.PI) / 2;
-  const STEP = 8;
-  const raw: number[] = [];
-  for (let x = 0; x <= 1440; x += STEP) {
-    const t = x / 1440;
-    raw.push(
-      0.65 * Math.sin(2 * Math.PI * f1 * t + phase1) +
-        0.35 * Math.sin(2 * Math.PI * f2 * t + phase2),
-    );
-  }
-  const top = Math.max(...raw);
-  const points = raw.map(
-    (r, i) => `${i * STEP} ${((top - r) * 45).toFixed(1)}`,
-  );
-  return `M${points.join("L")}V101H0Z`;
+  const f1 = 2 + (seed % 2);
+  const f2 = f1 + 1;
+  const wave = (t: number) =>
+    0.7 * Math.sin(2 * Math.PI * f1 * t + (seed * Math.PI) / 3) +
+    0.3 * Math.sin(2 * Math.PI * f2 * t + (seed * Math.PI) / 2);
+  let top = -Infinity;
+  for (let x = 0; x <= 2 * PERIOD; x += STEP)
+    top = Math.max(top, wave(x / PERIOD));
+  return `M${sample((t) => (top - wave(t)) * 40)}V101H0Z`;
 };
 
-/** A smooth S-curve wave (no cusps) hanging from the top edge. */
-const softWave = (periods: number, amp: number) => {
-  const half = 1440 / (periods * 2);
-  const mid = 50;
-  let prev = mid;
-  let d = `M0 0V${mid}`;
-  for (let i = 0; i < periods * 2; i++) {
-    const x = i * half;
-    const y = mid + (i % 2 === 0 ? amp : -amp);
-    d += `C${x + half / 2} ${prev} ${x + half / 2} ${y} ${x + half} ${y}`;
-    prev = y;
-  }
-  return `${d}V0Z`;
-};
+/** One gentle swell pattern, hanging down from the top edge (filled above the curve). */
+const softPath = () =>
+  `M${sample((t) => 50 + 28 * Math.sin(2 * Math.PI * 3 * t))}V0H0Z`;
 
 /**
- * Fills with `currentColor`, so set the colour with a text-* class.
- * "soft" hangs down from the top edge of its parent; "ocean" rises above it.
+ * Fills with `currentColor`, so set the colour with a text-* class. The wave drifts
+ * sideways forever (paused for reduced motion).
  */
 const WaveDivider = ({
   variant = "soft",
   seed = 0,
   className,
 }: WaveDividerProps) => {
-  if (variant === "soft") {
-    return (
-      <svg
-        aria-hidden
-        viewBox="0 0 1440 100"
-        preserveAspectRatio="none"
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-0 h-20 w-full sm:h-28",
-          className,
-        )}
-      >
-        <path d={softWave(3, 26)} fill="currentColor" />
-      </svg>
-    );
-  }
-
+  const ocean = variant === "ocean";
   return (
-    <svg
+    <div
       aria-hidden
-      viewBox="0 0 1440 100"
-      preserveAspectRatio="none"
-      style={{ height: oceanHeight(seed) }}
-      className={cn("pointer-events-none block w-full", className)}
+      className={cn(
+        "pointer-events-none overflow-hidden",
+        ocean ? "block w-full" : "absolute inset-x-0 top-0 h-20 w-full sm:h-28",
+        className,
+      )}
+      style={ocean ? { height: oceanHeight(seed) } : undefined}
     >
-      <path d={oceanPath(seed)} fill="currentColor" />
-    </svg>
+      <svg
+        viewBox={`0 0 ${2 * PERIOD} 100`}
+        preserveAspectRatio="none"
+        className="animate-wave-drift block h-full w-[200%]"
+        style={{
+          animationDuration: ocean ? `${16 + 4 * (seed % 3)}s` : "22s",
+          animationDirection: ocean && seed % 2 === 0 ? "reverse" : "normal",
+        }}
+      >
+        <path d={ocean ? oceanPath(seed) : softPath()} fill="currentColor" />
+      </svg>
+    </div>
   );
 };
 

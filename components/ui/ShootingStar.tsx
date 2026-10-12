@@ -1,43 +1,68 @@
+type Streak = {
+  x: number;
+  y: number;
+  scale: number;
+  delay: number;
+  duration: number;
+};
+
+/** Head position, size, and timing of each star; staggered so they never move in unison. */
+const STREAKS: Streak[] = [
+  { x: 340, y: 46, scale: 1, delay: 0, duration: 5 },
+  { x: 232, y: 118, scale: 0.7, delay: 1.6, duration: 4.2 },
+  { x: 388, y: 168, scale: 0.85, delay: 3.1, duration: 5.6 },
+  { x: 150, y: 56, scale: 0.55, delay: 0.8, duration: 4.6 },
+  { x: 300, y: 252, scale: 0.6, delay: 2.4, duration: 4 },
+];
+
+const TWINKLES = [
+  { x: 60, y: 130, r: 3 },
+  { x: 90, y: 230, r: 2 },
+  { x: 200, y: 26, r: 2 },
+  { x: 410, y: 100, r: 2.5 },
+] as const;
+
+/** Several stars, each drifting along its own tail direction and fading in and out in place. */
 const ShootingStar = ({ className }: { className?: string }) => (
-  <svg aria-hidden viewBox="0 0 320 200" fill="none" className={className}>
+  <svg aria-hidden viewBox="0 0 430 290" fill="none" className={className}>
     <defs>
-      <linearGradient
-        id="star-tail"
-        x1="300"
-        y1="30"
-        x2="20"
-        y2="170"
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="star-tail" x1="1" y1="0" x2="0" y2="1">
         <stop stopColor="currentColor" />
         <stop offset="1" stopColor="currentColor" stopOpacity="0" />
       </linearGradient>
     </defs>
-    <g className="animate-shooting-star">
-      <path d="M296 34 24 172 270 52Z" fill="url(#star-tail)" opacity="0.55" />
-      <path
-        d="M296 34 90 138"
-        stroke="url(#star-tail)"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M296 14c2 12 8 18 20 20-12 2-18 8-20 20-2-12-8-18-20-20 12-2 18-8 20-20Z"
+
+    {TWINKLES.map((t) => (
+      <circle
+        key={`${t.x}-${t.y}`}
+        cx={t.x}
+        cy={t.y}
+        r={t.r}
         fill="currentColor"
+        opacity="0.5"
       />
-    </g>
-    <path
-      d="M70 40c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10Z"
-      fill="currentColor"
-      opacity="0.7"
-    />
-    <path
-      d="M150 20c.8 4 3 6 7 7-4 .8-6 3-7 7-.8-4-3-6-7-7 4-.8 6-3 7-7Z"
-      fill="currentColor"
-      opacity="0.5"
-    />
-    <circle cx="220" cy="170" r="3" fill="currentColor" opacity="0.6" />
-    <circle cx="40" cy="100" r="2" fill="currentColor" opacity="0.5" />
+    ))}
+
+    {STREAKS.map((s) => (
+      <g
+        key={`${s.x}-${s.y}`}
+        transform={`translate(${s.x} ${s.y}) scale(${s.scale})`}
+      >
+        <g
+          className="animate-shooting-star"
+          style={{
+            animationDelay: `${s.delay}s`,
+            animationDuration: `${s.duration}s`,
+          }}
+        >
+          <path d="M0 0-130 76-116 82Z" fill="url(#star-tail)" opacity="0.7" />
+          <path
+            d="M0-16c2 10 6 14 16 16-10 2-14 6-16 16-2-10-6-14-16-16 10-2 14-6 16-16Z"
+            fill="currentColor"
+          />
+        </g>
+      </g>
+    ))}
   </svg>
 );
 

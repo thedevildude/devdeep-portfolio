@@ -31,3 +31,13 @@ export const VerityLogo = () => (
     className="h-12 w-auto"
   />
 );
+
+export const DoctorWeb3Logo = () => (
+  <Image
+    src="/doctorweb3-mark.png"
+    alt="DoctorWeb3"
+    width={1369}
+    height={345}
+    className="h-12 w-auto"
+  />
+);

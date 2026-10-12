@@ -112,8 +112,8 @@ export const WORKS = [
     },
   },
   {
-    id: "work-4",
-    title: "Work Four",
+    id: "doctorweb3",
+    title: "DoctorWeb3",
     theme: {
       bg: "#17224a",
       fg: "#ffffff",

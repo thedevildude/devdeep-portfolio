@@ -13,14 +13,14 @@ const DeepDivesHero = () => (
     <Container>
       <Reveal className="flex flex-col items-start justify-between gap-12 md:flex-row md:items-center">
         <div className="max-w-2xl">
-          <h2 className="text-4xl font-semibold uppercase sm:text-6xl lg:text-7xl">
+          <h2 className="text-3xl font-semibold uppercase sm:text-5xl lg:text-6xl">
             {DEEP_DIVES.title}
           </h2>
-          <p className="mt-6 font-slab text-xl sm:text-2xl">
+          <p className="mt-6 font-slab text-base sm:text-lg">
             {DEEP_DIVES.subtitle}
           </p>
         </div>
-        <ShootingStar className="w-44 shrink-0 text-petal-frost sm:w-60 lg:w-72" />
+        <ShootingStar className="w-48 shrink-0 text-petal-frost sm:w-64 lg:w-80" />
       </Reveal>
     </Container>
   </section>

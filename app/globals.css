@@ -68,28 +68,44 @@ html.lenis body {
   animation: marquee-rtl 30s linear infinite;
 }
 
-/* Shooting star glides toward the lower left, fading as it goes. */
+/* Each star drifts along its tail direction and fades in and out, looping in place. */
 @keyframes shooting-star {
-  0%, 100% {
-    transform: translate(24px, -14px);
+  0% {
+    transform: translate(28px, -16px);
     opacity: 0;
   }
-  20%, 60% {
+  25%,
+  65% {
     opacity: 1;
   }
-  80% {
-    transform: translate(-24px, 14px);
-    opacity: 0.4;
+  100% {
+    transform: translate(-28px, 16px);
+    opacity: 0;
   }
 }
 
 .animate-shooting-star {
-  animation: shooting-star 6s ease-in-out infinite;
+  animation: shooting-star 5s ease-in-out infinite;
+}
+
+/* Waves drift sideways by exactly one period (half the double-width svg), so the loop is seamless. */
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave-drift {
+  animation: wave-drift 18s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee-rtl,
-  .animate-shooting-star {
+  .animate-shooting-star,
+  .animate-wave-drift {
     animation: none;
   }
 }
