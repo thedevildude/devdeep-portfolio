@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { track } from "@/lib/analytics";
 
 const DEPTHS = [25, 50, 75, 100];
@@ -26,7 +27,13 @@ const linkEvent = (a: HTMLAnchorElement) => {
       ? (["click_nav", { ...params, target: href.slice(1) }] as const)
       : null;
   }
-  if (a.host && a.host !== window.location.host) {
+  if (a.host === window.location.host) {
+    return [
+      "click_nav",
+      { ...params, target: `${a.pathname}${a.hash}` },
+    ] as const;
+  }
+  if (a.host) {
     return [
       "click_outbound",
       { ...params, link_url: a.href, link_domain: a.host },
@@ -40,6 +47,8 @@ const linkEvent = (a: HTMLAnchorElement) => {
  * outbound), section views and scroll depth. Component-specific events call `track` directly.
  */
 const AnalyticsEvents = () => {
+  const pathname = usePathname();
+
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as Element).closest("a");
@@ -54,7 +63,7 @@ const AnalyticsEvents = () => {
         for (const entry of entries) {
           if (!entry.isIntersecting || seen.has(entry.target.id)) continue;
           seen.add(entry.target.id);
-          track("section_view", { section: entry.target.id });
+          track("section_view", { section: entry.target.id, page: pathname });
         }
       },
       { threshold: 0.4 },
@@ -71,7 +80,7 @@ const AnalyticsEvents = () => {
       for (const d of DEPTHS) {
         if (pct >= d && !fired.has(d)) {
           fired.add(d);
-          track("scroll_depth", { percent: d });
+          track("scroll_depth", { percent: d, page: pathname });
         }
       }
     };
@@ -82,7 +91,7 @@ const AnalyticsEvents = () => {
       window.removeEventListener("scroll", onScroll);
       sections.disconnect();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 };

@@ -8,7 +8,6 @@ import BrandCarousel from "@/components/sections/BrandCarousel";
 import Name from "@/components/sections/Name";
 import Works from "@/components/sections/Works";
 import Contact from "@/components/sections/Contact";
-import AnalyticsEvents from "@/components/ui/AnalyticsEvents";
 
 export const metadata: Metadata = {
   title: HOMEPAGE_METADATA.title,
@@ -23,7 +22,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <AnalyticsEvents />
       <Header />
       <main className="flex-1">
         <Hero />

@@ -7,6 +7,7 @@ import {
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
+import AnalyticsEvents from "@/components/ui/AnalyticsEvents";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ""} />
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
       <body className="flex min-h-svh w-full flex-col">
+        <AnalyticsEvents />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

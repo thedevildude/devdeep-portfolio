@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 
 const STACK = [
@@ -34,12 +35,12 @@ const VerityCard = () => (
             ))}
           </ul>
         </div>
-        <a
-          href="#"
+        <Link
+          href="/blog/verity-trust-before-automation"
           className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
         >
           Read case study <span aria-hidden>→</span>
-        </a>
+        </Link>
       </div>
 
       <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">

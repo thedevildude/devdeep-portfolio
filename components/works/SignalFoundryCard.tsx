@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 
 const STACK = [
@@ -33,12 +34,12 @@ const SignalFoundryCard = () => (
           ))}
         </ul>
       </div>
-      <a
-        href="#"
+      <Link
+        href="/blog/signalfoundry-one-plan-many-plays"
         className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
       >
         Read case study <span aria-hidden>→</span>
-      </a>
+      </Link>
     </div>
 
     <div className="relative aspect-16/10 lg:aspect-auto lg:min-h-60">

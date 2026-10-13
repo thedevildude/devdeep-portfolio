@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useReducedMotion } from "motion/react";
 
 const FEATURES = [
@@ -37,14 +38,22 @@ const BoomshareCard = () => {
               ))}
             </ul>
           </div>
-          <a
-            href="https://boomshare.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
-          >
-            Visit boomshare.ai <span aria-hidden>→</span>
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/blog/boomshare-large-video-exports"
+              className="inline-flex items-center gap-3 rounded-md bg-current/10 px-4 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
+            >
+              Case study <span aria-hidden>→</span>
+            </Link>
+            <a
+              href="https://boomshare.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-md bg-current/10 px-4 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
+            >
+              boomshare.ai <span aria-hidden>→</span>
+            </a>
+          </div>
         </div>
 
         <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">

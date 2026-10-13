@@ -42,7 +42,8 @@ export const LINKS = {
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Work", href: "#work" },
+  { label: "Work", href: "/#work" },
+  { label: "Blog", href: "/blog" },
   { label: "LinkedIn", href: LINKS.linkedin, external: true },
   { label: "Resume", href: LINKS.resume, external: true },
   { label: "Contact", href: CONTACT.contactUs, external: true },
