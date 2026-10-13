@@ -52,6 +52,7 @@ html.lenis body {
   --color-lavender-veil: #fde5f4;
   --color-full-spectrum-blue: #0145fd;
   --color-petal-frost: #fedff5;
+  --color-studio-gray: #e5e7eb;
 }
 
 /* Marquee: content drifts right → left; 0 → -50% loops seamlessly over two copies. */
