@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
 import SmoothScroll from "@/components/ui/SmoothScroll";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const barlow = Barlow_Semi_Condensed({
   variable: "--font-barlow",
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         "h-full antialiased",
       )}
     >
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ""} />
       <body className="flex min-h-svh w-full flex-col">
         <SmoothScroll>{children}</SmoothScroll>
       </body>
