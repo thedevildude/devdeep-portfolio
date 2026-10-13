@@ -1,12 +1,23 @@
 ---
 title: SignalFoundry: one plan, many plays
-description: Building a marketing system where agents plan, launch and measure campaigns on AWS, and the model's output is never trusted blindly.
-date: 2026-10-12
 tag: Case study
 work: signalfoundry
+seoTitle: SignalFoundry Case Study: Agentic Marketing on AWS
+description: A case study of SignalFoundry, a serverless marketing operating system on AWS where AI agents plan, launch and measure campaigns and every action is auditable.
+date: 2026-09-02
+updated: 2026-10-01
+keywords: SignalFoundry case study, agentic marketing platform, AI agents, AWS Lambda DynamoDB EventBridge, serverless architecture, LLM output validation, marketing automation
 ---
 
 SignalFoundry is a marketing operating system. You describe the mission, the offer, your proof and your budget. It plans the campaign, produces the content, publishes through connected accounts, and learns from the results. The point is that every action is explainable, and where it matters, approved by a person first.
+
+
+## At a glance
+
+- **Product:** SignalFoundry, a marketing operating system that plans, launches and measures campaigns.
+- **Core idea:** one canonical plan per goal, and campaigns made of channel-level plays run by AI agents.
+- **Hard problem:** keeping LLM output reliable, auditable and inside strict time limits.
+- **Stack:** AWS Lambda, DynamoDB, EventBridge, API Gateway, Cognito, SAM, React and TypeScript.
 
 ## The loop
 

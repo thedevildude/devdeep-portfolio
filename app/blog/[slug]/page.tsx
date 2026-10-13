@@ -4,9 +4,12 @@ import { notFound } from "next/navigation";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Container from "@/components/ui/Container";
+import JsonLd from "@/components/ui/JsonLd";
 import Markdown from "@/components/ui/Markdown";
 import { formatDate, getPost, getPosts } from "@/lib/blog";
-import { SITE } from "@/lib/constants";
+import { LINKS, SITE } from "@/lib/constants";
+
+const AUTHOR = "Devdeep Ghosh";
 
 export const generateStaticParams = async () =>
   (await getPosts()).map(({ slug }) => ({ slug }));
@@ -16,15 +19,28 @@ export const generateMetadata = async ({
 }: PageProps<"/blog/[slug]">): Promise<Metadata> => {
   const post = await getPost((await params).slug);
   if (!post) return {};
+  const title = post.seoTitle ?? post.title;
   return {
-    title: `${post.title} — ${SITE.name}`,
+    title,
     description: post.description,
+    keywords: post.keywords,
+    authors: [{ name: AUTHOR }],
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
-      title: post.title,
+      title,
       description: post.description,
+      url: `/blog/${post.slug}`,
+      siteName: SITE.name,
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.updated,
+      authors: [AUTHOR],
+      tags: post.keywords,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: post.description,
     },
   };
 };
@@ -33,8 +49,62 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
   const post = await getPost((await params).slug);
   if (!post) notFound();
 
+  const url = `${SITE.url}/blog/${post.slug}`;
+  const person = {
+    "@type": "Person",
+    name: AUTHOR,
+    url: SITE.url,
+    sameAs: [LINKS.linkedin, LINKS.github],
+  };
+
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BlogPosting",
+              headline: post.title,
+              description: post.description,
+              keywords: post.keywords.join(", "),
+              datePublished: post.date,
+              dateModified: post.updated,
+              mainEntityOfPage: url,
+              url,
+              image: `${url}/opengraph-image`,
+              author: person,
+              publisher: person,
+              inLanguage: "en",
+              articleSection: post.tag,
+              wordCount: post.body.split(/\s+/).length,
+            },
+            {
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: SITE.url,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Blog",
+                  item: `${SITE.url}/blog`,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: post.title,
+                  item: url,
+                },
+              ],
+            },
+          ],
+        }}
+      />
       <Header />
       <main className="flex-1 pt-32 pb-20 sm:pt-44 sm:pb-28">
         <Container>
@@ -49,7 +119,8 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
               <span className="rounded-full bg-white/10 px-2.5 py-0.5">
                 {post.tag}
               </span>
-              {formatDate(post.date)} · {post.readMinutes} min read
+              <time dateTime={post.date}>{formatDate(post.date)}</time> ·{" "}
+              {post.readMinutes} min read
             </p>
             <h1 className="mt-4 text-3xl leading-tight font-semibold uppercase sm:text-5xl">
               {post.title}

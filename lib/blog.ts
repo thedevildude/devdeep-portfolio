@@ -6,9 +6,14 @@ const DIR = path.join(process.cwd(), "content/blog");
 export type PostMeta = {
   slug: string;
   title: string;
+  /** Optional <title>; keeps search titles near 60 characters while the H1 stays human. */
+  seoTitle?: string;
   description: string;
+  keywords: string[];
   /** ISO date (YYYY-MM-DD). */
   date: string;
+  /** ISO date of the last meaningful edit. */
+  updated: string;
   tag: string;
   /** Project this post covers; matches an id in WORKS. */
   work?: string;
@@ -31,8 +36,14 @@ const parse = (slug: string, raw: string): Post => {
   return {
     slug,
     title: fields.title,
+    seoTitle: fields.seoTitle,
     description: fields.description,
+    keywords: (fields.keywords ?? "")
+      .split(",")
+      .map((k) => k.trim())
+      .filter(Boolean),
     date: fields.date,
+    updated: fields.updated ?? fields.date,
     tag: fields.tag ?? "Note",
     work: fields.work,
     readMinutes: Math.max(1, Math.round(body.split(/\s+/).length / 220)),

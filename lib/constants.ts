@@ -55,8 +55,18 @@ export const PLACEHOLDER_IMAGE = "/placeholder.svg";
  * percentage of the image, `ratio` its pixel size, so the glow overlay stays on the star.
  */
 export const HERO_IMAGES = [
-  { src: "/hero-image2.png", width: 1672, height: 941, center: { x: 61.8, y: 48.9 } },
-  { src: "/hero-image3.png", width: 1920, height: 1088, center: { x: 50, y: 50 } },
+  {
+    src: "/hero-image2.png",
+    width: 1672,
+    height: 941,
+    center: { x: 61.8, y: 48.9 },
+  },
+  {
+    src: "/hero-image3.png",
+    width: 1920,
+    height: 1088,
+    center: { x: 50, y: 50 },
+  },
 ] as const;
 
 /** Wrap text in **double asterisks** to highlight it in the Intro section. */

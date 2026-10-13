@@ -1,14 +1,25 @@
 ---
 title: Verity: a QA platform that has to show its evidence
-description: Building an AI-assisted QA system on AWS where no bug exists without proof, and a jury, not a single prompt, decides what's real.
-date: 2026-10-11
 tag: Case study
 work: verity
+seoTitle: Verity Case Study: AI QA Platform on AWS
+description: How Verity, a serverless QA platform on AWS Step Functions and Playwright, uses an AI jury, confidence scoring and fingerprint dedup to file fewer, better bugs.
+date: 2026-09-24
+updated: 2026-10-06
+keywords: Verity case study, AI QA platform, Playwright automation, AWS Step Functions, bug deduplication, AI jury, test automation, serverless QA
 ---
 
 Most small teams have no QA person. The usual stand-in is an AI that writes bug reports, and those are mostly confident guesses, plus the same issue filed five times and a flaky test crying wolf every morning. Verity starts from the opposite principle: **truth over automation**. A finding doesn't exist unless it comes with evidence (a screenshot, logs or a trace) and a confidence score.
 
 It's pre-launch, so this is a story about design, not adoption.
+
+
+## At a glance
+
+- **Product:** Verity, an AI-assisted QA platform for teams without a QA department.
+- **Core idea:** no finding without evidence, and a five-role AI jury decides what counts as a real bug.
+- **Noise control:** failure classification, fingerprint de-duplication and confidence thresholds.
+- **Stack:** AWS Step Functions, Lambda, DynamoDB, S3, Playwright, Fargate, React and TypeScript.
 
 ## How a run flows
 

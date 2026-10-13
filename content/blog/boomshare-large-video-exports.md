@@ -1,12 +1,23 @@
 ---
 title: Boomshare: exporting videos that don't fit in a Lambda
-description: How a screen-recording product with AI editing, usage billing and a desktop app handles huge exports without paying for idle servers.
-date: 2026-10-13
 tag: Case study
 work: boomshare
+seoTitle: Boomshare Case Study: Large Video Exports on AWS
+description: How Boomshare, a screen-recording app with AI editing, routes huge video exports between AWS Lambda and Fargate using SQS, S3 and FFmpeg without idle servers.
+date: 2026-08-04
+updated: 2026-09-15
+keywords: Boomshare case study, video export AWS Lambda, Fargate scale to zero, SQS workers, FFmpeg, S3 CloudFront, Electron screen recorder, Lago billing
 ---
 
 Boomshare is a screen and video recording product. You record in a desktop app, tidy the video in a web editor, and share a link. Around that sit transcription, AI dubbing, comments, referrals and usage-based billing. I worked across the backend and the desktop recorder.
+
+
+## At a glance
+
+- **Product:** Boomshare, a screen and video recording app with AI editing, dubbing and usage-based billing.
+- **Problem:** exports of long 4K recordings ran out of disk on AWS Lambda.
+- **Solution:** a two-lane export pipeline that routes by measured size, with Lambda for small jobs and Fargate for large ones.
+- **Stack:** Node.js, TypeScript, PostgreSQL, SQS, S3, CloudFront, FFmpeg, Electron, Lago and Stripe.
 
 ## The shape of the system
 
