@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Image from "next/image";
 import { HERO_IMAGES } from "@/lib/constants";
 
@@ -9,12 +9,14 @@ import { HERO_IMAGES } from "@/lib/constants";
  * One of HERO_IMAGES is picked per visit; the pick happens after mount so server and client
  * markup agree, and the statically rendered page doesn't pin everyone to the same image.
  */
-const HeroBackdrop = () => {
-  const [index, setIndex] = useState<number | null>(null);
+let picked: number | null = null;
+const noopSubscribe = () => () => {};
+const pickOnClient = () =>
+  (picked ??= Math.floor(Math.random() * HERO_IMAGES.length));
 
-  useEffect(() => {
-    setIndex(Math.floor(Math.random() * HERO_IMAGES.length));
-  }, []);
+const HeroBackdrop = () => {
+  // Server snapshot is null, so hydration matches; the client then switches to the pick.
+  const index = useSyncExternalStore(noopSubscribe, pickOnClient, () => null);
 
   if (index === null) return <div className="absolute inset-0" />;
 
