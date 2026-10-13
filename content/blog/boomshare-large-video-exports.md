@@ -21,17 +21,19 @@ The recorder is an Electron app with React and Vite, with FFmpeg bundled so capt
 
 ## The export that ran out of disk
 
-Exports ran on Lambda, which gives you 10 GB of `/tmp`. That is plenty until someone exports a long 4K recording. An hour of 4K can run to well over 10 GB, and our export wrote three full copies of it to disk: the downloaded segments, the remuxed file, and the watermarked file. Peak usage was about three times the size of the video, so large exports failed with `ENOSPC`.
+Exports ran on Lambda, which gives you 10 GB of `/tmp`. That is plenty until someone exports a long 4K recording. An hour of 4K is 11 to 18 GB, and paid users can record with no duration cap. Our export wrote three full copies of it to disk: the downloaded segments, the remuxed file, and the watermarked file. Peak usage was about three times the size of the video, so anything above roughly 2.5 to 3 GB failed with `ENOSPC`.
 
-Most exports were fine. Moving everything onto bigger machines would have meant paying for the rare large job all day long.
+The awkward part was that almost nothing else was wrong. Production was doing 72 exports a day, 22.5 seconds on average, 259 seconds at the slowest. That is a small, sparse workload, a good fit for Lambda and a bad one for an always-on container. Moving everything to bigger machines would have meant paying all day for a job that almost never arrives.
 
 ## Two lanes
 
-So I split exports into two lanes and let the size of the job pick one. Small jobs stay on the existing Lambda. Large ones go to a Fargate service that scales to zero and has far more ephemeral storage.
+So I split exports into two lanes and let the size of the job pick one. Small jobs stay on the existing Lambda. Anything over 8 GB goes to a Fargate service that scales to zero and has 80 GB of ephemeral storage. About 99% of jobs stay on Lambda.
 
 I did think about launching a fresh Fargate task for every large job. I dropped it because I'd have had to write a dispatcher, something to clean up stuck tasks, and my own retry counter, and I'd have lost SQS redelivery and the dead-letter queue, which I already trusted. With both lanes reading from SQS, retries behave the same everywhere.
 
-The cost is a cold start on the heavy lane. For a big export that someone started and walked away from, that's acceptable.
+The cost is a cold start of two to three minutes on the heavy lane. For a big export that someone started and walked away from, that's acceptable.
+
+I also made the Lambda lane less wasteful. It had been downloading every HLS segment to disk before FFmpeg touched them, even though FFmpeg's HLS demuxer can fetch signed URLs itself. Pointing the playlist at those URLs removed one full copy and is what made an 8 GB threshold realistic instead of 3 GB.
 
 ## Knowing how big a video is
 

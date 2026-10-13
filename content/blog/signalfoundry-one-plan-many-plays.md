@@ -31,9 +31,9 @@ Most of the design decisions here came from the model doing something I hadn't e
 
 In the intake, the model once asked about a success metric but rendered a URL input. So the server now decides what kind of question to ask, and the model only words it. I considered a second model call to check the first, but it would have doubled the latency of every turn.
 
-Strict schema validation was throwing away output that was almost right, so a slightly over-long label could fail a whole turn. Now the server pads, truncates and de-duplicates the model's output into something valid instead.
+Strict schema validation was throwing away output that was almost right: a single 130-character label could kill a whole turn and show the user an error instead of a question. Now the server pads, truncates and de-duplicates the model's output into something valid instead.
 
-Plan synthesis started as one large schema behind a CDN with a short timeout, and it kept running out of time. I split it into several passes, each with a prompt that covers only its own part, and that fixed the timeouts.
+Plan synthesis was one schema producing about 29,700 output tokens, which at the measured rate takes over three minutes, behind a CDN that hangs up at 60 seconds. It could never finish. Splitting the schema wasn't enough, because every pass still received the whole-plan prompt and reasoned about all thirteen sections. Once each prompt covered only its own pass, the same call that had timed out at 60 seconds returned in 36.
 
 Some strategy plans failed over several days before anyone noticed. Optional stages now check a time budget and skip themselves, with a log line, when they can't finish. Background failures emit a metric directly from code instead of depending on a log filter.
 

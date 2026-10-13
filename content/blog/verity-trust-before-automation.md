@@ -33,7 +33,7 @@ If the semantic pass fails, the finding is treated as unique. That means an occa
 
 ## Running the browser
 
-Quick single-URL scans run on Lambda. Full end-to-end journeys need more time and disk than that suits, so the plan is to run Playwright on Fargate using the official image. Both paths write the same result format, so nothing downstream cares which one ran. I ruled out one Lambda per step because the browser would cold-start on every step and the traces wouldn't join up.
+Quick single-URL scans run on Lambda. The test executor had been inheriting a 300 second, 1 GB default, which a real login-and-CRUD journey won't reliably finish in. I raised it to 900 seconds and 3 GB as a stopgap, but that is a ceiling raise, not a fix: Lambda has no video and a 15 minute hard cap. So the chosen design runs full journeys on Fargate with the official Playwright image, billed per second, and that runner isn't built yet. Both paths write the same result format, so nothing downstream cares which one ran. I ruled out one Lambda per step because the browser would cold-start on every step and the traces wouldn't join up.
 
 ## Limits on automation
 
