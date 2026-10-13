@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 const STACK = [
   "AWS Lambda",
@@ -44,12 +43,14 @@ const VerityCard = () => (
       </div>
 
       <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">
+        {/* Animated GIF: the optimizer would only flatten it, so serve it as-is. */}
         <Image
-          src={PLACEHOLDER_IMAGE}
-          alt="Verity"
+          src="/verity-demo.gif"
+          alt="Verity product screens"
           fill
-          sizes="66vw"
-          className="object-cover"
+          unoptimized
+          sizes="(min-width: 1024px) 66vw, 100vw"
+          className="object-cover object-top"
         />
       </div>
     </div>

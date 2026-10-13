@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 
 const STACK = [
   "AWS Lambda",
@@ -12,16 +11,18 @@ const STACK = [
 const DESCRIPTION =
   "An agentic marketing platform that turns creator intake into on-brand campaign strategies and publishes them across 50+ channels, cutting setup from hours to minutes. A multi-play engine lets AI agents launch coordinated content across platforms in one operation.";
 
-/** Two columns; the visual on the right runs the full height of the card, edge to edge. */
+/** Stacked below lg, then two columns; the visual on the right runs the full height of the card, edge to edge. */
 const SignalFoundryCard = () => (
-  <div className="grid flex-1 md:grid-cols-2">
-    <div className="flex flex-col justify-between gap-8 px-5 pt-20 pb-8 sm:px-12 sm:pt-26 md:pr-10 lg:pl-16">
+  <div className="grid flex-1 lg:grid-cols-2">
+    <div className="flex flex-col justify-between gap-6 px-5 pt-20 pb-8 sm:px-12 sm:pt-26 lg:pr-10 lg:pl-16">
       <div>
-        <h3 className="text-lg font-semibold uppercase sm:text-3xl lg:text-4xl">
+        <h3 className="text-lg font-semibold uppercase sm:text-3xl xl:text-4xl">
           Agentic marketing platform
         </h3>
-        <p className="mt-6 font-slab text-sm sm:text-base">{DESCRIPTION}</p>
-        <ul className="mt-6 flex flex-wrap gap-2">
+        <p className="mt-4 font-slab text-sm sm:mt-6 sm:text-base lg:text-sm xl:text-base">
+          {DESCRIPTION}
+        </p>
+        <ul className="mt-4 flex sm:mt-6 flex-wrap gap-2">
           {STACK.map((tech) => (
             <li
               key={tech}
@@ -40,13 +41,15 @@ const SignalFoundryCard = () => (
       </a>
     </div>
 
-    <div className="relative aspect-video md:aspect-auto md:min-h-60">
+    <div className="relative aspect-16/10 lg:aspect-auto lg:min-h-60">
+      {/* Animated GIF: the optimizer would only flatten it, so serve it as-is. */}
       <Image
-        src={PLACEHOLDER_IMAGE}
-        alt="SignalFoundry"
+        src="/signalfoundry-demo.gif"
+        alt="SignalFoundry product screens"
         fill
-        sizes="(min-width: 768px) 50vw, 100vw"
-        className="object-cover"
+        unoptimized
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="object-cover object-top lg:object-contain"
       />
     </div>
   </div>
