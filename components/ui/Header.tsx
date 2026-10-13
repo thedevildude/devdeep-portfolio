@@ -6,6 +6,7 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
@@ -38,8 +39,15 @@ const Header = () => {
     >
       <Container isHeader>
         <div className="flex flex-row items-center justify-between py-3 text-xl">
-          <Link href="/" className="text-xl font-bold lowercase sm:text-2xl">
-            {SITE.name}.
+          <Link href="/" aria-label={SITE.name} className="block">
+            <Image
+              src="/logo.svg"
+              alt=""
+              width={40}
+              height={40}
+              priority
+              className="size-9 sm:size-10"
+            />
           </Link>
 
           <nav className="hidden flex-row gap-6 font-bold md:flex">

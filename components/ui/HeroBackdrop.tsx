@@ -41,6 +41,8 @@ const HeroBackdrop = () => {
           className="object-cover"
         />
       </div>
+      {/* Dark wash so the artwork sits back behind the hero copy. */}
+      <div className="absolute inset-0 bg-black/20" />
     </div>
   );
 };
