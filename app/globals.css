@@ -116,7 +116,36 @@ html.lenis body {
   animation: hero-drift 45s ease-in-out infinite alternate;
 }
 
+/* DoctorWeb3 mock: a pulse travels the pipeline; the pending request blinks. */
+@keyframes dw3-pulse {
+  from {
+    left: 1rem;
+  }
+  to {
+    left: calc(100% - 1.25rem);
+  }
+}
+
+@keyframes dw3-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.dw3-pulse {
+  animation: dw3-pulse 3.2s ease-in-out infinite;
+}
+
+.dw3-blink {
+  animation: dw3-blink 1.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .dw3-pulse,
+  .dw3-blink {
+    animation: none;
+  }
+
   .animate-hero-drift,
   .animate-marquee-rtl,
   .animate-shooting-star,

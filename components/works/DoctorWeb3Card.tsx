@@ -40,7 +40,7 @@ const DoctorWeb3Card = () => (
       </a>
     </div>
 
-    <div className="relative aspect-video md:aspect-auto md:min-h-60">
+    <div className="relative aspect-3/4 sm:aspect-4/3 md:aspect-auto md:min-h-60">
       <DoctorWeb3Mock />
     </div>
   </div>
