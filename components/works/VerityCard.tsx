@@ -11,7 +11,7 @@ const STACK = [
 ] as const;
 
 const DESCRIPTION =
-  "A serverless QA platform on AWS with Playwright automation and 92% test coverage. An AI jury scores findings and fingerprint deduplication removes repeat issues, cutting QA noise.";
+  "A serverless QA platform on AWS with Playwright automation. An AI jury scores every finding and fingerprint deduplication removes repeat issues, so it files fewer, better-evidenced bugs.";
 
 /** Same layout as Boomshare: headline on top; below, a third for copy and two thirds for the visual. */
 const VerityCard = () => (

@@ -136,6 +136,14 @@ export const WORKS = [
     },
   },
   {
+    id: "peos",
+    title: "PEOS",
+    theme: {
+      bg: "#0d1233",
+      fg: "#ffffff",
+    },
+  },
+  {
     id: "doctorweb3",
     title: "DoctorWeb3",
     theme: {

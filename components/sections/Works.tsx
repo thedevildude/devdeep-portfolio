@@ -8,6 +8,7 @@ import BoomshareCard from "@/components/works/BoomshareCard";
 import DoctorWeb3Card from "@/components/works/DoctorWeb3Card";
 import SignalFoundryCard from "@/components/works/SignalFoundryCard";
 import VerityCard from "@/components/works/VerityCard";
+import PEOSCard from "@/components/works/PEOSCard";
 import {
   BoomLogo,
   SignalFoundryLogo,
@@ -21,6 +22,7 @@ const CARDS: Record<string, ReactNode> = {
   boomshare: <BoomshareCard />,
   signalfoundry: <SignalFoundryCard />,
   verity: <VerityCard />,
+  peos: <PEOSCard />,
   doctorweb3: <DoctorWeb3Card />,
 };
 
