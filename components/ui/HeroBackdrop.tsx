@@ -36,7 +36,7 @@ const HeroBackdrop = () => {
           src={src}
           alt=""
           fill
-          priority
+          preload
           sizes="100vw"
           className="object-cover"
         />

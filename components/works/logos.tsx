@@ -4,6 +4,7 @@ import Image from "next/image";
 
 export const BoomLogo = () => (
   <Image
+    loading="eager"
     src="/boom-logo.png"
     alt="Boom"
     width={960}
@@ -14,6 +15,7 @@ export const BoomLogo = () => (
 
 export const SignalFoundryLogo = () => (
   <Image
+    loading="eager"
     src="/signalfoundry-mark.png"
     alt="SignalFoundry"
     width={1576}
@@ -24,6 +26,7 @@ export const SignalFoundryLogo = () => (
 
 export const VerityLogo = () => (
   <Image
+    loading="eager"
     src="/verity-mark.png"
     alt="Verity"
     width={943}
@@ -34,6 +37,7 @@ export const VerityLogo = () => (
 
 export const DoctorWeb3Logo = () => (
   <Image
+    loading="eager"
     src="/doctorweb3-mark.png"
     alt="DoctorWeb3"
     width={1369}

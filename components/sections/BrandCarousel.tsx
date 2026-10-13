@@ -10,6 +10,7 @@ const BrandCarousel = () => (
     >
       {BRANDS.map((brand) => (
         <Image
+          loading="eager"
           key={brand.name}
           src={brand.logo}
           alt={brand.name}

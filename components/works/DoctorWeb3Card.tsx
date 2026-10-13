@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { PLACEHOLDER_IMAGE } from "@/lib/constants";
+import DoctorWeb3Mock from "./DoctorWeb3Mock";
 
 const STACK = [
   "Solidity",
@@ -42,13 +41,7 @@ const DoctorWeb3Card = () => (
     </div>
 
     <div className="relative aspect-video md:aspect-auto md:min-h-60">
-      <Image
-        src={PLACEHOLDER_IMAGE}
-        alt="DoctorWeb3"
-        fill
-        sizes="(min-width: 768px) 50vw, 100vw"
-        className="object-cover"
-      />
+      <DoctorWeb3Mock />
     </div>
   </div>
 );

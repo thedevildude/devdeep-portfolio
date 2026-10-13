@@ -45,6 +45,7 @@ const VerityCard = () => (
       <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">
         {/* Animated GIF: the optimizer would only flatten it, so serve it as-is. */}
         <Image
+          loading="eager"
           src="/verity-demo.gif"
           alt="Verity product screens"
           fill

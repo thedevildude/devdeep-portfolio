@@ -44,12 +44,13 @@ const SignalFoundryCard = () => (
     <div className="relative aspect-16/10 lg:aspect-auto lg:min-h-60">
       {/* Animated GIF: the optimizer would only flatten it, so serve it as-is. */}
       <Image
+        loading="eager"
         src="/signalfoundry-demo.gif"
         alt="SignalFoundry product screens"
         fill
         unoptimized
         sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover object-top lg:object-contain"
+        className="object-contain"
       />
     </div>
   </div>

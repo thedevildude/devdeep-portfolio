@@ -7,7 +7,11 @@ const DEPTHS = [25, 50, 75, 100];
 
 /** Where on the page a click happened: the header, footer, or the enclosing section's id. */
 const locationOf = (el: Element) =>
-  el.closest("header") ? "header" : el.closest("footer") ? "footer" : (el.closest("section[id]")?.id ?? "page");
+  el.closest("header")
+    ? "header"
+    : el.closest("footer")
+      ? "footer"
+      : (el.closest("section[id]")?.id ?? "page");
 
 const linkEvent = (a: HTMLAnchorElement) => {
   const href = a.getAttribute("href") ?? "";
@@ -18,10 +22,15 @@ const linkEvent = (a: HTMLAnchorElement) => {
   if (href.startsWith("mailto:")) return ["click_email", params] as const;
   if (href.startsWith("tel:")) return ["click_phone", params] as const;
   if (href.startsWith("#")) {
-    return href.length > 1 ? (["click_nav", { ...params, target: href.slice(1) }] as const) : null;
+    return href.length > 1
+      ? (["click_nav", { ...params, target: href.slice(1) }] as const)
+      : null;
   }
   if (a.host && a.host !== window.location.host) {
-    return ["click_outbound", { ...params, link_url: a.href, link_domain: a.host }] as const;
+    return [
+      "click_outbound",
+      { ...params, link_url: a.href, link_domain: a.host },
+    ] as const;
   }
   return null;
 };
@@ -50,7 +59,9 @@ const AnalyticsEvents = () => {
       },
       { threshold: 0.4 },
     );
-    document.querySelectorAll("section[id]").forEach((s) => sections.observe(s));
+    document
+      .querySelectorAll("section[id]")
+      .forEach((s) => sections.observe(s));
 
     const fired = new Set<number>();
     const onScroll = () => {
