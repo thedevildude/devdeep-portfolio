@@ -3,63 +3,40 @@ title: Verity: a QA platform that has to show its evidence
 tag: Case study
 work: verity
 seoTitle: Verity Case Study: AI QA Platform on AWS
-description: How Verity, a serverless QA platform on AWS Step Functions and Playwright, uses an AI jury, confidence scoring and fingerprint dedup to file fewer, better bugs.
+description: Verity is a serverless QA platform built on AWS and Playwright. It only reports a bug when it can show evidence for it.
 date: 2026-09-24
 updated: 2026-10-06
-keywords: Verity case study, AI QA platform, Playwright automation, AWS Step Functions, bug deduplication, AI jury, test automation, serverless QA
+keywords: Verity, AI QA, Playwright, AWS Step Functions, bug deduplication
 ---
 
-Most small teams have no QA person. The usual stand-in is an AI that writes bug reports, and those are mostly confident guesses, plus the same issue filed five times and a flaky test crying wolf every morning. Verity starts from the opposite principle: **truth over automation**. A finding doesn't exist unless it comes with evidence (a screenshot, logs or a trace) and a confidence score.
+Most small teams don't have a QA person. The usual stand-in is an AI that writes bug reports, and those tend to be confident guesses, the same issue filed several times, and a flaky test failing every morning. Verity is my attempt at the opposite. A finding only exists if it comes with evidence, such as a screenshot, logs or a trace, and a confidence score.
 
-It's pre-launch, so this is a story about design, not adoption.
+## How a run works
 
+A test case, a schedule, or a result from a customer's CI starts a run. A Step Functions state machine drives it: run the test, process the evidence, check for duplicates, score the confidence, then either open an issue or log the finding quietly. Playwright captures a screenshot at each step along with console and API errors. Raw artifacts go to S3 and structured results go to DynamoDB.
 
-## At a glance
+The backend is AWS SAM with API Gateway, TypeScript Lambdas, DynamoDB, S3 and Cognito. The React app and an embeddable feedback widget are hosted separately. Tenants contain projects, and projects contain environments.
 
-- **Product:** Verity, an AI-assisted QA platform for teams without a QA department.
-- **Core idea:** no finding without evidence, and a five-role AI jury decides what counts as a real bug.
-- **Noise control:** failure classification, fingerprint de-duplication and confidence thresholds.
-- **Stack:** AWS Step Functions, Lambda, DynamoDB, S3, Playwright, Fargate, React and TypeScript.
+## Deciding what is a real bug
 
-## How a run flows
+When a step fails, the first question is whether the product is broken or the infrastructure is. Failures are classified as an assertion failure, an infrastructure problem, a timeout or a cancellation, and only real assertion failures go any further. That keeps flaky runners from turning into bug tickets.
 
-A test case, a schedule or a result from a customer's CI starts a run, and a Step Functions state machine drives it: execute the test, process the evidence, de-duplicate, score confidence, then either open an issue or quietly log the finding. Playwright captures a screenshot per step along with console and API errors. Raw artifacts go to S3 and structured results to DynamoDB.
+Those failures go to a jury of five roles: a collector, a visual judge, a functional judge, a skeptic and an arbiter. The skeptic argues that the finding isn't real, and the arbiter makes the call. The result is a confidence score, and the score decides whether Verity files an issue, sends the finding to a person to review, or only logs it. Automatic dispatch exists but is off by default.
 
-The backend is AWS SAM with API Gateway, TypeScript Lambdas, DynamoDB, S3 and Cognito. The React app and an embeddable feedback widget are hosted separately. Tenants contain projects, and projects contain environments. A beginner and an expert mode sit over the same data, so a founder and an engineer see the same truth at different depths.
+This costs extra latency and model spend. I accepted that because a tool that files fewer bugs, each with evidence, is one people keep reading.
 
-## A jury instead of a prompt
+## Duplicates
 
-When a test step fails, the first question is whether the product is broken or the infrastructure is. Failures are classified as an assertion failure, infrastructure, a timeout or a cancellation, and **only real assertion failures reach the jury**. That one filter keeps flaky runners from turning into bug tickets.
+Deduplication happens in two passes. The first is an exact fingerprint match, which is cheap and deterministic. The second is a semantic pass that catches the same bug described in different words. Both are scoped to the tenant, so one customer's report is never compared against another's.
 
-The jury is five roles: a collector, a visual judge, a functional judge, a skeptic and an arbiter. The skeptic exists to argue the finding isn't real. The arbiter rules.
-
-Confidence then decides what happens:
-
-- **92 or more:** eligible for auto-dispatch, which is off by default.
-- **75 or more:** a QA issue is created.
-- **55 or more:** goes to a human for review.
-- **Below 55:** logged, not filed.
-
-It costs extra latency and model spend, and I think it's worth it. A tool that files fewer, better bugs gets read; one that files everything gets muted.
-
-## Duplicates, in two passes
-
-Deduplication is tiered. First an exact SHA-256 fingerprint, which is cheap and deterministic. Then a separate semantic pass catches findings that are the same bug in different words. Both are scoped per tenant, so one customer's report can never be treated as a duplicate of another's.
-
-The semantic pass fails open: if the model errors, everything is treated as unique. That means an occasional duplicate gets through rather than a real bug being dropped, and medium-confidence matches are tagged `possible-duplicate` instead of silently merged. I'll take a repeat over a missed regression every time.
+If the semantic pass fails, the finding is treated as unique. That means an occasional repeat gets through, but a real bug is never dropped. Likely matches are tagged `possible-duplicate` instead of being merged silently.
 
 ## Running the browser
 
-Lambda caps at 300 seconds and 1 GB, with no video, which isn't enough for a full end-to-end journey. For those, the plan is to run Playwright on Fargate using the official image, billed per second, and keep Lambda for quick single-URL scans. Both paths write the same result envelope, so everything downstream doesn't care which one ran. I rejected one Lambda per step because of a Chromium cold start on every step and traces that don't join up.
+Quick single-URL scans run on Lambda. Full end-to-end journeys need more time and disk than that suits, so the plan is to run Playwright on Fargate using the official image. Both paths write the same result format, so nothing downstream cares which one ran. I ruled out one Lambda per step because the browser would cold-start on every step and the traces wouldn't join up.
 
-## Automation with a leash
+## Limits on automation
 
-Anything that can change code is bounded. AI fixes arrive as pull requests, never direct commits. Automation halts on a duplicate fingerprint, repeated failures, an attempt with no diff, or a budget limit, and production is read-only by default. An application's lifecycle phase isn't stored at all. It's derived from the data and tested exhaustively, so it can't drift out of sync.
+Anything that can change code is bounded. AI fixes arrive as pull requests and never as direct commits. Automation stops on a duplicate fingerprint, repeated failures, an attempt that produces no diff, or a budget limit, and production is read-only by default. An application's lifecycle phase isn't stored anywhere. It's derived from the data, so it can't get out of sync.
 
-There's also an MCP server, off by default per project, so an assistant like ChatGPT, Claude or Cursor can drive Verity directly.
-
-## An honest note on coverage
-
-Backend statement coverage is **about 54%** as of early September, and CI enforces it as a ratchet so it can only go up. An older doc claimed 92% and nobody could trace where it came from. We deleted the claim and set the thresholds to reality. The suite is large (over 2,000 backend tests and about 900 frontend tests) but a number you can't reproduce is worse than a lower one you can.
-
-That's the same instinct as the product itself: don't report anything you can't back up.
+There is also an MCP server, off by default for each project, so an AI assistant can drive Verity directly.

@@ -3,48 +3,40 @@ title: SignalFoundry: one plan, many plays
 tag: Case study
 work: signalfoundry
 seoTitle: SignalFoundry Case Study: Agentic Marketing on AWS
-description: A case study of SignalFoundry, a serverless marketing operating system on AWS where AI agents plan, launch and measure campaigns and every action is auditable.
+description: SignalFoundry is a serverless marketing system on AWS where AI agents plan, launch and measure campaigns, and every action can be audited.
 date: 2026-09-02
 updated: 2026-10-01
-keywords: SignalFoundry case study, agentic marketing platform, AI agents, AWS Lambda DynamoDB EventBridge, serverless architecture, LLM output validation, marketing automation
+keywords: SignalFoundry, AI agents, marketing automation, AWS serverless, LLM output validation
 ---
 
-SignalFoundry is a marketing operating system. You describe the mission, the offer, your proof and your budget. It plans the campaign, produces the content, publishes through connected accounts, and learns from the results. The point is that every action is explainable, and where it matters, approved by a person first.
+SignalFoundry is a marketing operating system. You give it your mission, your offer, your proof and your budget. It plans the campaign, produces the content, publishes through your connected accounts and learns from the results. Every action can be explained afterwards and, where it matters, approved by a person first.
 
+## From brief to plan
 
-## At a glance
+It starts with a guided, chat-style intake. A deeper ingest step can read a website and pre-fill the brief, so nobody types the same facts twice. Out of that comes one marketing plan per goal. The strategy pipeline keeps adding to that same document: personas, research, a channel and budget plan, a content strategy. A critic step checks the quality before anything moves on.
 
-- **Product:** SignalFoundry, a marketing operating system that plans, launches and measures campaigns.
-- **Core idea:** one canonical plan per goal, and campaigns made of channel-level plays run by AI agents.
-- **Hard problem:** keeping LLM output reliable, auditable and inside strict time limits.
-- **Stack:** AWS Lambda, DynamoDB, EventBridge, API Gateway, Cognito, SAM, React and TypeScript.
+Campaigns are made of plays. A campaign is one outcome, and each play covers one surface, with its own assets, schedule and metrics. "Launch across PR, LinkedIn and ads" becomes one campaign with three plays rather than three unrelated records. The campaign coordinates and the play executes. Only paid plays carry a budget and experiments.
 
-## The loop
+Agents handle strategy, content, creative compliance and channel execution. For each action we record the intent, the reasoning, the inputs and outputs, a confidence level, the policy result, the approval status and what happened. Publishing goes through connectors for ads, social, email, SMS and CRM.
 
-It starts with a guided, chat-style intake. A deeper ingest step can read a website and pre-fill the brief so nobody types the same facts twice. Out of that comes one canonical **marketing plan** per goal. The strategy pipeline enriches that same document in place with personas, research, a channel and budget plan, and a content strategy, and a critic step checks the quality before anything moves on.
+## How it's built
 
-Campaigns come next, and this is the part I like most. A campaign is one outcome, and it's made of **plays**: one per surface, each with its own assets, schedule and metrics. "Launch across PR, LinkedIn and ads" becomes one campaign with three plays, not three unrelated records. The campaign coordinates and the play executes. Only paid plays carry budget and experiments.
+The backend is serverless on AWS: API Gateway, Cognito, Lambda, DynamoDB, EventBridge and S3, defined as nested SAM stacks, with a React frontend. The control plane (auth, tenants, brands, approvals, connectors) is kept separate from the execution plane (planning, generation, validation, publishing, budget decisions). The control plane began as a single routed Lambda so the first slice could ship quickly, with its modules kept separate enough to split later.
 
-Agents handle strategy, content, creative compliance and channel execution. Each action records its intent, its reasoning, the inputs and outputs, a confidence level, the policy result, approval status and the outcome. Publishing goes through connectors for ads, social, email, SMS and CRM, and everything is persisted so it can be audited.
+Every domain event uses the same envelope: event ID, type, version, tenant, brand, project, actor, and correlation and causation IDs. The event is written to storage before it goes to EventBridge, so there is always a trail to replay. That costs an extra write, and it has been worth it whenever something needed explaining.
 
-## Under the hood
+## Dealing with model output
 
-The backend is serverless on AWS: API Gateway, Cognito, Lambda, DynamoDB, EventBridge and S3, defined as nested SAM stacks. The frontend is React. I kept a hard line between the control plane (auth, tenants, brands, approvals, connectors) and the execution plane (planning, generation, validation, publishing, budget decisions), and started with a single routed Lambda for the control plane so the first vertical slice shipped fast, with modules kept separable to split later.
+Most of the design decisions here came from the model doing something I hadn't expected.
 
-Every domain event uses the same envelope: event ID, type, version, tenant, brand, project, actor, correlation and causation IDs. The event is written to storage before it goes to EventBridge, so there is always a replay trail. That costs an extra write, and it has paid for itself every time something needed explaining.
+In the intake, the model once asked about a success metric but rendered a URL input. So the server now decides what kind of question to ask, and the model only words it. I considered a second model call to check the first, but it would have doubled the latency of every turn.
 
-## Lessons from the model misbehaving
+Strict schema validation was throwing away output that was almost right, so a slightly over-long label could fail a whole turn. Now the server pads, truncates and de-duplicates the model's output into something valid instead.
 
-Most of the interesting decisions came from AI output doing something unexpected.
+Plan synthesis started as one large schema behind a CDN with a short timeout, and it kept running out of time. I split it into several passes, each with a prompt that covers only its own part, and that fixed the timeouts.
 
-**The server picks the question, the model only phrases it.** In the intake, a model once asked about a success metric but rendered a URL input. Now the server decides what to ask, as a fixed enum, and the model just words it. I rejected running two model calls per turn because it doubled latency.
-
-**Normalize, don't just validate.** A single 130-character label used to fail an entire turn on a strict schema. The server now pads, truncates and de-duplicates model output into something valid instead of throwing it away.
-
-**Size generation to the transport.** Plan synthesis was one schema producing around 30,000 output tokens, behind a CDN with a 60-second limit. We moved to multi-pass generation with prompts scoped per pass. A call that used to time out at 60 seconds came back in 36 once its prompt only covered its own pass.
-
-**Make failure loud.** Several strategy plans once failed over a few days before anyone noticed. Optional stages now check a wall-clock budget and skip themselves when they can't finish, logging the skip, and background failures emit a metric straight from code instead of relying on a log filter.
+Some strategy plans failed over several days before anyone noticed. Optional stages now check a time budget and skip themselves, with a log line, when they can't finish. Background failures emit a metric directly from code instead of depending on a log filter.
 
 ## Where it stands
 
-It's in late beta and stabilisation: deploys are still manual, and I'd rather say so than dress it up. What I'm proudest of is the shape. One plan, many plays, an auditable event trail, and a habit of never letting a model's output through without the server having the last word.
+SignalFoundry is still in beta, and deploys are manual for now.
