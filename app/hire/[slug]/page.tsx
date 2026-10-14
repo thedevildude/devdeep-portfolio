@@ -7,23 +7,11 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Container from "@/components/ui/Container";
 import JsonLd from "@/components/ui/JsonLd";
-import Marquee from "@/components/ui/Marquee";
+import LogoMarquee from "@/components/ui/LogoMarquee";
 import Reveal from "@/components/ui/Reveal";
 import { getPosts } from "@/lib/blog";
 import { CONTACT, LINKS, SITE } from "@/lib/constants";
 import { SERVICES, getService } from "@/lib/services";
-
-const STACK = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Node.js",
-  "AI / LLMs",
-  "Blockchain",
-  "AWS",
-  "Playwright",
-  "Tailwind",
-];
 
 export const generateStaticParams = () =>
   SERVICES.map(({ slug }) => ({ slug }));
@@ -179,19 +167,7 @@ const ServiceContent = async ({
         </Container>
       </section>
 
-      {/* Stack marquee */}
-      <div className="border-y border-border bg-surface py-5">
-        <Marquee>
-          {STACK.map((s) => (
-            <span
-              key={s}
-              className="mx-8 text-lg font-semibold uppercase text-muted sm:text-2xl"
-            >
-              {s} <span className="ml-8 text-accent">✦</span>
-            </span>
-          ))}
-        </Marquee>
-      </div>
+      <LogoMarquee />
 
       {/* Why: bento */}
       <section className="py-20 sm:py-32">

@@ -5,7 +5,7 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Hero from "@/components/sections/Hero";
 import Intro from "@/components/sections/Intro";
-import BrandCarousel from "@/components/sections/BrandCarousel";
+import LogoMarquee from "@/components/ui/LogoMarquee";
 import Name from "@/components/sections/Name";
 import Works from "@/components/sections/Works";
 import Contact from "@/components/sections/Contact";
@@ -57,7 +57,7 @@ export default function Home() {
         <Hero />
         <div className="relative z-10 bg-background">
           <Intro />
-          <BrandCarousel />
+          <LogoMarquee />
           <Name />
           <Works />
           <Contact />

@@ -13,7 +13,7 @@ const Highlighted = ({ text }: { text: string }) =>
   );
 
 const Intro = () => (
-  <Section id="intro">
+  <Section id="intro" fullScreen={false} className="pb-10 sm:pb-12">
     <h2 className="max-w-3xl text-xl font-medium sm:text-4xl lg:text-5xl">
       <span className="text-muted">
         HIGH-PERFORMANCE WEB, DESKTOP & MOBILE APPLICATIONS TO AI-POWERED VIDEO
