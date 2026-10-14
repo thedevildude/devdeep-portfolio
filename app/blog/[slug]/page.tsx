@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
@@ -47,11 +46,10 @@ export const generateMetadata = async ({
   };
 };
 
-const BlogPostContent = async ({
-  params,
-}: {
-  params: PageProps<"/blog/[slug]">["params"];
-}) => {
+/** Every slug is prerendered at build, so the full content ships in the static HTML for crawlers. */
+export const instant = false;
+
+const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
   const post = await getPost((await params).slug);
   if (!post) notFound();
 
@@ -66,6 +64,7 @@ const BlogPostContent = async ({
 
   return (
     <>
+      <Header />
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -142,18 +141,9 @@ const BlogPostContent = async ({
           </article>
         </Container>
       </main>
+      <Footer />
     </>
   );
 };
-
-const BlogPost = ({ params }: PageProps<"/blog/[slug]">) => (
-  <>
-    <Header />
-    <Suspense fallback={<main className="min-h-svh flex-1" />}>
-      <BlogPostContent params={params} />
-    </Suspense>
-    <Footer />
-  </>
-);
 
 export default BlogPost;
