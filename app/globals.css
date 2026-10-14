@@ -113,8 +113,15 @@ html.lenis body {
   }
 }
 
+/* Faster on small screens, where the image covers less and the push-in reads as slower. */
 .animate-hero-drift {
-  animation: hero-drift 45s ease-in-out infinite alternate;
+  animation: hero-drift 22s ease-in-out infinite alternate;
+}
+
+@media (min-width: 768px) {
+  .animate-hero-drift {
+    animation-duration: 34s;
+  }
 }
 
 /* DoctorWeb3 mock: a pulse travels the pipeline; the pending request blinks. */
