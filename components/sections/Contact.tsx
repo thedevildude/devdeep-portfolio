@@ -41,7 +41,7 @@ const Contact = () => {
       <WaveDivider
         variant="ocean"
         seed={4}
-        className="text-studio-gray bg-full-spectrum-blue"
+        className="text-studio-gray"
       />
       <div
         className="bg-studio-gray pt-12 text-background sm:pt-20 lg:flex lg:flex-col lg:min-h-[calc(100svh-var(--wave))]"
