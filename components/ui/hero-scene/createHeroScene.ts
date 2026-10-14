@@ -7,6 +7,7 @@ import {
   CORE_PLANET,
   IMG_H,
   IMG_W,
+  ORBIT_ARCS,
   PLANETS,
   RAYS,
   REVEAL_FOR,
@@ -21,7 +22,6 @@ import {
   CORONA_FRAG,
   GLITTER_FRAG,
   GLITTER_VERT,
-  PLANET_FRAG,
   RAY_FRAG,
   RAY_VERT,
   SKY_FRAG,
@@ -30,11 +30,13 @@ import {
   STREAK_FRAG,
   WORLD_VERT,
 } from "./shaders";
+import { addDetails } from "./details";
+import { makePlanetMesh } from "./planet";
 
 /**
  * A live Three.js take on the hero artwork: deep space with a Milky Way band, a starburst
  * fanning out from behind a central planet, planets, orbit lines, stars, cursor-shy glitter and
- * the odd shooting star. It opens with a big bang: the core charges, flashes, and a shockwave
+ * the odd shooting star, plus the finer layers in details.ts. It opens with a big bang: the core charges, flashes, and a shockwave
  * reveals the scene.
  *
  * The scene is laid out in the artwork's own pixel space (1920×1088, origin at its centre,
@@ -104,7 +106,7 @@ export const createHeroScene = (host: HTMLElement) => {
     }
     return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat);
   };
-  galaxy.add(arc(330, -35, 168), arc(195, 25, 158), arc(560, 52, 122));
+  galaxy.add(...ORBIT_ARCS.map(([radius, from, to]) => arc(radius, from, to)));
 
   // Spokes from the starburst out to the planets and edges, plus a small constellation.
   const spokeEnds = [
@@ -192,7 +194,7 @@ export const createHeroScene = (host: HTMLElement) => {
   };
   galaxy.add(
     new THREE.Mesh(
-      new THREE.PlaneGeometry(400, 400),
+      new THREE.PlaneGeometry(600, 600),
       new THREE.ShaderMaterial({
         uniforms: corona,
         vertexShader: WORLD_VERT,
@@ -300,26 +302,8 @@ export const createHeroScene = (host: HTMLElement) => {
   });
 
   // Planets drift on their own slow cycles and pop in as the shockwave reaches them.
-  const srgb = (hex: string) => new THREE.Color(hex).convertLinearToSRGB();
   const planets = [...PLANETS, CORE_PLANET].map((p, i) => {
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(p.r * 2.6, p.r * 2.6),
-      new THREE.ShaderMaterial({
-        uniforms: {
-          uTime: time,
-          uBase: { value: srgb(p.base) },
-          uAccent: { value: srgb(p.accent) },
-          uAccent2: { value: srgb(p.accent2) },
-          uRim: { value: srgb(p.rim) },
-          uSeed: { value: i * 3.7 },
-          uOpacity: { value: p.opacity ?? 1 },
-        },
-        vertexShader: WORLD_VERT,
-        fragmentShader: PLANET_FRAG,
-        transparent: true,
-        depthTest: false,
-      }),
-    );
+    const mesh = makePlanetMesh(p, i * 3.7, time);
     const [x, y] = at(p.x, p.y);
     mesh.position.set(x, y, 0);
     mesh.renderOrder = 2;
@@ -334,6 +318,17 @@ export const createHeroScene = (host: HTMLElement) => {
       // When the shockwave's front reaches the planet's edge (inverse of easeOutCubic).
       appear: BANG_AT + REVEAL_FOR * (1 - Math.cbrt(1 - Math.min(reach, 0.999))),
     };
+  });
+
+  const updateDetails = addDetails({
+    scene,
+    galaxy,
+    planets: planets.map((p) => p.mesh),
+    time,
+    since,
+    starScale,
+    rand,
+    gauss,
   });
 
   let viewW = 1;
@@ -372,7 +367,13 @@ export const createHeroScene = (host: HTMLElement) => {
   document.addEventListener("pointerleave", onLeave);
 
   const start = performance.now();
+  let lastT = 0;
+  let scrollEased = 0;
   const render = (t = (performance.now() - start) / 1000) => {
+    // Frame-rate independent easing: the share of the remaining distance to cover this frame.
+    const dt = Math.min(0.1, Math.max(0, t - lastT));
+    lastT = t;
+    const ease = (rate: number) => 1 - Math.exp(-dt * rate);
     time.value = t;
 
     // Big bang: the point charges, flashes, and the shockwave sweeps the scene in.
@@ -395,6 +396,7 @@ export const createHeroScene = (host: HTMLElement) => {
       mesh.position.y = y + Math.cos(t * 0.2 + phase) * amp;
       mesh.scale.setScalar(Math.max(0, easeOutBack(clamp01((t - appear) / 0.7))));
     });
+    updateDetails(t);
 
     for (const st of streaks) {
       const local = t - st.offset;
@@ -423,16 +425,18 @@ export const createHeroScene = (host: HTMLElement) => {
 
     // Zoomed in enough to frame the starburst right of the card, breathing slowly, with a
     // touch of pointer parallax; it starts tight on the bang and pulls back.
-    pointer.x += (pointer.tx - pointer.x) * 0.04;
-    pointer.y += (pointer.ty - pointer.y) * 0.04;
+    pointer.x += (pointer.tx - pointer.x) * ease(2.4);
+    pointer.y += (pointer.ty - pointer.y) * ease(2.4);
     // Scrolling past the hero pushes the camera in toward the starburst.
-    const scroll = clamp01(window.scrollY / window.innerHeight);
+    // Eased toward the scroll position, so the push-in glides instead of stepping with it.
+    scrollEased += (clamp01(window.scrollY / window.innerHeight) - scrollEased) * ease(3);
+    const scroll = scrollEased;
     const intro = Math.exp(-t * 0.9);
     const zoom = (1.18 + 0.04 * Math.sin(t * 0.08)) * (1 + 1.6 * intro) * (1 + scroll * 0.8);
     camera.zoom = zoom;
     const halfW = viewW / 2 / zoom;
     const halfH = viewH / 2 / zoom;
-    const burstX = wide ? BURST_SCREEN_X + (0.5 - BURST_SCREEN_X) * scroll : 0.5;
+    const burstX = wide ? BURST_SCREEN_X : 0.5;
     const camX = CENTER[0] - (burstX - 0.5) * 2 * halfW + pointer.x * 24;
     const camY = CENTER[1] * 0.5 - pointer.y * 16;
     const clamp = (v: number, lim: number) => Math.max(-lim, Math.min(lim, v));
@@ -444,9 +448,9 @@ export const createHeroScene = (host: HTMLElement) => {
     const mx = camera.position.x + (pointer.sx - 0.5) * 2 * halfW;
     const my = camera.position.y - (pointer.sy - 0.5) * 2 * halfH;
     if (mouseOn.value < 0.01) mouseWorld.set(mx, my);
-    mouseWorld.x += (mx - mouseWorld.x) * 0.035;
-    mouseWorld.y += (my - mouseWorld.y) * 0.035;
-    mouseOn.value += ((pointer.over ? 1 : 0) - mouseOn.value) * 0.03;
+    mouseWorld.x += (mx - mouseWorld.x) * ease(2.1);
+    mouseWorld.y += (my - mouseWorld.y) * ease(2.1);
+    mouseOn.value += ((pointer.over ? 1 : 0) - mouseOn.value) * ease(1.8);
 
     renderer.render(scene, camera);
   };

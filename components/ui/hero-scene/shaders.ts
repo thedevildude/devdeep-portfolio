@@ -128,12 +128,14 @@ export const CORONA_FRAG = /* glsl */ `
   uniform float uSettled; // 0 before the bang, 1 once the planet is out
   varying vec2 vUv;
   void main() {
-    float r = length((vUv * 2.0 - 1.0) * 200.0);
+    float r = length((vUv * 2.0 - 1.0) * 300.0);
     float pulse = 1.0 + 0.08 * sin(uTime * 1.4);
     float point = exp(-r / (6.0 + 30.0 * uCharge)) * (1.0 - uSettled) * 1.6;
     float rim = exp(-max(r - uRadius, 0.0) / (16.0 * pulse)) * smoothstep(uRadius * 0.7, uRadius, r);
     float halo = exp(-r / (70.0 * pulse)) * 0.25;
-    vec3 col = vec3(0.78, 0.94, 1.0) * (point + (rim * 0.9 + halo) * uSettled * uCharge);
+    // Fade to nothing well inside the quad, so its edges never show, even mid-bang.
+    float edge = 1.0 - smoothstep(220.0, 290.0, r);
+    vec3 col = vec3(0.78, 0.94, 1.0) * (point + (rim * 0.9 + halo) * uSettled * uCharge) * edge;
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -255,5 +257,114 @@ export const STREAK_FRAG = /* glsl */ `
   void main() {
     float body = pow(vUv.x, 3.0) * (1.0 - abs(vUv.y - 0.5) * 2.0);
     gl_FragColor = vec4(vec3(0.9, 0.95, 1.0) * body * uOpacity, 1.0);
+  }
+`;
+
+/**
+ * The asteroid belt: a tilted, foreshortened disc of specks orbiting the core, inner ones
+ * faster. Drawn twice: the far half behind the core planet, the near half in front of it.
+ */
+export const BELT_VERT = /* glsl */ `
+  attribute float aRadius;
+  attribute float aAngle;
+  attribute float aSize;
+  attribute float aPhase;
+  uniform float uTime;
+  uniform float uScale;
+  uniform float uSince;
+  uniform float uTilt;
+  uniform float uSquash;
+  uniform float uNearHalf; // 1 draws the near half, 0 the far half
+  varying float vShine;
+  varying float vWarm;
+  void main() {
+    float a = aAngle + uTime * 0.07 * pow(260.0 / aRadius, 1.5);
+    float near = step(sin(a), 0.0);
+    float keep = mix(1.0 - near, near, uNearHalf);
+    vec2 p = vec2(cos(a), sin(a) * uSquash) * aRadius;
+    float c = cos(uTilt), s = sin(uTilt);
+    p = vec2(c * p.x - s * p.y, s * p.x + c * p.y);
+    float k = clamp((uSince - aRadius / 1800.0) / 0.9, 0.0, 1.0);
+    k = 1.0 - pow(1.0 - k, 3.0);
+    vShine = (0.9 + 0.4 * sin(uTime * (1.0 + aPhase) + aPhase * 20.0)) * k * mix(0.55, 1.0, near);
+    vWarm = aPhase;
+    gl_PointSize = aSize * uScale;
+    // Specks on the other half are pushed outside the clip volume.
+    gl_Position = keep > 0.5 ? projectionMatrix * modelViewMatrix * vec4(p * k, 0.0, 1.0) : vec4(2.0, 2.0, 2.0, 1.0);
+  }
+`;
+
+export const BELT_FRAG = /* glsl */ `
+  varying float vShine;
+  varying float vWarm;
+  void main() {
+    vec2 c = gl_PointCoord * 2.0 - 1.0;
+    float g = exp(-dot(c, c) * 6.0);
+    vec3 col = mix(vec3(0.72, 0.80, 1.0), vec3(1.0, 0.84, 0.92), step(0.6, vWarm));
+    gl_FragColor = vec4(col * g * vShine, 1.0);
+  }
+`;
+
+/** A planet's rings: banded, with a dark gap; drawn as a far half and a near half. */
+export const RING_FRAG = /* glsl */ `
+  uniform float uInner;    // inner edge, as a fraction of the plane's half-size
+  uniform float uTilt;
+  uniform float uSquash;
+  uniform float uNearHalf; // 1 draws the near half, 0 the far half
+  uniform float uOpacity;
+  uniform vec3 uColA;
+  uniform vec3 uColB;
+  varying vec2 vUv;
+  void main() {
+    vec2 d = vUv * 2.0 - 1.0;
+    float c = cos(-uTilt), s = sin(-uTilt);
+    d = vec2(c * d.x - s * d.y, s * d.x + c * d.y);
+    float near = step(d.y, 0.0);
+    float keep = mix(1.0 - near, near, uNearHalf);
+    d.y /= uSquash;
+    float r = length(d);
+    float aa = fwidth(r) * 1.5;
+    float band = smoothstep(uInner - aa, uInner + aa, r) * (1.0 - smoothstep(1.0 - aa * 2.0, 1.0, r));
+    float t = clamp((r - uInner) / (1.0 - uInner), 0.0, 1.0);
+    float stripes = 0.65 + 0.35 * sin(t * 46.0) * sin(t * 13.0 + 1.0);
+    float gap = 1.0 - 0.85 * exp(-pow((t - 0.62) / 0.035, 2.0));
+    vec3 col = mix(uColA, uColB, t);
+    gl_FragColor = vec4(col, band * stripes * gap * keep * uOpacity * mix(0.7, 1.0, near));
+  }
+`;
+
+/** A distant spiral galaxy: bright core, two turning arms, tilted into an ellipse. */
+export const GALAXY_FRAG = /* glsl */ `
+  uniform float uTime;
+  uniform float uTilt;
+  uniform float uSquash;
+  uniform float uSeed;
+  uniform float uOpacity;
+  uniform vec3 uTint;
+  varying vec2 vUv;
+  ${NOISE}
+  void main() {
+    vec2 d = vUv * 2.0 - 1.0;
+    float c = cos(-uTilt), s = sin(-uTilt);
+    d = vec2(c * d.x - s * d.y, s * d.x + c * d.y);
+    d.y /= uSquash;
+    float r = length(d);
+    float a = atan(d.y, d.x);
+    float arms = pow(0.5 + 0.5 * cos(2.0 * (a - log(r + 0.02) * 2.6 - uTime * 0.05)), 3.0);
+    float n = fbm(d * 7.0 + uSeed);
+    float lum = exp(-r * 16.0) * 1.3 + exp(-r * 3.4) * (0.2 + arms * 0.9) * (0.5 + 0.7 * n);
+    lum *= 1.0 - smoothstep(0.75, 1.0, r);
+    gl_FragColor = vec4(uTint * lum * uOpacity, 1.0);
+  }
+`;
+
+/** A small soft light, for satellites travelling the orbit arcs. */
+export const DOT_FRAG = /* glsl */ `
+  uniform float uOpacity;
+  varying vec2 vUv;
+  void main() {
+    float r = length(vUv * 2.0 - 1.0);
+    float g = exp(-r * r * 18.0) + exp(-r * 5.0) * 0.25;
+    gl_FragColor = vec4(vec3(0.9, 0.95, 1.0) * g * uOpacity, 1.0);
   }
 `;
