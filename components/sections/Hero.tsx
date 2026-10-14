@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
 import HeroBackdrop from "@/components/ui/HeroBackdrop";
@@ -23,6 +24,15 @@ const Hero = () => (
         </div>
         <p className="mt-4 text-base text-background sm:mt-6 sm:text-xl lg:text-2xl font-medium font-slab">
           Helping startups and engineering teams move at light speed.
+        </p>
+        <p className="mt-4 text-sm text-background/70 sm:text-base">
+          Senior full stack engineer based in India, available for hire.{" "}
+          <Link
+            href="/hire/hire-software-engineer-india"
+            className="underline underline-offset-4 hover:text-background"
+          >
+            Work with me
+          </Link>
         </p>
       </Reveal>
     </Container>

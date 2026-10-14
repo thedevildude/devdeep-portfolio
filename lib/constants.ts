@@ -152,3 +152,15 @@ export const WORKS = [
     },
   },
 ] as const;
+
+export const DEMO_VIDEO = {
+  name: "Boomshare product demo: AI screen recording, transcript and editing",
+  description:
+    "Demo of Boomshare, a screen recorder with an AI transcript editor, dubbing and usage-based billing, built by Devdeep Ghosh.",
+  src: "/boom-demo.mp4",
+  poster: "/boom-demo-poster.jpg",
+  uploadDate: "2026-10-12",
+  duration: "PT18S",
+  width: 1920,
+  height: 1080,
+} as const;

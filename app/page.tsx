@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HOMEPAGE_METADATA, LINKS, SITE } from "@/lib/constants";
+import { DEMO_VIDEO, HOMEPAGE_METADATA, LINKS, SITE } from "@/lib/constants";
 import JsonLd from "@/components/ui/JsonLd";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
@@ -35,6 +35,21 @@ export default function Home() {
           address: { "@type": "PostalAddress", addressCountry: "IN" },
           knowsAbout: [...HOMEPAGE_METADATA.keywords],
           sameAs: [LINKS.linkedin, LINKS.github, LINKS.twitter],
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: DEMO_VIDEO.name,
+          description: DEMO_VIDEO.description,
+          thumbnailUrl: [`${SITE.url}${DEMO_VIDEO.poster}`],
+          uploadDate: DEMO_VIDEO.uploadDate,
+          duration: DEMO_VIDEO.duration,
+          contentUrl: `${SITE.url}${DEMO_VIDEO.src}`,
+          width: DEMO_VIDEO.width,
+          height: DEMO_VIDEO.height,
+          inLanguage: "en",
         }}
       />
       <Header />

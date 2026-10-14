@@ -59,6 +59,7 @@ const BoomshareCard = () => {
         <div className="relative aspect-video overflow-hidden lg:aspect-auto lg:min-h-52 ring-1 ring-current/15 lg:col-span-2">
           <video
             src="/boom-demo.mp4"
+            poster="/boom-demo-poster.jpg"
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay={!reduce}
             controls={!!reduce}
