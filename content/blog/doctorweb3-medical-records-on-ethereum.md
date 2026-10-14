@@ -3,10 +3,10 @@ title: DoctorWeb3: sharing medical records without a central database
 tag: Case study
 work: doctorweb3
 seoTitle: DoctorWeb3 Case Study: Medical Records on Ethereum
-description: DoctorWeb3 lets patients own their medical records and share them with verified doctors and hospitals using Ethereum, IPFS and Chainlink, with end-to-end encryption and revocable access.
+description: DoctorWeb3 lets patients own their medical records and share them with verified doctors and hospitals using Ethereum, IPFS and Chainlink, with end-to-end encryption and revocable access. Published at IEEE IEMECON 2024.
 date: 2026-10-14
 updated: 2026-10-14
-keywords: DoctorWeb3, end-to-end encryption, access revocation, medical records blockchain, Ethereum, Solidity, IPFS, Chainlink, healthcare, smart contracts
+keywords: DoctorWeb3, Doctor Web3.0, IEEE IEMECON 2024, end-to-end encryption, access revocation, medical records blockchain, Ethereum, Solidity, IPFS, Chainlink, healthcare, smart contracts
 ---
 
 A patient's medical history is scattered across clinics, each holding its own copy, and the patient is rarely the one deciding who sees it. DoctorWeb3 flips that. The patient holds the record, and a smart contract, not a hospital's database, says who may receive it. The file stays encrypted, so even the storage network never sees the contents.

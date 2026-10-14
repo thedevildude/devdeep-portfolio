@@ -8,6 +8,7 @@ import Intro from "@/components/sections/Intro";
 import LogoMarquee from "@/components/ui/LogoMarquee";
 import Name from "@/components/sections/Name";
 import Works from "@/components/sections/Works";
+import HireServices from "@/components/sections/HireServices";
 import Contact from "@/components/sections/Contact";
 
 export const metadata: Metadata = {
@@ -60,6 +61,7 @@ export default function Home() {
           <LogoMarquee />
           <Name />
           <Works />
+          <HireServices />
           <Contact />
         </div>
       </main>

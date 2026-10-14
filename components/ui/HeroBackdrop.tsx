@@ -32,12 +32,13 @@ const HeroBackdrop = () => {
         }}
         className="animate-hero-drift absolute top-1/2 left-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
       >
+        {/* The box covers the section, so it is as wide as the viewport or as tall-times-ratio. */}
         <Image
           src={src}
           alt=""
           fill
           preload
-          sizes="100vw"
+          sizes={`max(100vw, ${Math.round((100 * width) / height)}vh)`}
           className="object-cover"
         />
       </div>

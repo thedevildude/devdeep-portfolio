@@ -83,7 +83,30 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
               publisher: person,
               inLanguage: "en",
               articleSection: post.tag,
-              ...(paper && { citation: paper.url }),
+              ...(paper && {
+                citation: {
+                  "@type": "ScholarlyArticle",
+                  name: paper.title,
+                  url: paper.url,
+                  sameAs: `https://doi.org/${paper.doi}`,
+                  identifier: {
+                    "@type": "PropertyValue",
+                    propertyID: "DOI",
+                    value: paper.doi,
+                  },
+                  author: paper.authors.map((name) => ({
+                    "@type": "Person",
+                    name,
+                  })),
+                  datePublished: paper.published,
+                  publisher: { "@type": "Organization", name: "IEEE" },
+                  isPartOf: {
+                    "@type": "Event",
+                    name: paper.conference,
+                    location: paper.location,
+                  },
+                },
+              }),
               wordCount: post.body.split(/\s+/).length,
             },
             {
@@ -134,7 +157,7 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
             <p className="mt-5 font-slab text-lg text-muted sm:text-2xl">
               {post.description}
             </p>
-            {paper && <PaperCallout {...paper} className="mt-8 sm:mt-10" />}
+            {paper && <PaperCallout paper={paper} className="mt-8 sm:mt-10" />}
             <div className="mt-10 border-t border-border pt-10 sm:mt-14 sm:pt-14">
               <Markdown source={post.body} />
             </div>

@@ -166,9 +166,33 @@ export const DEMO_VIDEO = {
 } as const;
 
 /** Published research linked to a work (keyed by WORKS id). */
-export const PAPERS: Record<string, { url: string; venue: string }> = {
+export const PAPERS: Record<
+  string,
+  {
+    url: string;
+    venue: string;
+    title: string;
+    authors: string[];
+    conference: string;
+    conferenceShort: string;
+    location: string;
+    dates: string;
+    published: string;
+    doi: string;
+  }
+> = {
   doctorweb3: {
     url: "https://ieeexplore.ieee.org/document/10846115/",
     venue: "IEEE Xplore",
+    title:
+      "Doctor Web3.0: An Enhanced Decentralized Framework to Share and Store Medical Record of Patients",
+    authors: ["Jyoti Anand", "Afaq Ahmad", "Devdeep Ghosh"],
+    conference:
+      "2024 12th International Conference on Internet of Everything, Microwave, Embedded, Communication and Networks (IEMECON)",
+    conferenceShort: "IEMECON 2024",
+    location: "Jaipur, India",
+    dates: "24-26 October 2024",
+    published: "2025-01-23",
+    doi: "10.1109/IEMECON62401.2024.10846115",
   },
 };

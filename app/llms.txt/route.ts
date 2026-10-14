@@ -1,5 +1,5 @@
 import { getPosts } from "@/lib/blog";
-import { HOMEPAGE_METADATA, LINKS, SITE } from "@/lib/constants";
+import { HOMEPAGE_METADATA, LINKS, PAPERS, SITE } from "@/lib/constants";
 import { SERVICES } from "@/lib/services";
 
 export const GET = async () => {
@@ -17,6 +17,15 @@ ${SERVICES.map((s) => `- [${s.h1}](${SITE.url}/hire/${s.slug}): ${s.description}
 ## Case studies
 
 ${posts.map((p) => `- [${p.title}](${SITE.url}/blog/${p.slug}): ${p.description}`).join("\n")}
+
+## Research
+
+${Object.values(PAPERS)
+  .map(
+    (p) =>
+      `- [${p.title}](${p.url}): ${p.authors.join(", ")}. ${p.conferenceShort}, ${p.location}. DOI ${p.doi}`,
+  )
+  .join("\n")}
 
 ## Optional
 
