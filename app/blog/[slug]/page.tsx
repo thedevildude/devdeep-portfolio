@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Container from "@/components/ui/Container";
 import JsonLd from "@/components/ui/JsonLd";
 import Markdown from "@/components/ui/Markdown";
+import PaperCallout from "@/components/ui/PaperCallout";
 import { formatDate, getPost, getPosts } from "@/lib/blog";
-import { LINKS, SITE } from "@/lib/constants";
+import { LINKS, PAPERS, SITE } from "@/lib/constants";
 
 const AUTHOR = "Devdeep Ghosh";
 
@@ -45,11 +47,16 @@ export const generateMetadata = async ({
   };
 };
 
-const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
+const BlogPostContent = async ({
+  params,
+}: {
+  params: PageProps<"/blog/[slug]">["params"];
+}) => {
   const post = await getPost((await params).slug);
   if (!post) notFound();
 
   const url = `${SITE.url}/blog/${post.slug}`;
+  const paper = post.work ? PAPERS[post.work] : undefined;
   const person = {
     "@type": "Person",
     name: AUTHOR,
@@ -77,6 +84,7 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
               publisher: person,
               inLanguage: "en",
               articleSection: post.tag,
+              ...(paper && { citation: paper.url }),
               wordCount: post.body.split(/\s+/).length,
             },
             {
@@ -105,7 +113,6 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
           ],
         }}
       />
-      <Header />
       <main className="flex-1 pt-32 pb-20 sm:pt-44 sm:pb-28">
         <Container>
           <article className="mx-auto max-w-3xl">
@@ -128,15 +135,25 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
             <p className="mt-5 font-slab text-lg text-muted sm:text-2xl">
               {post.description}
             </p>
+            {paper && <PaperCallout {...paper} className="mt-8 sm:mt-10" />}
             <div className="mt-10 border-t border-border pt-10 sm:mt-14 sm:pt-14">
               <Markdown source={post.body} />
             </div>
           </article>
         </Container>
       </main>
-      <Footer />
     </>
   );
 };
+
+const BlogPost = ({ params }: PageProps<"/blog/[slug]">) => (
+  <>
+    <Header />
+    <Suspense fallback={<main className="min-h-svh flex-1" />}>
+      <BlogPostContent params={params} />
+    </Suspense>
+    <Footer />
+  </>
+);
 
 export default BlogPost;

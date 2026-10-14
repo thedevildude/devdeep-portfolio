@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PAPERS } from "@/lib/constants";
 import DoctorWeb3Mock from "./DoctorWeb3Mock";
 
 const STACK = [
@@ -34,12 +35,22 @@ const DoctorWeb3Card = () => (
           ))}
         </ul>
       </div>
-      <Link
-        href="/blog/doctorweb3-medical-records-on-ethereum"
-        className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
-      >
-        Read case study <span aria-hidden>→</span>
-      </Link>
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href="/blog/doctorweb3-medical-records-on-ethereum"
+          className="inline-flex items-center gap-3 rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
+        >
+          Read case study <span aria-hidden>→</span>
+        </Link>
+        <a
+          href={PAPERS.doctorweb3.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-3 rounded-md border border-current/50 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/10"
+        >
+          IEEE paper <span aria-hidden>↗</span>
+        </a>
+      </div>
     </div>
 
     <div className="relative aspect-3/4 sm:aspect-4/3 md:aspect-auto md:min-h-60">

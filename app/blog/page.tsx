@@ -6,7 +6,7 @@ import Footer from "@/components/ui/Footer";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
 import { formatDate, getPosts } from "@/lib/blog";
-import { SITE } from "@/lib/constants";
+import { PAPERS, SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Blog — ${SITE.name}`,
@@ -76,6 +76,11 @@ const BlogIndex = async () => {
                     <span className="rounded-full bg-white/10 px-2.5 py-0.5">
                       {post.tag}
                     </span>
+                    {post.work && PAPERS[post.work] && (
+                      <span className="rounded-full bg-accent px-2.5 py-0.5 text-accent-foreground">
+                        IEEE paper
+                      </span>
+                    )}
                     {post.readMinutes} min
                   </span>
                 </Link>

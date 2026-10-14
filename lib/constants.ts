@@ -164,3 +164,11 @@ export const DEMO_VIDEO = {
   width: 1920,
   height: 1080,
 } as const;
+
+/** Published research linked to a work (keyed by WORKS id). */
+export const PAPERS: Record<string, { url: string; venue: string }> = {
+  doctorweb3: {
+    url: "https://ieeexplore.ieee.org/document/10846115/",
+    venue: "IEEE Xplore",
+  },
+};
