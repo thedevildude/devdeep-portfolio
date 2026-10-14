@@ -39,7 +39,7 @@ export type PlanetSpec = {
 /** Measured from the artwork, coloured to match it and the site palette. */
 export const PLANETS: PlanetSpec[] = [
   { x: 642, y: -5, r: 183, base: "#5a86f0", accent: "#a6a8f4", accent2: "#f1ecfb", rim: "#e6ebff" },
-  { x: 1192, y: 108, r: 44, base: "#7cc4d2", accent: "#b9ece8", accent2: "#e0f8f4", rim: "#ecfcff" },
+  { x: 1192, y: 218, r: 44, base: "#7cc4d2", accent: "#b9ece8", accent2: "#e0f8f4", rim: "#ecfcff" },
   { x: 762, y: 383, r: 53, base: "#eba6bc", accent: "#fdd0dc", accent2: "#7f79d0", rim: "#fff0f6" },
   { x: 1876, y: 383, r: 77, base: "#e2aef0", accent: "#f2cdf4", accent2: "#fde5f4", rim: "#fff2fc" },
   { x: 40, y: 930, r: 290, base: "#b98ae6", accent: "#f2b8d8", accent2: "#fde5f4", rim: "#ffe8f6" },
@@ -48,9 +48,9 @@ export const PLANETS: PlanetSpec[] = [
   { x: 612, y: 890, r: 21, base: "#f0b2c8", accent: "#fedff5", accent2: "#c890b8", rim: "#fff2f8" },
   { x: 900, y: 215, r: 9, base: "#8cd2dc", accent: "#c8f0ec", accent2: "#e8fbf8", rim: "#f2ffff" },
   { x: 1835, y: 178, r: 11, base: "#8cd2dc", accent: "#c8f0ec", accent2: "#e8fbf8", rim: "#f2ffff" },
-  { x: 1385, y: 428, r: 14, base: "#eea488", accent: "#f8caae", accent2: "#b4849a", rim: "#ffeadc" },
+  { x: 1385, y: 520, r: 14, base: "#eea488", accent: "#f8caae", accent2: "#b4849a", rim: "#ffeadc" },
   { x: 1460, y: 600, r: 15, base: "#eea488", accent: "#f8caae", accent2: "#b4849a", rim: "#ffeadc" },
-  { x: 1610, y: 530, r: 14, base: "#a698f4", accent: "#d0c4fa", accent2: "#f3ecfd", rim: "#f6f2ff" },
+  { x: 1610, y: 610, r: 14, base: "#a698f4", accent: "#d0c4fa", accent2: "#f3ecfd", rim: "#f6f2ff" },
 ];
 
 /** The planet the starburst's rays fan out from, backlit like an eclipse, at the scene's centre. */
@@ -69,8 +69,8 @@ export const RAYS = { count: 110, minLength: 40, maxLength: 230 };
 
 /** Bright four-point stars, as painted. [x, y, size] in artwork pixels. */
 export const SPARKLES: [number, number, number][] = [
-  [1100, 255, 46], [1190, 300, 40], [1320, 315, 54], [1178, 905, 60],
-  [350, 6, 44], [1200, 362, 22], [845, 255, 18], [1530, 210, 20],
+  [1100, 365, 46], [1190, 410, 40], [1320, 425, 54], [1178, 905, 60],
+  [350, 6, 44], [1200, 472, 22], [845, 255, 18], [1530, 320, 20],
 ];
 
 /** Orbit arcs around the starburst: [radius, from°, to°]. Satellites travel along them. */
@@ -102,7 +102,7 @@ export const MOONS = [
 
 /** Distant spiral galaxies: artwork position, size (world px), tilt and foreshortening. */
 export const GALAXIES = [
-  { x: 1450, y: 165, size: 84, tilt: 0.5, squash: 0.42, tint: [0.85, 0.82, 1] },
+  { x: 1450, y: 275, size: 84, tilt: 0.5, squash: 0.42, tint: [0.85, 0.82, 1] },
   { x: 1320, y: 625, size: 58, tilt: -0.35, squash: 0.6, tint: [1, 0.86, 0.94] },
   { x: 760, y: 760, size: 46, tilt: 1.1, squash: 0.36, tint: [0.76, 0.86, 1] },
 ];

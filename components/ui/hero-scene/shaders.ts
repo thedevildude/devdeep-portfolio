@@ -368,3 +368,43 @@ export const DOT_FRAG = /* glsl */ `
     gl_FragColor = vec4(vec3(0.9, 0.95, 1.0) * g * uOpacity, 1.0);
   }
 `;
+
+/** The wish star's tail: a strip from the head (uv.x = 0) back along its path, tapering. */
+export const WISH_TAIL_VERT = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    vec3 p = position;
+    p.y *= 1.0 - uv.x * 0.9;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+  }
+`;
+
+export const WISH_TAIL_FRAG = /* glsl */ `
+  uniform float uOpacity;
+  varying vec2 vUv;
+  void main() {
+    float along = pow(1.0 - vUv.x, 1.7);
+    float across = 1.0 - pow(abs(vUv.y - 0.5) * 2.0, 2.0);
+    vec3 col = mix(vec3(0.996, 0.80, 0.93), vec3(1.0), along * 0.6);
+    gl_FragColor = vec4(col * along * across * uOpacity, 1.0);
+  }
+`;
+
+/** The wish star's head: a slowly turning four-point sparkle with a soft halo. */
+export const SPARKLE_FRAG = /* glsl */ `
+  uniform float uOpacity;
+  uniform float uSpin;
+  varying vec2 vUv;
+  void main() {
+    vec2 c = vUv * 2.0 - 1.0;
+    float s = sin(uSpin), co = cos(uSpin);
+    c = mat2(co, -s, s, co) * c;
+    float core = exp(-dot(c, c) * 40.0);
+    float cross = exp(-abs(c.x) * 26.0) * exp(-abs(c.y) * 2.4)
+                + exp(-abs(c.y) * 26.0) * exp(-abs(c.x) * 2.4);
+    float halo = exp(-length(c) * 4.5) * 0.4;
+    vec3 col = mix(vec3(0.996, 0.85, 0.95), vec3(1.0), core);
+    gl_FragColor = vec4(col * (core * 1.4 + cross + halo) * uOpacity, 1.0);
+  }
+`;

@@ -32,6 +32,7 @@ import {
 } from "./shaders";
 import { addDetails } from "./details";
 import { makePlanetMesh } from "./planet";
+import { addWishStar, type WishState } from "./wish";
 
 /**
  * A live Three.js take on the hero artwork: deep space with a Milky Way band, a starburst
@@ -43,8 +44,8 @@ import { makePlanetMesh } from "./planet";
  * y up) and the orthographic camera "covers" the section the way object-cover would.
  */
 
-/** Builds the scene into host and starts it; returns a function that tears it all down. */
-export const createHeroScene = (host: HTMLElement) => {
+/** Builds the scene into host and starts it; returns its teardown, and a way to release the wish star. */
+export const createHeroScene = (host: HTMLElement, onWish: (state: WishState) => void) => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
@@ -110,7 +111,7 @@ export const createHeroScene = (host: HTMLElement) => {
 
   // Spokes from the starburst out to the planets and edges, plus a small constellation.
   const spokeEnds = [
-    [975, -40], [790, 120], [1190, 108], [1385, 180], [612, 175], [565, 300], [1300, 520],
+    [975, -40], [790, 120], [1190, 218], [1385, 290], [612, 175], [565, 300], [1300, 520],
   ];
   const spokePts: number[] = [];
   for (const [x, y] of spokeEnds) {
@@ -120,7 +121,7 @@ export const createHeroScene = (host: HTMLElement) => {
     const len = Math.hypot(dx, dy);
     spokePts.push((dx / len) * 50, (dy / len) * 50, 0, dx, dy, 0);
   }
-  const constellation = [[1100, 255], [1190, 300], [1320, 315], [1190, 300], [1200, 362]];
+  const constellation = [[1100, 365], [1190, 410], [1320, 425], [1190, 410], [1200, 472]];
   for (let i = 0; i < constellation.length - 1; i += 2) {
     for (const [x, y] of [constellation[i], constellation[i + 1]]) {
       const [wx, wy] = at(x, y);
@@ -331,6 +332,8 @@ export const createHeroScene = (host: HTMLElement) => {
     gauss,
   });
 
+  const wish = addWishStar(scene, onWish);
+
   let viewW = 1;
   let viewH = 1;
   let wide = true;
@@ -443,6 +446,14 @@ export const createHeroScene = (host: HTMLElement) => {
     camera.position.x = clamp(camX, Math.max(0, IMG_W / 2 - halfW));
     camera.position.y = clamp(camY, Math.max(0, IMG_H / 2 - halfH));
     camera.updateProjectionMatrix();
+    wish.update(t, {
+      camX: camera.position.x,
+      camY: camera.position.y,
+      halfW,
+      halfH,
+      width: host.clientWidth,
+      height: host.clientHeight,
+    });
 
     // The dust follows the cursor lazily, so it drifts aside rather than scattering.
     const mx = camera.position.x + (pointer.sx - 0.5) * 2 * halfW;
@@ -467,7 +478,7 @@ export const createHeroScene = (host: HTMLElement) => {
     renderer.setAnimationLoop(() => visible && render());
   }
 
-  return () => {
+  const dispose = () => {
     renderer.setAnimationLoop(null);
     ro.disconnect();
     io.disconnect();
@@ -482,4 +493,6 @@ export const createHeroScene = (host: HTMLElement) => {
     renderer.dispose();
     renderer.domElement.remove();
   };
+
+  return { dispose, releaseWish: wish.release };
 };
