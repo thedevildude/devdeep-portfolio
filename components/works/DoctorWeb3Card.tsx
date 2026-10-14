@@ -1,8 +1,10 @@
+import Link from "next/link";
 import DoctorWeb3Mock from "./DoctorWeb3Mock";
 
 const STACK = [
   "Solidity",
-  "Hardhat",
+  "Truffle",
+  "Chainlink",
   "Ethers.js",
   "Ethereum",
   "IPFS",
@@ -10,7 +12,7 @@ const STACK = [
 ] as const;
 
 const DESCRIPTION =
-  "A decentralized platform for patients and hospitals to store and share medical records on Ethereum. Records stay encrypted on IPFS, and Solidity smart contracts share the access passwords with authorized parties only.";
+  "A platform for patients to share medical records with verified doctors and hospitals on Ethereum. Reports are encrypted before they reach IPFS, and Solidity contracts record who may receive each one, for how long, with Chainlink-backed verification.";
 
 /** Two columns; the visual on the right runs the full height of the card, edge to edge. */
 const DoctorWeb3Card = () => (
@@ -32,12 +34,12 @@ const DoctorWeb3Card = () => (
           ))}
         </ul>
       </div>
-      <a
-        href="#"
+      <Link
+        href="/blog/doctorweb3-medical-records-on-ethereum"
         className="inline-flex items-center gap-3 self-start rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
       >
         Read case study <span aria-hidden>→</span>
-      </a>
+      </Link>
     </div>
 
     <div className="relative aspect-3/4 sm:aspect-4/3 md:aspect-auto md:min-h-60">
