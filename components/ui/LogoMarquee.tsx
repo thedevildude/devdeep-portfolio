@@ -24,7 +24,7 @@ const LogoMarquee = () => (
     >
       Trusted by teams building real products
     </h2>
-    <div className="[mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+    <div className="mask-[linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
       <Marquee>
         {REPEATS.flatMap((set) =>
           BRANDS.map((brand) => {

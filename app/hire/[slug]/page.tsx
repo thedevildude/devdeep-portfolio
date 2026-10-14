@@ -10,7 +10,7 @@ import JsonLd from "@/components/ui/JsonLd";
 import LogoMarquee from "@/components/ui/LogoMarquee";
 import Reveal from "@/components/ui/Reveal";
 import { getPosts } from "@/lib/blog";
-import { CONTACT, LINKS, SITE } from "@/lib/constants";
+import { CONTACT, LINKS, SITE, WORKS } from "@/lib/constants";
 import { SERVICES, getService } from "@/lib/services";
 
 export const generateStaticParams = () =>
@@ -106,7 +106,7 @@ const ServiceContent = async ({
       <section className="relative pt-32 pb-16 sm:pt-44 sm:pb-24">
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-40 right-[-10%] size-[42rem] rounded-full bg-accent/25 blur-[140px]"
+          className="pointer-events-none absolute -top-40 right-[-10%] size-168 rounded-full bg-accent/25 blur-[140px]"
         />
         <Container className="relative">
           <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
@@ -139,11 +139,15 @@ const ServiceContent = async ({
               </div>
             </Reveal>
 
-            <Reveal y={40} delay={0.15} className="relative mx-auto w-full max-w-md">
-              <div className="relative aspect-square overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-surface to-background">
+            <Reveal
+              y={40}
+              delay={0.15}
+              className="relative mx-auto w-full max-w-md"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-3xl border border-border bg-linear-to-br from-surface to-background">
                 <div
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-accent/30 to-transparent"
+                  className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-trom-accent/30 to-transparent"
                 />
                 <Image
                   src="/portrait.png"
@@ -159,7 +163,7 @@ const ServiceContent = async ({
                 <p className="text-xs uppercase text-muted">in production</p>
               </div>
               <div className="absolute -top-4 -right-2 rounded-2xl bg-accent px-5 py-3 text-accent-foreground sm:-right-6">
-                <p className="text-2xl font-semibold">{posts.length}</p>
+                <p className="text-2xl font-semibold">{WORKS.length}</p>
                 <p className="text-xs uppercase">case studies</p>
               </div>
             </Reveal>
@@ -187,7 +191,12 @@ const ServiceContent = async ({
                 "lg:col-span-4 bg-petal-frost text-background",
               ][i % 4];
               return (
-                <Reveal key={w.title} delay={i * 0.08} y={32} className={`rounded-3xl p-7 sm:p-10 ${layout}`}>
+                <Reveal
+                  key={w.title}
+                  delay={i * 0.08}
+                  y={32}
+                  className={`rounded-3xl p-7 sm:p-10 ${layout}`}
+                >
                   <span className="text-5xl font-semibold opacity-30 sm:text-7xl">
                     0{i + 1}
                   </span>
@@ -290,7 +299,7 @@ const ServiceContent = async ({
           <ol className="relative mt-12 grid gap-10 sm:mt-16 md:grid-cols-3 md:gap-8">
             <div
               aria-hidden
-              className="absolute top-8 right-[16%] left-[8%] hidden h-px bg-gradient-to-r from-accent via-border to-accent md:block"
+              className="absolute top-8 right-[16%] left-[8%] hidden h-px bg-linear-to-r from-accent via-border to-accent md:block"
             />
             {service.steps.map((s, i) => (
               <Reveal key={s.title} delay={i * 0.12} y={32}>
@@ -348,10 +357,10 @@ const ServiceContent = async ({
       {/* CTA */}
       <section className="px-5 pb-20 sm:px-10 sm:pb-28 md:px-16 lg:px-32">
         <Reveal y={40}>
-          <div className="relative overflow-hidden rounded-[2rem] bg-full-spectrum-blue px-7 py-14 text-petal-frost sm:px-16 sm:py-24">
+          <div className="relative overflow-hidden rounded-4xl bg-full-spectrum-blue px-7 py-14 text-petal-frost sm:px-16 sm:py-24">
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-24 -bottom-32 size-[28rem] rounded-full bg-petal-frost/20 blur-[100px]"
+              className="pointer-events-none absolute -right-24 -bottom-32 size-112 rounded-full bg-petal-frost/20 blur-[100px]"
             />
             <h2 className="relative max-w-3xl text-3xl leading-tight font-semibold uppercase sm:text-6xl">
               Let&apos;s build something that ships
