@@ -2,14 +2,14 @@ export const SITE = {
   name: "Devdeep",
   title: "Devdeep — Full Stack Software Engineer",
   description:
-    "Senior software engineer with 3+ years of experience in full stack JavaScript, TypeScript and Blockchain ecosystem. Forward Deployed Engineer with AI, Cloud knowlegdge",
-  url: "https://idevdeep.com",
+    "Senior full stack software engineer in India for hire. 3+ years building production apps with React, Next.js, TypeScript, AI and Blockchain.",
+  url: "https://www.idevdeep.com",
 } as const;
 
 export const HOMEPAGE_METADATA = {
-  title: "Devdeep — Senior Full Stack Software Engineer",
+  title: "Hire a Senior Software Engineer in India — Devdeep",
   description:
-    "Senior full stack software engineer with 3+ years of experience in building production applications using React, Next.js and Blockchain ecosystem. Specialized in creating modern, responsive user interfaces and optimizing website performance.",
+    "Hire a senior full stack software engineer in India. 3+ years shipping production React, Next.js, TypeScript, AI and Blockchain products for startups.",
   keywords: [
     "Senior Full Stack Software Engineer",
     "Full Stack Software Engineer",

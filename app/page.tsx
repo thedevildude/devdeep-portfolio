@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { HOMEPAGE_METADATA } from "@/lib/constants";
+import { HOMEPAGE_METADATA, LINKS, SITE } from "@/lib/constants";
+import JsonLd from "@/components/ui/JsonLd";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Hero from "@/components/sections/Hero";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   title: HOMEPAGE_METADATA.title,
   description: HOMEPAGE_METADATA.description,
   keywords: [...HOMEPAGE_METADATA.keywords],
+  alternates: { canonical: "/" },
   openGraph: {
     title: HOMEPAGE_METADATA.title,
     description: HOMEPAGE_METADATA.description,
@@ -22,6 +24,19 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Devdeep Ghosh",
+          url: SITE.url,
+          jobTitle: "Senior Full Stack Software Engineer",
+          description: HOMEPAGE_METADATA.description,
+          address: { "@type": "PostalAddress", addressCountry: "IN" },
+          knowsAbout: [...HOMEPAGE_METADATA.keywords],
+          sameAs: [LINKS.linkedin, LINKS.github, LINKS.twitter],
+        }}
+      />
       <Header />
       <main className="flex-1">
         <Hero />
