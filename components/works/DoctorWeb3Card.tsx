@@ -20,15 +20,15 @@ const DoctorWeb3Card = () => (
   <div className="grid flex-1 md:grid-cols-2">
     <div className="flex flex-col justify-between gap-8 px-5 pt-20 pb-8 sm:px-12 sm:pt-26 md:pr-10 lg:pl-16">
       <div>
-        <h3 className="text-lg font-semibold uppercase sm:text-3xl lg:text-4xl">
+        <h3 className="text-base font-semibold uppercase sm:text-3xl lg:text-4xl">
           Decentralized medical records
         </h3>
-        <p className="mt-6 font-slab text-sm sm:text-base">{DESCRIPTION}</p>
+        <p className="mt-6 font-slab text-xs sm:text-base">{DESCRIPTION}</p>
         <ul className="mt-6 flex flex-wrap gap-2">
           {STACK.map((tech) => (
             <li
               key={tech}
-              className="rounded-full bg-current/10 px-2 py-0.5 text-xs"
+              className="rounded-full bg-current/10 px-2 py-0.5 text-[10px] sm:text-xs"
             >
               {tech}
             </li>
@@ -38,7 +38,7 @@ const DoctorWeb3Card = () => (
       <div className="flex flex-wrap gap-2">
         <Link
           href="/blog/doctorweb3-medical-records-on-ethereum"
-          className="inline-flex items-center gap-3 rounded-md bg-current/10 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/20"
+          className="inline-flex items-center gap-3 rounded-md bg-current/10 px-4 py-2 font-slab text-xs sm:px-5 sm:py-2.5 sm:text-sm transition-colors hover:bg-current/20"
         >
           Read case study <span aria-hidden>→</span>
         </Link>
@@ -46,7 +46,7 @@ const DoctorWeb3Card = () => (
           href={PAPERS.doctorweb3.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 rounded-md border border-current/50 px-5 py-2.5 font-slab text-sm transition-colors hover:bg-current/10"
+          className="inline-flex items-center gap-3 rounded-md border border-current/50 px-4 py-2 font-slab text-xs sm:px-5 sm:py-2.5 sm:text-sm transition-colors hover:bg-current/10"
         >
           IEEE paper <span aria-hidden>↗</span>
         </a>

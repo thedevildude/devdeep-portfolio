@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 type WaveDividerProps = {
@@ -60,15 +61,27 @@ const WaveDivider = ({
       aria-hidden
       className={cn(
         "pointer-events-none overflow-hidden",
-        ocean ? "block w-full" : "absolute inset-x-0 top-0 h-20 w-full sm:h-28",
+        // Narrow screens squeeze the swells into steep spikes, so the ocean wave is lower there.
+        ocean
+          ? "-my-px block h-(--wave-h-sm) w-full sm:h-(--wave-h)"
+          : "absolute inset-x-0 top-0 h-20 w-full sm:h-28",
         className,
       )}
-      style={ocean ? { height: oceanHeight(seed) } : undefined}
+      style={
+        ocean
+          ? ({
+              "--wave-h": `${oceanHeight(seed)}px`,
+              // Whole pixels plus a 1px overlap each side (-my-px), so no hairline seam shows.
+              "--wave-h-sm": `${Math.round(oceanHeight(seed) * 0.55)}px`,
+            } as CSSProperties)
+          : undefined
+      }
     >
+      {/* Drifts by half its own width, which is always one period, so it can be wider on phones. */}
       <svg
         viewBox={`0 0 ${2 * PERIOD} 100`}
         preserveAspectRatio="none"
-        className="animate-wave-drift block h-full w-[200%]"
+        className="animate-wave-drift block h-full w-[300%] sm:w-[200%]"
         style={{
           animationDuration: ocean ? `${16 + 4 * (seed % 3)}s` : "22s",
           animationDirection: ocean && seed % 2 === 0 ? "reverse" : "normal",

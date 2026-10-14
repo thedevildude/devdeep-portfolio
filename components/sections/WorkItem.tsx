@@ -116,7 +116,7 @@ const WorkItem = ({
             {/* Same spot on every card: the logo, or the title as a wordmark. */}
             <div className="absolute top-6 left-5 z-10 flex h-10 items-center sm:top-8 sm:left-12 sm:h-12 lg:left-16">
               {logo ?? (
-                <span className="text-xl font-semibold uppercase">{title}</span>
+                <span className="text-base font-semibold uppercase sm:text-xl">{title}</span>
               )}
             </div>
             {/* Each card owns its padding, so it can bleed to the card's edges. */}
