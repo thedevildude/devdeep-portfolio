@@ -16,6 +16,8 @@ const LABEL =
 const Contact = () => {
   const started = useRef(false);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   // Fires once per visit, the first time the visitor touches any field.
   const onFocus = () => {
@@ -24,12 +26,32 @@ const Contact = () => {
     track("contact_form_start");
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: decide what happens with the message (email service, API route, ...).
-    track("contact_form_submit");
-    track("generate_lead", { form: "contact" });
-    setSent(true);
+    if (sending) return;
+    setSending(true);
+    setError("");
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json?.ok) {
+        throw new Error(json?.error ?? "Something went wrong.");
+      }
+      track("contact_form_submit");
+      track("generate_lead", { form: "contact" });
+      setSent(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   const onInvalid = (e: FormEvent<HTMLFormElement>) => {
@@ -124,11 +146,25 @@ const Contact = () => {
                     placeholder="What are you working on?"
                   />
                 </div>
+                {/* Honeypot: hidden from people, tempting to bots. */}
+                <input
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
+                {error && (
+                  <p role="alert" className="font-slab text-sm text-red-600 sm:col-span-2">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-3 justify-self-start rounded-xl bg-background px-7 py-3.5 font-slab text-sm text-foreground transition-colors hover:bg-full-spectrum-blue sm:col-span-2"
+                  disabled={sending}
+                  className="inline-flex items-center gap-3 justify-self-start rounded-xl bg-background px-7 py-3.5 font-slab text-sm text-foreground transition-colors hover:bg-full-spectrum-blue disabled:opacity-60 sm:col-span-2"
                 >
-                  Send message <span aria-hidden>→</span>
+                  {sending ? "Sending…" : "Send message"} <span aria-hidden>→</span>
                 </button>
               </form>
             )}
