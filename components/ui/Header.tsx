@@ -42,7 +42,7 @@ const Header = () => {
           <Link href="/" aria-label={SITE.name} className="block">
             <Image
               src="/logo.svg"
-              alt=""
+              alt="Devdeep Ghosh logo"
               width={40}
               height={40}
               priority

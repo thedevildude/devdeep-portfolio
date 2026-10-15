@@ -11,7 +11,7 @@ const Hero = () => (
       <Reveal className="max-w-md rounded-xl bg-foreground p-6 sm:p-10">
         <Image
           src="/logo-bw.svg"
-          alt=""
+          alt="Devdeep Ghosh logo"
           width={56}
           height={56}
           className="mb-5 size-10 sm:mb-8 sm:size-14"
