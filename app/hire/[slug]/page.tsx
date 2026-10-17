@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Instrument_Serif } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,14 +14,6 @@ import { BRANDS, LINKS, SITE } from "@/lib/constants";
 import { hireAsset } from "@/lib/hireAssets";
 import { HIRE_SHARED, SERVICES, getService } from "@/lib/services";
 import { cn } from "@/lib/utils";
-
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export const generateStaticParams = () =>
   SERVICES.map(({ slug }) => ({ slug }));
@@ -87,10 +78,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
 
   return (
     <div
-      className={cn(
-        instrument.variable,
-        "theme-sky flex flex-1 flex-col bg-background tracking-normal text-foreground sm:tracking-normal",
-      )}
+      className="theme-sky flex flex-1 flex-col bg-background tracking-normal text-foreground sm:tracking-normal"
     >
       <Header />
       <main className="flex-1 overflow-x-clip">
@@ -143,13 +131,6 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
         <section className={cn("relative pt-36 text-center sm:pt-44", SKY)}>
           <Container>
             <Reveal y={24}>
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-sm font-medium backdrop-blur">
-                <span className="relative flex size-2">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-kiwi opacity-60" />
-                  <span className="relative inline-flex size-2 rounded-full bg-kiwi" />
-                </span>
-                Taking on new work · Based in India · Remote
-              </p>
               <h1 className="mx-auto mt-7 max-w-5xl text-5xl leading-none font-normal sm:text-6xl lg:text-[5.25rem]">
                 <Accent text={service.headline} />
               </h1>
@@ -388,7 +369,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                   <Reveal delay={i * 0.08} y={24}>
                     <span
                       className={cn(
-                        "relative z-10 flex size-14 items-center justify-center rounded-full font-display-serif text-2xl ring-8 ring-background",
+                        "relative z-10 flex size-14 items-center justify-center rounded-full font-slab text-2xl ring-8 ring-background",
                         tone(i),
                       )}
                     >
@@ -590,7 +571,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                     <dt className="mx-auto mt-3 max-w-56 text-base text-foreground/75">
                       {s.label}
                     </dt>
-                    <dd className="font-display-serif text-6xl text-ink-blue sm:text-7xl">
+                    <dd className="font-slab text-6xl text-ink-blue sm:text-7xl">
                       {s.value}
                     </dd>
                   </div>

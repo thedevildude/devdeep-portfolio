@@ -1,7 +1,7 @@
 /**
  * Content for the /hire/[slug] pages.
  * In `headline`, `roleTitle`, `whyTitle` and `ctaTitle`, wrap one phrase in *single asterisks*
- * to set it in the italic serif accent.
+ * to set it in the blue slab-serif accent.
  */
 
 export type IconName =
@@ -193,18 +193,21 @@ export const SERVICES: Service[] = [
       "Next.js",
       "TypeScript",
       "Node.js",
+      "Rust",
       "AWS",
       "AI agents",
+      "LangGraph",
+      "GStreamer",
       "Blockchain",
     ],
     overview: {
       title: "How to hire a software engineer in India",
       paragraphs: [
         "“Software engineer” covers a lot: frontend, backend, cloud and AI, sometimes all four in one sprint. Most startups and small teams don't need a big team. They need one senior person who learns the product quickly, writes code that lasts and stays.",
-        "That's the gap I fill. I'm a full stack engineer with 3+ years of production work across React, Next.js, TypeScript, serverless AWS, AI agents and Blockchain. You hire me directly, so the person in your standup is the person writing your pull requests.",
+        "That's the gap I fill. I'm a full stack engineer with 3+ years of production work across React, Next.js, TypeScript, Rust, serverless AWS, AI agents, real-time video and Blockchain. You hire me directly, so the person in your standup is the person writing your pull requests.",
       ],
       gets: [
-        "One senior engineer across frontend, backend, cloud and AI",
+        "One senior engineer across frontend, backend, desktop, mobile, cloud and AI",
         "Direct communication, with no agency or middle layer",
         "Working hours that overlap with your team's day",
         "Flexible terms: a project, a monthly retainer or a full-time remote role",
@@ -237,7 +240,7 @@ export const SERVICES: Service[] = [
       {
         icon: "sparkles",
         title: "AI features",
-        body: "Ship LLM workflows and agents that show their work and keep a person in the loop.",
+        body: "Ship RAG pipelines and LangGraph agents that show their work and keep a person in the loop.",
       },
       {
         icon: "review",
@@ -298,34 +301,112 @@ export const SERVICES: Service[] = [
       },
     ],
     stack: [
-      { category: "Languages", items: ["TypeScript", "JavaScript", "Solidity"] },
+      {
+        category: "Languages",
+        items: [
+          "TypeScript",
+          "JavaScript",
+          "Rust",
+          "C++",
+          "Objective-C",
+          "Solidity",
+          "SQL",
+        ],
+      },
       {
         category: "Front end",
-        items: ["React", "Next.js (App Router)", "Tailwind CSS"],
+        items: [
+          "React",
+          "Next.js (App Router)",
+          "Angular",
+          "Redux Toolkit",
+          "Zustand",
+          "Tailwind CSS",
+          "SCSS",
+        ],
+      },
+      {
+        category: "Desktop and mobile",
+        items: ["Electron", "React Native", "Native addons"],
       },
       {
         category: "Back end",
-        items: ["Node.js", "REST APIs", "Serverless functions"],
+        items: [
+          "Node.js",
+          "Express",
+          "Django",
+          "REST APIs",
+          "Serverless functions",
+        ],
       },
       {
-        category: "Cloud",
-        items: ["AWS Lambda", "Step Functions", "S3", "CloudFront", "DynamoDB"],
+        category: "Databases",
+        items: [
+          "PostgreSQL",
+          "MongoDB",
+          "DynamoDB",
+          "Supabase",
+          "Prisma",
+          "Sequelize",
+        ],
       },
       {
         category: "AI",
-        items: ["LLM agents", "Retrieval", "Human-in-the-loop approvals"],
+        items: [
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "Retrieval",
+          "LLM agents",
+          "Agentic workflows",
+          "n8n",
+          "Human-in-the-loop approvals",
+        ],
       },
-      { category: "Desktop and media", items: ["Electron", "FFmpeg"] },
       {
-        category: "Integrations",
-        items: ["Stripe", "Salesforce", "Microsoft Graph"],
+        category: "Video and media",
+        items: [
+          "GStreamer",
+          "GStreamer Editing Services",
+          "FFmpeg",
+          "HLS / DASH streaming",
+        ],
+      },
+      {
+        category: "Cloud",
+        items: [
+          "AWS Lambda",
+          "Step Functions",
+          "S3",
+          "CloudFront",
+          "Cognito",
+          "Azure",
+          "Google Cloud",
+        ],
       },
       {
         category: "Blockchain",
-        items: ["Ethereum", "Ethers", "IPFS", "Chainlink"],
+        items: ["Ethereum", "Hardhat", "Ethers.js", "IPFS", "Chainlink"],
       },
-      { category: "Testing", items: ["Playwright", "Integration tests"] },
-      { category: "Workflow", items: ["Git", "GitHub", "CI/CD"] },
+      {
+        category: "Integrations",
+        items: ["Stripe", "Salesforce", "Microsoft Graph", "GoHighLevel"],
+      },
+      {
+        category: "Testing",
+        items: ["Playwright", "Jest", "Integration tests"],
+      },
+      {
+        category: "DevOps",
+        items: [
+          "Docker",
+          "Git",
+          "GitHub",
+          "GitHub Actions",
+          "CircleCI",
+          "CI/CD",
+        ],
+      },
     ],
     faqs: [
       {
@@ -334,7 +415,7 @@ export const SERVICES: Service[] = [
       },
       {
         q: "What kind of work can I hire you for?",
-        a: "Full stack product work: React and Next.js front ends, Node.js and serverless backends on AWS, AI features and agents, and Blockchain integrations. I also do architecture reviews and mentoring through code review.",
+        a: "Full stack product work: React and Next.js front ends, Electron and React Native apps, Node.js and serverless backends on AWS, AI agents and RAG with LangChain and LangGraph, real-time video with GStreamer and FFmpeg, and Blockchain integrations. I also do architecture reviews and mentoring through code review.",
       },
       {
         q: "How quickly can you start?",
@@ -370,7 +451,8 @@ export const SERVICES: Service[] = [
     seoTitle: "Hire a React & Next.js Developer in India | Devdeep",
     h1: "Hire a React & Next.js Developer in India",
     role: "React & Next.js Developer",
-    headline: "Hire a React & Next.js developer in India, *who sweats the details*",
+    headline:
+      "Hire a React & Next.js developer in India, *who sweats the details*",
     description:
       "Hire a senior React and Next.js developer in India. App Router, TypeScript, performance and SEO-focused builds for startups, with clear communication and fast delivery.",
     keywords: [
@@ -493,12 +575,25 @@ export const SERVICES: Service[] = [
       },
     ],
     stack: [
-      { category: "Languages", items: ["TypeScript", "JavaScript"] },
+      {
+        category: "Languages",
+        items: ["TypeScript", "JavaScript", "HTML", "CSS"],
+      },
       {
         category: "Frameworks",
-        items: ["React", "Next.js (App Router)", "Server Components"],
+        items: [
+          "React",
+          "Next.js (App Router)",
+          "Server Components",
+          "Angular",
+        ],
       },
-      { category: "Styling", items: ["Tailwind CSS", "CSS", "Motion"] },
+      {
+        category: "State",
+        items: ["Redux Toolkit", "Zustand", "React Context"],
+      },
+      { category: "Styling", items: ["Tailwind CSS", "SCSS / Sass", "Motion"] },
+      { category: "Desktop and mobile", items: ["Electron", "React Native"] },
       {
         category: "Performance",
         items: ["Core Web Vitals", "Image and font strategy", "Caching"],
@@ -507,9 +602,16 @@ export const SERVICES: Service[] = [
         category: "SEO",
         items: ["Metadata API", "Structured data", "Sitemaps"],
       },
-      { category: "Web3 front ends", items: ["Ethers", "Wallet connection"] },
-      { category: "Testing", items: ["Playwright", "Component tests"] },
-      { category: "Hosting", items: ["Vercel", "AWS", "CI/CD"] },
+      {
+        category: "AI interfaces",
+        items: ["Streaming chat UIs", "LangChain", "RAG"],
+      },
+      {
+        category: "Web3 front ends",
+        items: ["Ethers.js", "Wallet connection"],
+      },
+      { category: "Testing", items: ["Jest", "Playwright", "Component tests"] },
+      { category: "Hosting", items: ["Vercel", "AWS", "Docker", "CI/CD"] },
     ],
     faqs: [
       {
@@ -546,7 +648,8 @@ export const SERVICES: Service[] = [
     seoTitle: "Hire a Forward Deployed Engineer in India | Devdeep",
     h1: "Hire a Forward Deployed Engineer in India",
     role: "Forward Deployed Engineer",
-    headline: "Hire a forward deployed engineer in India, *close to your customers*",
+    headline:
+      "Hire a forward deployed engineer in India, *close to your customers*",
     description:
       "Hire a forward deployed engineer in India who embeds with your customers or team, ships AI and full stack solutions fast and turns messy requirements into working software.",
     keywords: [
@@ -561,6 +664,9 @@ export const SERVICES: Service[] = [
     heroCta: "Hire me for a deployment",
     chips: [
       "AI agents",
+      "LangGraph",
+      "RAG",
+      "n8n",
       "Integrations",
       "Prototypes",
       "AWS",
@@ -671,19 +777,62 @@ export const SERVICES: Service[] = [
     stack: [
       {
         category: "AI",
-        items: ["LLM agents", "Document extraction", "Human-in-the-loop"],
+        items: [
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "LLM agents",
+          "Document extraction",
+          "Human-in-the-loop",
+        ],
+      },
+      {
+        category: "Automation",
+        items: [
+          "n8n",
+          "Agentic workflows",
+          "Playwright",
+          "Scheduled pipelines",
+        ],
       },
       {
         category: "Integrations",
-        items: ["Salesforce", "Microsoft Graph", "Stripe", "Webhooks"],
+        items: [
+          "Salesforce",
+          "Microsoft Graph",
+          "GoHighLevel",
+          "Stripe",
+          "Webhooks",
+        ],
       },
       {
         category: "Cloud",
-        items: ["AWS Lambda", "Step Functions", "S3", "DynamoDB"],
+        items: [
+          "AWS Lambda",
+          "Step Functions",
+          "S3",
+          "Cognito",
+          "Azure",
+          "Google Cloud",
+        ],
       },
-      { category: "Back end", items: ["Node.js", "TypeScript", "REST APIs"] },
+      {
+        category: "Data",
+        items: ["PostgreSQL", "MongoDB", "DynamoDB", "Supabase", "Prisma"],
+      },
+      {
+        category: "Back end",
+        items: [
+          "Node.js",
+          "TypeScript",
+          "Rust",
+          "Express",
+          "Django",
+          "REST APIs",
+        ],
+      },
       { category: "Front end", items: ["React", "Next.js", "Tailwind CSS"] },
-      { category: "Automation", items: ["Playwright", "Scheduled pipelines"] },
+      { category: "DevOps", items: ["Docker", "GitHub Actions", "CI/CD"] },
     ],
     faqs: [
       {
@@ -696,7 +845,7 @@ export const SERVICES: Service[] = [
       },
       {
         q: "Which AI tools and models do you use?",
-        a: "I choose per use case: hosted frontier models, retrieval pipelines and evaluation harnesses, with attention to cost, latency and data privacy.",
+        a: "I choose per use case: hosted frontier models, LangChain and LangGraph for agents, RAG pipelines for retrieval and n8n for automation, with attention to latency, reliability and data privacy.",
       },
       {
         q: "Do you take short engagements?",

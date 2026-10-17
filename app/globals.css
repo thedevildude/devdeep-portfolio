@@ -169,7 +169,3 @@ html.lenis body {
   --color-pomelo: #b02f7c;
   --color-pomelo-soft: #ffe6f4;
 }
-
-@theme inline {
-  --font-display-serif: var(--font-instrument), ui-serif, Georgia, serif;
-}
