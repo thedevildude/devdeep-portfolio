@@ -158,6 +158,16 @@ html.lenis body {
   --color-sky-1: #cbeeff;
   --color-sky-2: #c2eafd;
   --color-sky-3: #85cef2;
+  /* Alternative hero gradients, so hire pages don't all look alike. */
+  --color-mint-1: #dcfbea;
+  --color-mint-2: #c8f3dd;
+  --color-mint-3: #8fdcb6;
+  --color-peach-1: #fff0e1;
+  --color-peach-2: #ffe2c8;
+  --color-peach-3: #ffbf94;
+  --color-lilac-1: #f0e8ff;
+  --color-lilac-2: #e3d6ff;
+  --color-lilac-3: #c0aaf2;
   --color-kiwi: #00862e;
   --color-kiwi-soft: #dcfbdc;
   --color-ixia: #00808c;
@@ -192,5 +202,17 @@ html.lenis body {
 @media (prefers-reduced-motion: reduce) {
   .diwali-twinkle {
     animation: none;
+  }
+}
+
+/* Contact dialog on the hire pages: a short rise and fade in. */
+@keyframes contact-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

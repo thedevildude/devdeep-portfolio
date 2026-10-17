@@ -4,6 +4,8 @@
  * to set it in light italic deep blue.
  */
 
+import { HIRE_PAGES } from "./hire-pages";
+
 export type IconName =
   | "code"
   | "server"
@@ -26,8 +28,24 @@ export type IconName =
   | "shield"
   | "globe";
 
+/**
+ * Per-page design choices, so the hire pages don't all look the same.
+ * Every field is optional; the defaults are the original layout.
+ */
+export type HireLayout = {
+  /** Hero and closing-band gradient. */
+  theme?: "sky" | "mint" | "peach" | "lilac";
+  /** "What I do": centred icon grid, two-column list, or uneven bento cards. */
+  duties?: "grid" | "list" | "bento";
+  /** "Why me": tinted cards, big numbered rows, or sticky heading with items beside it. */
+  why?: "cards" | "numbered" | "split";
+  /** Process: horizontal row of steps, or a vertical timeline. */
+  process?: "row" | "timeline";
+};
+
 export type Service = {
   slug: string;
+  layout?: HireLayout;
   seoTitle: string;
   /** Plain-text page title, also used in links from the footer and other pages. */
   h1: string;
@@ -167,7 +185,7 @@ export const HIRE_SHARED = {
   relatedTitle: "More ways to *work with me*",
 } as const;
 
-export const SERVICES: Service[] = [
+const CORE_SERVICES: Service[] = [
   {
     slug: "hire-software-engineer-india",
     seoTitle: "Hire a Software Engineer in India — Senior, Remote | Devdeep",
@@ -435,6 +453,7 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "hire-react-nextjs-developer-india",
+    layout: { theme: "peach", duties: "bento", why: "numbered", process: "timeline" },
     seoTitle: "Hire a React & Next.js Developer in India | Devdeep",
     h1: "Hire a React & Next.js Developer in India",
     role: "React & Next.js Developer",
@@ -631,6 +650,7 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "hire-forward-deployed-engineer-india",
+    layout: { theme: "lilac", duties: "list", why: "split", process: "row" },
     seoTitle: "Hire a Forward Deployed Engineer in India | Devdeep",
     h1: "Hire a Forward Deployed Engineer in India",
     role: "Forward Deployed Engineer",
@@ -836,6 +856,9 @@ export const SERVICES: Service[] = [
       "Send the use case. You'll get an honest answer on fit and a first plan within 24 hours.",
   },
 ];
+
+/** Every hire page: the three originals first, then the rest. */
+export const SERVICES: Service[] = [...CORE_SERVICES, ...HIRE_PAGES];
 
 export const getService = (slug: string) =>
   SERVICES.find((s) => s.slug === slug);

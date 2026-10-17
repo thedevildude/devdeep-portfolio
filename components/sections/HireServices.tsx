@@ -24,7 +24,7 @@ const HireServices = () => (
       </Reveal>
 
       <ul className="mt-12 grid gap-4 sm:mt-16 md:grid-cols-3">
-        {SERVICES.map((service, i) => (
+        {SERVICES.slice(0, 3).map((service, i) => (
           <li key={service.slug}>
             <Reveal delay={i * 0.08} y={32} className="h-full">
               <Link
@@ -56,6 +56,22 @@ const HireServices = () => (
           </li>
         ))}
       </ul>
+
+      {/* The rest of the hire pages, as plain links: good for visitors and for crawlers. */}
+      <Reveal className="mt-8">
+        <ul className="flex flex-wrap gap-2">
+          {SERVICES.slice(3).map((service) => (
+            <li key={service.slug}>
+              <Link
+                href={`/hire/${service.slug}`}
+                className="inline-block rounded-full border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
+              >
+                {service.role}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
 
       <Reveal className="mt-10 sm:mt-14">
         <a

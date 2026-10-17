@@ -13,18 +13,12 @@ const Highlighted = ({ text }: { text: string }) =>
   );
 
 const Intro = () => (
-  <Section id="intro" fullScreen={false} className="pb-10 sm:pb-12">
+  <Section id="intro" fullScreen={false} className="py-24 sm:py-40 lg:py-48">
     <h2 className="max-w-3xl text-xl font-medium sm:text-4xl lg:text-5xl">
-      <span className="text-muted">
-        HIGH-PERFORMANCE WEB, DESKTOP & MOBILE APPLICATIONS TO AI-POWERED VIDEO
-        PIPELINES,
-      </span>
-      <span>
-        {" "}
-        I BUILD PLATFORMS THAT POWER MISSION-CRITICAL INFRASTRUCTURE.
-      </span>
+      <span className="text-muted">WEB, MOBILE, DESKTOP AND AI PIPELINES.</span>
+      <span> I BUILD PLATFORMS FOR MISSION-CRITICAL WORK.</span>
     </h2>
-    <div className="mt-10 grid sm:mt-16 grid-cols-1 gap-10 md:grid-cols-3 md:gap-10 font-slab">
+    <div className="mt-16 grid sm:mt-28 lg:mt-32 grid-cols-1 gap-10 md:grid-cols-3 md:gap-10 font-slab">
       {INTRO_POINTS.map((point, i) => (
         <div key={point.title} className="border-t border-border pt-6">
           <div className="flex items-baseline gap-3">
