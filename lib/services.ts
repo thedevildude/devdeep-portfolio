@@ -59,8 +59,6 @@ export const HIRE_SHARED = {
   processTitle: "How hiring *me* works",
   processIntro:
     "Five short steps from first message to shipped work. Most clients go from brief to first pull request inside two weeks.",
-  processClose:
-    "You keep 100% of the product decisions. I bring the engineering, the ownership and the weekly updates.",
   engageTitle: "Ways to *work with me*",
   engageIntro:
     "Every engagement gets the same standard of work. Choose the shape that fits where your product is today.",
@@ -188,18 +186,7 @@ export const SERVICES: Service[] = [
     intro:
       "Work directly with me, a senior full stack engineer based in India. You keep control of the roadmap and the decisions. I write the code, ship it and keep you in the loop, with no account managers, no bench of juniors and no three-month recruiting cycle.",
     heroCta: "Hire me for your project",
-    chips: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Node.js",
-      "Rust",
-      "AWS",
-      "AI agents",
-      "LangGraph",
-      "GStreamer",
-      "Blockchain",
-    ],
+    chips: ["React", "Next.js", "Node.js", "TypeScript", "AWS", "AI agents"],
     overview: {
       title: "How to hire a software engineer in India",
       paragraphs: [
@@ -470,7 +457,6 @@ export const SERVICES: Service[] = [
       "Next.js",
       "TypeScript",
       "Tailwind CSS",
-      "Server Components",
       "Core Web Vitals",
       "SEO",
     ],
@@ -662,18 +648,7 @@ export const SERVICES: Service[] = [
     intro:
       "A forward deployed engineer sits where the product meets the customer's real problem. I embed with your team or your clients, learn the workflow, then build the integrations, AI features and tooling that get them live. Part engineer, part consultant, fully hands-on.",
     heroCta: "Hire me for a deployment",
-    chips: [
-      "AI agents",
-      "LangGraph",
-      "RAG",
-      "n8n",
-      "Integrations",
-      "Prototypes",
-      "AWS",
-      "Salesforce",
-      "Microsoft Graph",
-      "Full stack",
-    ],
+    chips: ["AI agents", "RAG", "LangGraph", "n8n", "AWS", "Salesforce"],
     overview: {
       title: "How to hire a forward deployed engineer in India",
       paragraphs: [

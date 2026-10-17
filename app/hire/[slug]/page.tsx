@@ -88,7 +88,8 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
   // A page-specific closing image wins; otherwise every hire page shares one.
   const ctaArt =
     hireAsset(service.slug, "cta.png") ?? sharedHireAsset("cta.png");
-  const meRow = sharedHireAsset("me-row.webp");
+  const meRow =
+    sharedHireAsset("me-row-minion.webp") ?? sharedHireAsset("me-row.webp");
 
   return (
     <div
@@ -423,11 +424,6 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                 </li>
               ))}
             </ol>
-            <Reveal className="mt-14 text-center">
-              <p className="mx-auto inline-block max-w-3xl rounded-3xl bg-surface px-6 py-4 text-lg">
-                {HIRE_SHARED.processClose}
-              </p>
-            </Reveal>
           </Container>
         </section>
 
