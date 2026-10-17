@@ -1,4 +1,4 @@
-hauler.webp — 24-frame sprite sheet (6×4 grid, 690×402 px per frame) rendered from
-"Universal Animation Library" by Quaternius — https://quaternius.com/packs/universalanimationlibrary.html
-License: CC0 1.0 Universal (public domain).
-Mannequin + Jog_Fwd_Loop clip, recoloured, posed hauling a rope tied to a cardboard box, rendered with three.js.
+guy/*.png — body parts of the "Male person" character from "Toon Characters 1"
+by Kenney — https://kenney.nl/assets/toon-characters-1 (also https://opengameart.org/content/toon-characters-1)
+License: Creative Commons Zero (CC0 / public domain). Credit is optional.
+Parts are unmodified; they're rigged and animated in components/ui/PushLoader.tsx.

@@ -38,6 +38,8 @@ const LogoMarquee = () => (
                 width={width}
                 height={height}
                 sizes="160px"
+                // The first set can be on screen at load (it was flagged as LCP); the repeats scroll in later.
+                loading={set === 0 ? "eager" : "lazy"}
                 className="mx-10 h-9 w-auto shrink-0 object-contain opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0 sm:mx-16 sm:h-12"
               />
             );
