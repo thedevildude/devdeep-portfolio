@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Barlow_Semi_Condensed } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +8,7 @@ import {
   ContactDialogProvider,
 } from "@/components/hire/ContactDialog";
 import DiwaliLights from "@/components/hire/DiwaliLights";
+import { barlowItalic } from "@/components/hire/fonts";
 import HireIcon from "@/components/hire/HireIcon";
 import {
   DutiesSection,
@@ -34,15 +34,6 @@ import { BRANDS, LINKS, SITE } from "@/lib/constants";
 import { hireAsset, sharedHireAsset } from "@/lib/hireAssets";
 import { HIRE_SHARED, SERVICES, getService } from "@/lib/services";
 import { cn } from "@/lib/utils";
-
-/** Real light italic for the highlighted headline phrase; only the hire pages load it. */
-const barlowItalic = Barlow_Semi_Condensed({
-  variable: "--font-barlow-italic",
-  subsets: ["latin"],
-  weight: "300",
-  style: "italic",
-  display: "swap",
-});
 
 export const generateStaticParams = () =>
   SERVICES.map(({ slug }) => ({ slug }));

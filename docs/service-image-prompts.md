@@ -31,3 +31,6 @@ Slugs: `hire-software-engineer-india`, `hire-react-nextjs-developer-india`, `hir
 
 ## Already in use
 - **Hero portrait:** `public/portrait.png` (transparent PNG). Keep it a cut-out with no background so it sits on the sky gradient.
+
+## Generation settings (Voicebox, Qwen Image 2.1)
+At 1376×768 the default VAE tiling (512 tile, 384 stride, so only 128px of blend) leaves a faint vertical seam around x≈1270, near the right edge. Pass `"engine_options": { "vae_tile_size": 768, "vae_tile_stride": 512 }` to get a 256px blend and a single tile row. A 1024 tile needs about 14GB, too much on a 16GB machine. The blog covers in `public/blog/<slug>/` were made before this and had the seam filled in afterwards.

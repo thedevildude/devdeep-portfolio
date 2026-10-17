@@ -15,3 +15,9 @@ export const sharedHireAsset = (file: string) => {
   const url = `/hire/${file}`;
   return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
 };
+
+/** A blog post's cover, read from public/blog/<slug>/cover.webp, or null if it isn't there yet. */
+export const blogCover = (slug: string) => {
+  const url = `/blog/${slug}/cover.webp`;
+  return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
+};
