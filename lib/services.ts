@@ -1,7 +1,7 @@
 /**
  * Content for the /hire/[slug] pages.
  * In `headline`, `roleTitle`, `whyTitle` and `ctaTitle`, wrap one phrase in *single asterisks*
- * to set it in the blue slab-serif accent.
+ * to set it in light italic deep blue.
  */
 
 export type IconName =

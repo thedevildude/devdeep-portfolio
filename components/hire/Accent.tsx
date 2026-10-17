@@ -1,10 +1,10 @@
-/** Renders text with the *starred* phrase in the blue slab-serif accent. */
+/** Renders text with the *starred* phrase in light italic deep blue. */
 const Accent = ({ text }: { text: string }) =>
   text.split("*").map((part, i) =>
     i % 2 ? (
       <em
         key={i}
-        className="font-slab font-light text-ink-blue not-italic"
+        className="font-accent font-light text-ink-blue italic"
       >
         {part}
       </em>

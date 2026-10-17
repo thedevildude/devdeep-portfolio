@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Barlow_Semi_Condensed } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,6 +15,15 @@ import { BRANDS, LINKS, SITE } from "@/lib/constants";
 import { hireAsset } from "@/lib/hireAssets";
 import { HIRE_SHARED, SERVICES, getService } from "@/lib/services";
 import { cn } from "@/lib/utils";
+
+/** Real light italic for the highlighted headline phrase; only the hire pages load it. */
+const barlowItalic = Barlow_Semi_Condensed({
+  variable: "--font-barlow-italic",
+  subsets: ["latin"],
+  weight: "300",
+  style: "italic",
+  display: "swap",
+});
 
 export const generateStaticParams = () =>
   SERVICES.map(({ slug }) => ({ slug }));
@@ -56,9 +66,9 @@ const tone = (i: number) => TONES[i % TONES.length];
 
 const SKY = "bg-linear-to-b from-sky-1 via-sky-2 to-sky-3";
 const H2 =
-  "mx-auto max-w-4xl text-center text-4xl leading-[1.05] font-normal sm:text-5xl lg:text-6xl";
+  "mx-auto max-w-4xl text-center text-4xl leading-[1.05] font-normal tracking-normal text-balance sm:text-5xl lg:text-6xl";
 const LEDE =
-  "mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-muted sm:text-xl";
+  "mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-pretty text-muted sm:text-xl";
 const PRIMARY_BTN =
   "inline-flex items-center gap-3 rounded-full bg-foreground px-8 py-4 text-base font-medium text-background transition hover:bg-ink-blue sm:text-lg";
 const GHOST_BTN =
@@ -78,7 +88,10 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
 
   return (
     <div
-      className="theme-sky flex flex-1 flex-col bg-background tracking-normal text-foreground sm:tracking-normal"
+      className={cn(
+        barlowItalic.variable,
+        "theme-sky flex flex-1 flex-col bg-background tracking-wide text-foreground",
+      )}
     >
       <Header />
       <main className="flex-1 overflow-x-clip">
@@ -131,10 +144,10 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
         <section className={cn("relative pt-36 text-center sm:pt-44", SKY)}>
           <Container>
             <Reveal y={24}>
-              <h1 className="mx-auto mt-7 max-w-5xl text-5xl leading-none font-normal sm:text-6xl lg:text-[5.25rem]">
+              <h1 className="mx-auto mt-7 max-w-5xl text-5xl leading-none font-normal tracking-normal text-balance sm:text-6xl lg:text-[5.25rem]">
                 <Accent text={service.headline} />
               </h1>
-              <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-foreground/75 sm:text-xl">
+              <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-pretty text-foreground/75 sm:text-xl">
                 {service.intro}
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
@@ -225,7 +238,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
               <Reveal className={cn(!overviewArt && "mx-auto max-w-3xl")}>
                 <h2
                   className={cn(
-                    "text-4xl leading-[1.05] font-normal sm:text-5xl",
+                    "text-4xl leading-[1.05] font-normal tracking-normal sm:text-5xl",
                     !overviewArt && "text-center",
                   )}
                 >
@@ -369,7 +382,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                   <Reveal delay={i * 0.08} y={24}>
                     <span
                       className={cn(
-                        "relative z-10 flex size-14 items-center justify-center rounded-full font-slab text-2xl ring-8 ring-background",
+                        "relative z-10 flex size-14 items-center justify-center rounded-full text-2xl font-semibold ring-8 ring-background",
                         tone(i),
                       )}
                     >
@@ -571,7 +584,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                     <dt className="mx-auto mt-3 max-w-56 text-base text-foreground/75">
                       {s.label}
                     </dt>
-                    <dd className="font-slab text-6xl text-ink-blue sm:text-7xl">
+                    <dd className="text-6xl font-semibold tracking-normal text-ink-blue sm:text-7xl">
                       {s.value}
                     </dd>
                   </div>
@@ -717,7 +730,7 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                 !ctaArt && "pb-16 sm:pb-24",
               )}
             >
-              <h2 className="mx-auto max-w-4xl text-4xl leading-none font-normal sm:text-6xl lg:text-7xl">
+              <h2 className="mx-auto max-w-4xl text-4xl leading-none font-normal tracking-normal text-balance sm:text-6xl lg:text-7xl">
                 <Accent text={service.ctaTitle} />
               </h2>
               <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-foreground/75 sm:text-xl">
