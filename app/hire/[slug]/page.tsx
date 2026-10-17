@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Accent from "@/components/hire/Accent";
+import DiwaliLights from "@/components/hire/DiwaliLights";
 import HireIcon from "@/components/hire/HireIcon";
 import Container from "@/components/ui/Container";
 import Footer from "@/components/ui/Footer";
@@ -12,7 +13,7 @@ import JsonLd from "@/components/ui/JsonLd";
 import Reveal from "@/components/ui/Reveal";
 import { getPosts } from "@/lib/blog";
 import { BRANDS, LINKS, SITE } from "@/lib/constants";
-import { hireAsset } from "@/lib/hireAssets";
+import { hireAsset, sharedHireAsset } from "@/lib/hireAssets";
 import { HIRE_SHARED, SERVICES, getService } from "@/lib/services";
 import { cn } from "@/lib/utils";
 
@@ -84,7 +85,10 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
   const url = `${SITE.url}/hire/${service.slug}`;
   const others = SERVICES.filter((s) => s.slug !== service.slug);
   const overviewArt = hireAsset(service.slug, "overview.webp");
-  const ctaArt = hireAsset(service.slug, "cta.webp");
+  // A page-specific closing image wins; otherwise every hire page shares one.
+  const ctaArt =
+    hireAsset(service.slug, "cta.png") ?? sharedHireAsset("cta.png");
+  const meRow = sharedHireAsset("me-row.webp");
 
   return (
     <div
@@ -180,21 +184,37 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                 ))}
               </ul>
             </Reveal>
-            <Reveal
-              y={40}
-              delay={0.15}
-              className="relative mx-auto mt-10 aspect-square w-full max-w-sm sm:max-w-md"
-            >
-              <Image
-                src="/portrait.png"
-                alt="Devdeep Ghosh, senior full stack software engineer"
-                fill
-                priority
-                sizes="(min-width: 640px) 28rem, 24rem"
-                className="object-contain object-bottom"
+            {!meRow && (
+              <Reveal
+                y={40}
+                delay={0.15}
+                className="relative mx-auto mt-10 aspect-square w-full max-w-sm sm:max-w-md"
+              >
+                <Image
+                  src="/portrait.png"
+                  alt="Devdeep Ghosh, senior full stack software engineer"
+                  fill
+                  priority
+                  sizes="(min-width: 640px) 28rem, 24rem"
+                  className="object-contain object-bottom"
+                />
+              </Reveal>
+            )}
+          </Container>
+          {meRow && (
+            <Reveal y={40} delay={0.15} className="mt-12">
+              {/* Repeats edge to edge, like a crowd; each copy is the same five illustrations of me. */}
+              <div
+                role="img"
+                aria-label="Illustrations of Devdeep Ghosh: arms crossed, coding on a laptop, waving, thinking, and with a coffee"
+                className="h-32 bg-bottom bg-repeat-x sm:h-44 lg:h-56"
+                style={{
+                  backgroundImage: `url(${meRow})`,
+                  backgroundSize: "auto 100%",
+                }}
               />
             </Reveal>
-          </Container>
+          )}
         </section>
 
         {/* Trust strip */}
@@ -232,13 +252,13 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
             <div
               className={cn(
                 "mx-auto grid max-w-6xl items-center gap-12 lg:gap-16",
-                overviewArt && "lg:grid-cols-2",
+                overviewArt && "lg:grid-cols-[1.5fr_1fr]",
               )}
             >
               <Reveal className={cn(!overviewArt && "mx-auto max-w-3xl")}>
                 <h2
                   className={cn(
-                    "text-4xl leading-[1.05] font-normal tracking-normal sm:text-5xl",
+                    "text-4xl leading-[1.05] font-normal tracking-normal text-balance sm:text-5xl",
                     !overviewArt && "text-center",
                   )}
                 >
@@ -275,13 +295,13 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                 <Reveal
                   delay={0.1}
                   y={32}
-                  className="relative aspect-4/3 overflow-hidden rounded-4xl bg-sky-1"
+                  className="relative mx-auto aspect-4/3 w-full max-w-md overflow-hidden rounded-4xl bg-sky-1"
                 >
                   <Image
                     src={overviewArt}
                     alt=""
                     fill
-                    sizes="(min-width: 1024px) 36rem, 90vw"
+                    sizes="(min-width: 1024px) 28rem, 90vw"
                     className="object-cover"
                   />
                 </Reveal>
@@ -289,6 +309,11 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
             </div>
           </Container>
         </section>
+
+        <DiwaliLights
+          seed={7}
+          className="-my-14 bg-linear-to-b from-background to-surface"
+        />
 
         {/* What I do */}
         <section className="bg-surface py-20 sm:py-28">
@@ -363,8 +388,10 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
           </Container>
         </section>
 
+        <DiwaliLights seed={23} className="-my-14" />
+
         {/* Process */}
-        <section className="border-t border-border py-20 sm:py-28">
+        <section className="py-20 sm:py-28">
           <Container>
             <Reveal>
               <h2 className={H2}>
@@ -516,6 +543,11 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
           </Container>
         </section>
 
+        <DiwaliLights
+          seed={41}
+          className="-my-14 bg-linear-to-b from-background to-surface"
+        />
+
         {/* Proof */}
         <section className="bg-surface py-20 sm:py-28">
           <Container>
@@ -645,6 +677,11 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
           </Container>
         </section>
 
+        <DiwaliLights
+          seed={88}
+          className="-my-14 bg-linear-to-b from-background to-surface"
+        />
+
         {/* FAQ */}
         <section className="bg-surface py-20 sm:py-28">
           <Container>
@@ -750,13 +787,13 @@ const ServicePage = async ({ params }: PageProps<"/hire/[slug]">) => {
                 </a>
               </div>
               {ctaArt && (
-                <div className="relative mx-auto mt-12 aspect-21/9 w-full max-w-4xl">
+                <div className="relative mx-auto mt-10 mb-6 aspect-1376/250 w-full max-w-5xl">
                   <Image
                     src={ctaArt}
                     alt=""
                     fill
-                    sizes="(min-width: 1024px) 56rem, 90vw"
-                    className="object-contain object-bottom"
+                    sizes="(min-width: 1024px) 64rem, 90vw"
+                    className="object-contain"
                   />
                 </div>
               )}

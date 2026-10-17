@@ -10,6 +10,7 @@ import Name from "@/components/sections/Name";
 import Works from "@/components/sections/Works";
 import HireServices from "@/components/sections/HireServices";
 import Contact from "@/components/sections/Contact";
+import PushLoader from "@/components/ui/PushLoader";
 
 export const metadata: Metadata = {
   title: HOMEPAGE_METADATA.title,
@@ -53,6 +54,7 @@ export default function Home() {
           inLanguage: "en",
         }}
       />
+      <PushLoader />
       <Header />
       <main className="flex-1">
         <Hero />

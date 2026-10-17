@@ -1,498 +1,424 @@
 import * as THREE from "three";
-import {
-  BAND_ANGLE,
-  BANG_AT,
-  BURST_SCREEN_X,
-  CENTER,
-  CORE_PLANET,
-  IMG_H,
-  IMG_W,
-  ORBIT_ARCS,
-  PLANETS,
-  RAYS,
-  REVEAL_FOR,
-  REVEAL_RADIUS,
-  SPARKLES,
-  at,
-  clamp01,
-  easeOutBack,
-  easeOutCubic,
-} from "./layout";
-import {
-  CORONA_FRAG,
-  GLITTER_FRAG,
-  GLITTER_VERT,
-  RAY_FRAG,
-  RAY_VERT,
-  SKY_FRAG,
-  STAR_FRAG,
-  STAR_VERT,
-  STREAK_FRAG,
-  WORLD_VERT,
-} from "./shaders";
-import { addDetails } from "./details";
-import { makePlanetMesh } from "./planet";
-import { addWishStar, type WishState } from "./wish";
+import { FRAG, SIM_FRAG, VERT } from "./shaders";
 
 /**
- * A live Three.js take on the hero artwork: deep space with a Milky Way band, a starburst
- * fanning out from behind a central planet, planets, orbit lines, stars, cursor-shy glitter and
- * the odd shooting star, plus the finer layers in details.ts. It opens with a big bang: the core charges, flashes, and a shockwave
- * reveals the scene.
+ * The hero's live backdrop: a still river at dusk, running out through layered hills toward
+ * the horizon, ray traced in a full-screen pass. "Devdeep" means the divine lamp, so the scene opens with a lamp rising
+ * where the river meets the sky.
  *
- * The scene is laid out in the artwork's own pixel space (1920×1088, origin at its centre,
- * y up) and the orthographic camera "covers" the section the way object-cover would.
+ * The water near the camera is a small wave simulation. A click drops a stone into it; moving
+ * the cursor leads a fish, which follows with a little lag, beats its tail and leaves a wake.
+ * Now and then something rises far off, so the river never looks frozen.
  */
 
-/** Builds the scene into host and starts it; returns its teardown, and a way to release the wish star. */
-export const createHeroScene = (host: HTMLElement, onWish: (state: WishState) => void) => {
+/** Site palette (globals.css brand colours and the hero artwork), as display sRGB. */
+const PALETTE = {
+  uZenith: "#060b2e",
+  uCobalt: "#0a35d6",
+  uLavender: "#8f8cf2",
+  uPetal: "#fde5f4",
+  uGlow: "#fff6fb",
+  uDeep: "#031046",
+  uForest: "#050a26",
+};
+
+/** Seconds the lamp takes to rise, and where it settles above the horizon (radians). */
+const RISE_FOR = 3.2;
+const LAMP_ELEVATION = 0.04;
+
+/** The simulated patch of water, in world units (x across, z away from the camera). */
+const SIM = { minX: -30, maxX: 30, minZ: -52, maxZ: 0.8 };
+const SIM_STEPS_PER_SECOND = 60;
+const MAX_DROPS = 12;
+
+const CAMERA_HEIGHT = 1.15;
+
+/**
+ * Tree-line silhouette, as a coverage mask. Source: "Forest Treeline Silhouette 3" by GDJ,
+ * openclipart.org/detail/315866 (public domain).
+ */
+const TREELINE = { src: "/hero/treeline.webp", aspect: 800 / 237, height: 237 };
+
+const srgb = (hex: string) => new THREE.Color(hex).convertLinearToSRGB();
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+const easeOutCubic = (x: number) => 1 - (1 - x) ** 3;
+const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+
+/** Builds the scene into host and starts it; returns its teardown, or null without WebGL. */
+export const createHeroScene = (host: HTMLElement) => {
+  let renderer: THREE.WebGLRenderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+  } catch {
+    return null;
+  }
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  // The pass is per pixel, so resolution is the main cost; it adapts further below.
+  let pixelRatio = Math.min(window.devicePixelRatio, coarse ? 1 : 1.25);
+  renderer.setPixelRatio(pixelRatio);
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
   renderer.domElement.className = "absolute inset-0 size-full";
   host.appendChild(renderer.domElement);
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-  camera.position.z = 50;
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 10);
+  camera.rotation.order = "YXZ";
+  const quadGeo = new THREE.PlaneGeometry(2, 2);
 
-  // The shaders write display-ready (sRGB) colours, so pass them through unconverted.
-  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  // ---------------------------------------------------------------- ripple simulation
 
-  const time = { value: 0 };
-  // The cursor in world space, for the glitter to scatter from; mouseOn fades it in and out.
-  const mouseWorld = new THREE.Vector2(1e5, 1e5);
-  const mouseOn = { value: 0 };
-  const since = { value: 0 };
-  const center = new THREE.Vector2(...CENTER);
+  const simSize = new THREE.Vector2(SIM.maxX - SIM.minX, SIM.maxZ - SIM.minZ);
+  const simW = coarse ? 320 : 560;
+  const simH = Math.round((simW * simSize.y) / simSize.x);
+  const canSimulate =
+    !reducedMotion &&
+    (renderer.extensions.has("EXT_color_buffer_half_float") || renderer.extensions.has("EXT_color_buffer_float"));
+  const makeTarget = () =>
+    new THREE.WebGLRenderTarget(simW, simH, {
+      type: THREE.HalfFloatType,
+      format: THREE.RGBAFormat,
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      depthBuffer: false,
+    });
+  let simRead = canSimulate ? makeTarget() : null;
+  let simWrite = canSimulate ? makeTarget() : null;
 
-  const skyUniforms = {
-    uTime: time,
-    uCenter: { value: center },
-    uBand: { value: BAND_ANGLE },
-    uReveal: { value: 0 },
-    uFront: { value: 0 },
-    uFlash: { value: 0 },
+  const drops = Array.from({ length: MAX_DROPS }, () => new THREE.Vector4());
+  let dropCount = 0;
+  const simUniforms = {
+    uPrev: { value: simRead?.texture ?? null },
+    uTexel: { value: new THREE.Vector2(1 / simW, 1 / simH) },
+    uSize: { value: simSize },
+    uDrops: { value: drops },
+    uDropCount: { value: 0 },
   };
-  // The sky is a little larger than the artwork so the camera never sees past it.
-  const sky = new THREE.Mesh(
-    new THREE.PlaneGeometry(IMG_W * 1.2, IMG_H * 1.2),
-    new THREE.ShaderMaterial({
-      uniforms: skyUniforms,
-      vertexShader: WORLD_VERT,
-      fragmentShader: SKY_FRAG,
-      depthTest: false,
-    }),
-  );
-  scene.add(sky);
-
-  // Everything in the "galaxy" sways gently around the starburst.
-  const galaxy = new THREE.Group();
-  galaxy.position.set(CENTER[0], CENTER[1], 0);
-  galaxy.renderOrder = 1;
-  scene.add(galaxy);
-
-  const lineMat = new THREE.LineBasicMaterial({
-    // Raw display values, like the shaders (built-in colours would be linearised).
-    color: new THREE.Color().setRGB(0.96, 0.93, 0.96, THREE.LinearSRGBColorSpace),
-    transparent: true,
-    opacity: 0,
+  const simScene = new THREE.Scene();
+  const simMat = new THREE.ShaderMaterial({
+    uniforms: simUniforms,
+    vertexShader: VERT,
+    fragmentShader: SIM_FRAG,
     depthTest: false,
   });
-  const arc = (radius: number, from: number, to: number) => {
-    const pts: InstanceType<typeof THREE.Vector3>[] = [];
-    for (let i = 0; i <= 96; i++) {
-      const a = THREE.MathUtils.degToRad(from + ((to - from) * i) / 96);
-      pts.push(new THREE.Vector3(Math.cos(a) * radius, Math.sin(a) * radius, 0));
-    }
-    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat);
+  const simQuad = new THREE.Mesh(quadGeo, simMat);
+  simQuad.frustumCulled = false;
+  simScene.add(simQuad);
+
+  /** Queue a disturbance at a point on the water (world x, z). */
+  const drop = (x: number, z: number, radius: number, strength: number) => {
+    if (dropCount >= MAX_DROPS) return;
+    const u = (x - SIM.minX) / simSize.x;
+    const v = (z - SIM.minZ) / simSize.y;
+    if (u < 0 || u > 1 || v < 0 || v > 1) return;
+    drops[dropCount++].set(u, v, radius, strength);
   };
-  galaxy.add(...ORBIT_ARCS.map(([radius, from, to]) => arc(radius, from, to)));
 
-  // Spokes from the starburst out to the planets and edges, plus a small constellation.
-  const spokeEnds = [
-    [975, -40], [790, 120], [1190, 218], [1385, 290], [612, 175], [565, 300], [1300, 520],
-  ];
-  const spokePts: number[] = [];
-  for (const [x, y] of spokeEnds) {
-    const [wx, wy] = at(x, y);
-    const dx = wx - CENTER[0];
-    const dy = wy - CENTER[1];
-    const len = Math.hypot(dx, dy);
-    spokePts.push((dx / len) * 50, (dy / len) * 50, 0, dx, dy, 0);
-  }
-  const constellation = [[1100, 365], [1190, 410], [1320, 425], [1190, 410], [1200, 472]];
-  for (let i = 0; i < constellation.length - 1; i += 2) {
-    for (const [x, y] of [constellation[i], constellation[i + 1]]) {
-      const [wx, wy] = at(x, y);
-      spokePts.push(wx - CENTER[0], wy - CENTER[1], 0);
-    }
-  }
-  const spokeGeo = new THREE.BufferGeometry();
-  spokeGeo.setAttribute("position", new THREE.Float32BufferAttribute(spokePts, 3));
-  galaxy.add(new THREE.LineSegments(spokeGeo, lineMat));
-
-  // Stars: a field across open space, a dense drift along the Milky Way, and the sparkles.
-  const starPos: number[] = [];
-  const starSize: number[] = [];
-  const starPhase: number[] = [];
-  const starSparkle: number[] = [];
-  const rand = (() => {
-    let s = 7;
-    return () => ((s = (s * 16807) % 2147483647) / 2147483647);
-  })();
-  const gauss = () => Math.sqrt(-2 * Math.log(rand() + 1e-9)) * Math.cos(2 * Math.PI * rand());
-  const addStar = (x: number, y: number, size: number, sparkle = 0) => {
-    starPos.push(x, y, 0);
-    starSize.push(size);
-    starPhase.push(rand());
-    starSparkle.push(sparkle);
+  const stepSim = () => {
+    if (!simRead || !simWrite) return;
+    simUniforms.uPrev.value = simRead.texture;
+    simUniforms.uDropCount.value = dropCount;
+    renderer.setRenderTarget(simWrite);
+    renderer.render(simScene, camera);
+    [simRead, simWrite] = [simWrite, simRead];
+    dropCount = 0;
   };
-  for (let n = 0; n < 420; n++) {
-    const x = (rand() - 0.5) * IMG_W * 1.2;
-    const y = (rand() - 0.5) * IMG_H * 1.2;
-    addStar(x, y, rand() < 0.1 ? 7 : 2.5 + rand() * 3);
-  }
-  const bandDir = [Math.cos(BAND_ANGLE), Math.sin(BAND_ANGLE)];
-  for (let n = 0; n < 1600; n++) {
-    const along = (rand() - 0.5) * 2400;
-    const across = gauss() * 95;
-    const x = bandDir[0] * along - bandDir[1] * across;
-    const y = bandDir[1] * along + bandDir[0] * across;
-    addStar(x, y, rand() < 0.04 ? 5 : 1.4 + rand() * 1.8);
-  }
-  for (const [x, y, size] of SPARKLES) {
-    const [wx, wy] = at(x, y);
-    addStar(wx - CENTER[0], wy - CENTER[1], size, 1);
-  }
-  const starGeo = new THREE.BufferGeometry();
-  starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
-  starGeo.setAttribute("aSize", new THREE.Float32BufferAttribute(starSize, 1));
-  starGeo.setAttribute("aPhase", new THREE.Float32BufferAttribute(starPhase, 1));
-  starGeo.setAttribute("aSparkle", new THREE.Float32BufferAttribute(starSparkle, 1));
-  const starScale = { value: 1 };
-  galaxy.add(
-    new THREE.Points(
-      starGeo,
-      new THREE.ShaderMaterial({
-        uniforms: { uTime: time, uScale: starScale, uSince: since },
-        vertexShader: STAR_VERT,
-        fragmentShader: STAR_FRAG,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-      }),
-    ),
-  );
 
-  // The starburst: a corona hugging the core planet, and instanced ray strips fanning out
-  // from behind its rim (the planet itself is drawn with the others, on top).
-  const corona = {
-    uTime: time,
-    uRadius: { value: CORE_PLANET.r },
-    uCharge: { value: 0 },
-    uSettled: { value: 0 },
+  // ---------------------------------------------------------------- the river
+
+  const uniforms = {
+    uTime: { value: 0 },
+    uCamPos: { value: new THREE.Vector3(0, CAMERA_HEIGHT, 0) },
+    uCamRot: { value: new THREE.Matrix3() },
+    uTan: { value: new THREE.Vector2(1, 1) },
+    uSun: { value: new THREE.Vector3(0, 0, -1) },
+    uRise: { value: 0 },
+    uDim: { value: 0 },
+    uCloudOct: { value: coarse ? 4 : 5 },
+    uPix: { value: 0.001 },
+    uSim: { value: simRead?.texture ?? null },
+    uSimOn: { value: canSimulate ? 1 : 0 },
+    uSimRect: { value: new THREE.Vector4(SIM.minX, SIM.minZ, simSize.x, simSize.y) },
+    uSimTexel: { value: new THREE.Vector2(1 / simW, 1 / simH) },
+    uTrees: { value: null as THREE.Texture | null },
+    uTreesOn: { value: 0 },
+    uTreesAspect: { value: TREELINE.aspect },
+    uTreesTexH: { value: TREELINE.height },
+    uFish: { value: new THREE.Vector4(0, -8, -Math.PI / 2, 0) },
+    uFishPhase: { value: 0 },
+    ...Object.fromEntries(Object.entries(PALETTE).map(([k, hex]) => [k, { value: srgb(hex) }])),
   };
-  galaxy.add(
-    new THREE.Mesh(
-      new THREE.PlaneGeometry(600, 600),
-      new THREE.ShaderMaterial({
-        uniforms: corona,
-        vertexShader: WORLD_VERT,
-        fragmentShader: CORONA_FRAG,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-      }),
-    ),
-  );
-
-  const strip = new THREE.PlaneGeometry(1, 1).translate(0.5, 0, 0);
-  const rayGeo = new THREE.InstancedBufferGeometry();
-  rayGeo.setIndex(strip.getIndex());
-  rayGeo.setAttribute("position", strip.getAttribute("position"));
-  rayGeo.instanceCount = RAYS.count;
-  const rayAttr = (fill: (i: number) => number) =>
-    new THREE.InstancedBufferAttribute(Float32Array.from({ length: RAYS.count }, (_, i) => fill(i)), 1);
-  rayGeo.setAttribute("aAngle", rayAttr((i) => ((i + rand() * 0.8) / RAYS.count) * Math.PI * 2));
-  // Mostly short rays with the occasional long one, like the painted burst.
-  rayGeo.setAttribute("aLength", rayAttr(() => RAYS.minLength + (RAYS.maxLength - RAYS.minLength) * rand() ** 2.2));
-  rayGeo.setAttribute("aWidth", rayAttr(() => 1.2 + rand() * 2.4));
-  rayGeo.setAttribute("aPhase", rayAttr(() => rand()));
-  const rays = { uTime: time, uRadius: { value: CORE_PLANET.r * 0.85 }, uGrow: { value: 0 } };
-  galaxy.add(
-    new THREE.Mesh(
-      rayGeo,
-      new THREE.ShaderMaterial({
-        uniforms: rays,
-        vertexShader: RAY_VERT,
-        fragmentShader: RAY_FRAG,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-      }),
-    ),
-  );
-
-  // Glittering motes across the sky, and a spray of dust around the starburst.
-  const glPos: number[] = [];
-  const glSize: number[] = [];
-  const glPhase: number[] = [];
-  const glColor: number[] = [];
-  const addGlitter = (rx: number, ry: number, size: number, color: number[]) => {
-    glPos.push(rx + CENTER[0], ry + CENTER[1], 0);
-    glSize.push(size);
-    glPhase.push(rand());
-    glColor.push(...color);
-  };
-  const tints = [[0.88, 0.92, 1], [1, 0.86, 0.95], [0.8, 0.76, 1]];
-  for (let n = 0; n < 2400; n++) {
-    const rx = (rand() - 0.5) * IMG_W * 1.1 - CENTER[0];
-    const ry = (rand() - 0.5) * IMG_H * 1.1 - CENTER[1];
-    addGlitter(rx, ry, 1.6 + rand() * 1.8, tints[Math.floor(rand() * tints.length)]);
-  }
-  for (let n = 0; n < 700; n++) {
-    const a = rand() * Math.PI * 2;
-    const r = 40 + Math.abs(gauss()) * 260;
-    addGlitter(Math.cos(a) * r * 1.3, Math.sin(a) * r, 1.2 + rand() * 2.2, [1, 0.94, 1]);
-  }
-  const glGeo = new THREE.BufferGeometry();
-  glGeo.setAttribute("position", new THREE.Float32BufferAttribute(glPos, 3));
-  glGeo.setAttribute("aSize", new THREE.Float32BufferAttribute(glSize, 1));
-  glGeo.setAttribute("aPhase", new THREE.Float32BufferAttribute(glPhase, 1));
-  glGeo.setAttribute("aColor", new THREE.Float32BufferAttribute(glColor, 3));
-  const glitter = new THREE.Points(
-    glGeo,
-    new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: time,
-        uScale: starScale,
-        uSince: since,
-        uCenter: { value: center },
-        uMouse: { value: mouseWorld },
-        uMouseOn: mouseOn,
-      },
-      vertexShader: GLITTER_VERT,
-      fragmentShader: GLITTER_FRAG,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthTest: false,
-    }),
-  );
-  glitter.renderOrder = 1;
-  scene.add(glitter);
-
-  // Shooting stars streak across open sky every few seconds.
-  const streaks = [0, 1].map((i) => {
-    const opacity = { value: 0 };
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(1, 1),
-      new THREE.ShaderMaterial({
-        uniforms: { uOpacity: opacity },
-        vertexShader: WORLD_VERT,
-        fragmentShader: STREAK_FRAG,
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-      }),
-    );
-    mesh.scale.set(260, 2.5, 1);
-    mesh.renderOrder = 1;
-    scene.add(mesh);
-    return { mesh, opacity, period: 5.5 + i * 3.1, offset: 2.5 + i * 2.2, cycle: -1, x: 0, y: 0, a: 0 };
+  // The trees fade in once their small texture arrives; the scene renders fine without them.
+  let disposed = false;
+  let treeTex: THREE.Texture | null = null;
+  new THREE.TextureLoader().load(TREELINE.src, (tex) => {
+    if (disposed) return tex.dispose();
+    tex.wrapS = THREE.MirroredRepeatWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.minFilter = THREE.LinearMipmapLinearFilter;
+    tex.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+    tex.colorSpace = THREE.NoColorSpace;
+    treeTex = tex;
+    uniforms.uTrees.value = tex;
+    uniforms.uTreesOn.value = 1;
+    if (reducedMotion) still();
   });
 
-  // Planets drift on their own slow cycles and pop in as the shockwave reaches them.
-  const planets = [...PLANETS, CORE_PLANET].map((p, i) => {
-    const mesh = makePlanetMesh(p, i * 3.7, time);
-    const [x, y] = at(p.x, p.y);
-    mesh.position.set(x, y, 0);
-    mesh.renderOrder = 2;
-    scene.add(mesh);
-    const reach = Math.max(0, Math.hypot(x - CENTER[0], y - CENTER[1]) - p.r) / REVEAL_RADIUS;
-    return {
-      mesh,
-      x,
-      y,
-      phase: i * 1.9,
-      amp: p === CORE_PLANET ? 0 : p.r > 100 ? 6 : p.r > 30 ? 12 : 16,
-      // When the shockwave's front reaches the planet's edge (inverse of easeOutCubic).
-      appear: BANG_AT + REVEAL_FOR * (1 - Math.cbrt(1 - Math.min(reach, 0.999))),
-    };
-  });
+  const scene = new THREE.Scene();
+  const mat = new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG, depthTest: false });
+  const quad = new THREE.Mesh(quadGeo, mat);
+  quad.frustumCulled = false;
+  scene.add(quad);
 
-  const updateDetails = addDetails({
-    scene,
-    galaxy,
-    planets: planets.map((p) => p.mesh),
-    time,
-    since,
-    starScale,
-    rand,
-    gauss,
-  });
-
-  const wish = addWishStar(scene, onWish);
-
-  let viewW = 1;
-  let viewH = 1;
-  let wide = true;
+  /**
+   * Framing. Wide layouts sit the horizon just below the middle, with the river (and the lamp
+   * at its end) running off to the right of the hero card; narrow ones raise the horizon above
+   * the card and look straight down the river.
+   */
+  const frame = { pitch: 0, yaw: 0, tanX: 1, tanY: 1 };
   const resize = () => {
     const { clientWidth: w, clientHeight: h } = host;
     renderer.setSize(w, h, false);
-    // Cover: the artwork fills the viewport, cropping whichever axis overflows.
-    const worldScale = Math.max(w / IMG_W, h / IMG_H);
-    viewW = w / worldScale;
-    viewH = h / worldScale;
-    wide = w >= 768 && w > h;
-    camera.left = -viewW / 2;
-    camera.right = viewW / 2;
-    camera.top = viewH / 2;
-    camera.bottom = -viewH / 2;
-    starScale.value = worldScale * renderer.getPixelRatio();
+    const wide = w >= 768 && w > h;
+    camera.fov = wide ? 46 : 48;
+    camera.aspect = w / h;
+    frame.tanY = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    frame.tanX = frame.tanY * camera.aspect;
+    uniforms.uTan.value.set(frame.tanX, frame.tanY);
+    uniforms.uPix.value = (2 * frame.tanY) / Math.max(1, h * pixelRatio);
+    const horizon = wide ? 0.56 : 0.3;
+    frame.pitch = Math.atan((2 * horizon - 1) * frame.tanY);
+    frame.yaw = Math.atan((wide ? 0.34 : 0) * frame.tanX);
   };
   resize();
-  const ro = new ResizeObserver(resize);
+
+  const setLamp = (rise: number) => {
+    const elevation = THREE.MathUtils.lerp(-0.03, LAMP_ELEVATION, rise);
+    uniforms.uSun.value.set(0, Math.sin(elevation), -Math.cos(elevation));
+    uniforms.uRise.value = rise;
+  };
+
+  const place = (t: number, lookX: number, lookY: number) => {
+    // Drifting on still water: barely any bob.
+    uniforms.uCamPos.value.y = CAMERA_HEIGHT + Math.sin(t * 0.4) * 0.015;
+    camera.rotation.set(frame.pitch + lookY * 0.02, frame.yaw - lookX * 0.035, Math.sin(t * 0.23) * 0.002);
+    camera.updateMatrixWorld();
+    uniforms.uCamRot.value.setFromMatrix4(camera.matrixWorld);
+  };
+
+  // ---------------------------------------------------------------- pointer → water
+
+  const dir = new THREE.Vector3();
+  /** Where a screen point lands on the water (world x, z), or null above the horizon. */
+  const toWater = (clientX: number, clientY: number) => {
+    const rect = host.getBoundingClientRect();
+    const u = (clientX - rect.left) / rect.width;
+    const v = (clientY - rect.top) / rect.height;
+    if (u < 0 || u > 1 || v < 0 || v > 1) return null;
+    dir.set((u * 2 - 1) * frame.tanX, (1 - v * 2) * frame.tanY, -1).applyMatrix3(uniforms.uCamRot.value).normalize();
+    if (dir.y > -0.005) return null;
+    const t = -uniforms.uCamPos.value.y / dir.y;
+    return { x: uniforms.uCamPos.value.x + dir.x * t, z: uniforms.uCamPos.value.z + dir.z * t };
+  };
+
+  /**
+   * The fish. It chases the cursor's spot on the water, easing in as it arrives, turns with
+   * a limited rate, and beats its tail faster the faster it swims.
+   */
+  const fish = {
+    x: 4,
+    z: -10,
+    vx: 0,
+    vz: 0,
+    heading: -Math.PI / 2,
+    phase: 0,
+    tx: 4,
+    tz: -10,
+    lastSeen: -100,
+    visible: 0,
+    wasSwimming: false,
+  };
+
+  const look = { x: 0, y: 0, tx: 0, ty: 0 };
+  let now = 0;
+  const onPointerMove = (e: PointerEvent) => {
+    if (e.pointerType === "mouse") {
+      look.tx = e.clientX / window.innerWidth - 0.5;
+      look.ty = e.clientY / window.innerHeight - 0.5;
+    }
+    const hit = toWater(e.clientX, e.clientY);
+    if (!hit) return;
+    fish.tx = THREE.MathUtils.clamp(hit.x, SIM.minX + 2, SIM.maxX - 2);
+    fish.tz = THREE.MathUtils.clamp(hit.z, SIM.minZ + 2, -0.8);
+    // Out of sight, it rises from the deep just behind the cursor rather than crossing the river.
+    if (fish.visible < 0.03) {
+      fish.x = fish.tx + 1.2;
+      fish.z = fish.tz - 1.6;
+      fish.vx = fish.vz = 0;
+      fish.heading = Math.atan2(fish.tz - fish.z, fish.tx - fish.x);
+    }
+    fish.lastSeen = now;
+  };
+
+  const onPointerDown = (e: PointerEvent) => {
+    if (e.button !== 0) return;
+    const target = e.target as Element | null;
+    if (target?.closest("a, button, input, textarea, select, [role='button']")) return;
+    const hit = toWater(e.clientX, e.clientY);
+    if (!hit) return;
+    // A stone: one firm drop, and a smaller rebound just inside it.
+    drop(hit.x, hit.z, 0.85, -0.55);
+    drop(hit.x, hit.z, 0.35, 0.25);
+  };
+
+  window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerdown", onPointerDown, { passive: true });
+
+  const swim = (dt: number) => {
+    const dx = fish.tx - fish.x;
+    const dz = fish.tz - fish.z;
+    const dist = Math.hypot(dx, dz);
+    // Arrive: full speed when far, easing off close in.
+    const want = Math.min(6, dist * 3.2);
+    const wx = dist > 0.05 ? (dx / dist) * want : 0;
+    const wz = dist > 0.05 ? (dz / dist) * want : 0;
+    const k = 1 - Math.exp(-dt * 3.2);
+    fish.vx += (wx - fish.vx) * k;
+    fish.vz += (wz - fish.vz) * k;
+    const speed = Math.hypot(fish.vx, fish.vz);
+    if (speed > 0.08) {
+      // Fish can't turn on the spot.
+      const turn = wrapAngle(Math.atan2(fish.vz, fish.vx) - fish.heading);
+      fish.heading = wrapAngle(fish.heading + THREE.MathUtils.clamp(turn, -dt * 4.5, dt * 4.5));
+    }
+    // Swim along the heading, so the path curves instead of sliding sideways.
+    fish.x += Math.cos(fish.heading) * speed * dt;
+    fish.z += Math.sin(fish.heading) * speed * dt;
+    fish.phase += dt * (3 + speed * 4.5);
+
+    // Visible while the cursor has been over the water recently.
+    const present = now - fish.lastSeen < 4 ? 1 : 0;
+    fish.visible += (present - fish.visible) * (1 - Math.exp(-dt * 1.5));
+
+    // The wake: the head pushes a little water up, the tail swishes from side to side.
+    const swimming = speed > 0.25;
+    if (swimming && fish.visible > 0.05) {
+      const fx = Math.cos(fish.heading);
+      const fz = Math.sin(fish.heading);
+      const effort = Math.min(1, 0.3 + speed / 3);
+      const wag = Math.sin(fish.phase) * 0.22;
+      drop(fish.x + fx * 0.45, fish.z + fz * 0.45, 0.3, 0.012 * effort);
+      drop(fish.x - fx * 0.7 - fz * wag, fish.z - fz * 0.7 + fx * wag, 0.24, -0.02 * effort);
+    }
+    // Coming to rest, it touches the surface: one small ring.
+    if (fish.wasSwimming && speed < 0.2 && fish.visible > 0.3) drop(fish.x, fish.z, 0.3, -0.08);
+    fish.wasSwimming = speed > 0.5 ? true : speed < 0.2 ? false : fish.wasSwimming;
+
+    uniforms.uFish.value.set(fish.x, fish.z, fish.heading, fish.visible * 0.9);
+    uniforms.uFishPhase.value = fish.phase;
+  };
+
+  // Something rises out on the river every few seconds.
+  let nextRise = 2.5;
+  const ambient = (t: number) => {
+    if (t < nextRise) return;
+    nextRise = t + 3 + Math.random() * 5;
+    const z = THREE.MathUtils.lerp(-7, -24, Math.random());
+    const x = THREE.MathUtils.lerp(-16, 16, Math.random());
+    drop(x, z, 0.4, -0.22);
+  };
+
+  // ---------------------------------------------------------------- loop
+
+  /** A single settled frame, for reduced motion. */
+  const still = () => {
+    uniforms.uTime.value = 12;
+    setLamp(1);
+    place(12, 0, 0);
+    renderer.render(scene, camera);
+  };
+
+  const ro = new ResizeObserver(() => {
+    resize();
+    if (reducedMotion) still();
+  });
   ro.observe(host);
 
-  // Pointer: parallax from its place in the window, and its position over the scene (0–1).
-  const pointer = { x: 0, y: 0, tx: 0, ty: 0, sx: 0, sy: 0, over: false };
-  const onPointer = (e: PointerEvent) => {
-    pointer.tx = e.clientX / window.innerWidth - 0.5;
-    pointer.ty = e.clientY / window.innerHeight - 0.5;
-    const rect = host.getBoundingClientRect();
-    pointer.sx = (e.clientX - rect.left) / rect.width;
-    pointer.sy = (e.clientY - rect.top) / rect.height;
-    pointer.over = pointer.sx >= 0 && pointer.sx <= 1 && pointer.sy >= 0 && pointer.sy <= 1;
-  };
-  const onLeave = () => (pointer.over = false);
-  window.addEventListener("pointermove", onPointer);
-  document.addEventListener("pointerleave", onLeave);
-
   const start = performance.now();
-  let lastT = 0;
+  let last = 0;
+  let simClock = 0;
   let scrollEased = 0;
-  const render = (t = (performance.now() - start) / 1000) => {
-    // Frame-rate independent easing: the share of the remaining distance to cover this frame.
-    const dt = Math.min(0.1, Math.max(0, t - lastT));
-    lastT = t;
+  let slowFrames = 0;
+  let sampled = 0;
+  const render = () => {
+    const t = (performance.now() - start) / 1000;
+    const dt = Math.min(0.05, Math.max(0, t - last));
+    last = t;
+    now = t;
     const ease = (rate: number) => 1 - Math.exp(-dt * rate);
-    time.value = t;
 
-    // Big bang: the point charges, flashes, and the shockwave sweeps the scene in.
-    const s = t - BANG_AT;
-    since.value = Math.max(0, s);
-    const reveal = clamp01(s / REVEAL_FOR);
-    skyUniforms.uReveal.value = s < 0 ? 0 : REVEAL_RADIUS * easeOutCubic(reveal);
-    skyUniforms.uFront.value = s < 0 ? 0 : 1 - reveal;
-    skyUniforms.uFlash.value = s < 0 ? 0 : 0.9 * Math.exp(-s * 5);
-    corona.uCharge.value = s < 0 ? (t / BANG_AT) ** 2 : 1 + 2.5 * Math.exp(-s * 3);
-    corona.uSettled.value = clamp01(s / 0.3);
-    rays.uGrow.value = s < 0 ? 0 : easeOutCubic(clamp01(s / 1.4));
-    lineMat.opacity = 0.5 * clamp01((s - 0.8) / 1.4);
+    uniforms.uTime.value = t;
+    setLamp(easeOutCubic(clamp01((t - 0.2) / RISE_FOR)));
 
-    galaxy.rotation.z = Math.sin(t * 0.05) * 0.06;
-    skyUniforms.uBand.value = BAND_ANGLE + galaxy.rotation.z;
+    look.x += (look.tx - look.x) * ease(2);
+    look.y += (look.ty - look.y) * ease(2);
+    place(t, look.x, look.y);
 
-    planets.forEach(({ mesh, x, y, phase, amp, appear }) => {
-      mesh.position.x = x + Math.sin(t * 0.25 + phase) * amp;
-      mesh.position.y = y + Math.cos(t * 0.2 + phase) * amp;
-      mesh.scale.setScalar(Math.max(0, easeOutBack(clamp01((t - appear) / 0.7))));
-    });
-    updateDetails(t);
-
-    for (const st of streaks) {
-      const local = t - st.offset;
-      const cycle = Math.floor(local / st.period);
-      const p = (local - cycle * st.period) / 0.9;
-      if (local < 0 || p > 1) {
-        st.opacity.value = 0;
-        continue;
-      }
-      if (cycle !== st.cycle) {
-        // A fresh start point, heading down-left like the painted flow.
-        st.cycle = cycle;
-        st.x = (rand() - 0.3) * 1100;
-        st.y = (rand() - 0.2) * 600;
-        st.a = Math.PI + 0.35 + (rand() - 0.5) * 0.4;
-      }
-      const travel = p * 520;
-      st.mesh.position.set(
-        CENTER[0] + st.x + Math.cos(st.a) * travel,
-        CENTER[1] + st.y + Math.sin(st.a) * travel,
-        0,
-      );
-      st.mesh.rotation.z = st.a;
-      st.opacity.value = Math.sin(Math.PI * p);
+    if (canSimulate) {
+      swim(dt);
+      ambient(t);
+      // Fixed-rate steps keep ripple speed the same at any frame rate.
+      simClock += dt * SIM_STEPS_PER_SECOND;
+      let steps = Math.min(4, Math.floor(simClock));
+      simClock -= Math.floor(simClock);
+      while (steps-- > 0) stepSim();
+      uniforms.uSim.value = simRead!.texture;
+      renderer.setRenderTarget(null);
     }
 
-    // Zoomed in enough to frame the starburst right of the card, breathing slowly, with a
-    // touch of pointer parallax; it starts tight on the bang and pulls back.
-    pointer.x += (pointer.tx - pointer.x) * ease(2.4);
-    pointer.y += (pointer.ty - pointer.y) * ease(2.4);
-    // Scrolling past the hero pushes the camera in toward the starburst.
-    // Eased toward the scroll position, so the push-in glides instead of stepping with it.
-    scrollEased += (clamp01(window.scrollY / window.innerHeight) - scrollEased) * ease(3);
-    const scroll = scrollEased;
-    const intro = Math.exp(-t * 0.9);
-    const zoom = (1.18 + 0.04 * Math.sin(t * 0.08)) * (1 + 1.6 * intro) * (1 + scroll * 0.8);
-    camera.zoom = zoom;
-    const halfW = viewW / 2 / zoom;
-    const halfH = viewH / 2 / zoom;
-    const burstX = wide ? BURST_SCREEN_X : 0.5;
-    const camX = CENTER[0] - (burstX - 0.5) * 2 * halfW + pointer.x * 24;
-    const camY = CENTER[1] * 0.5 - pointer.y * 16;
-    const clamp = (v: number, lim: number) => Math.max(-lim, Math.min(lim, v));
-    camera.position.x = clamp(camX, Math.max(0, IMG_W / 2 - halfW));
-    camera.position.y = clamp(camY, Math.max(0, IMG_H / 2 - halfH));
-    camera.updateProjectionMatrix();
-    wish.update(t, {
-      camX: camera.position.x,
-      camY: camera.position.y,
-      halfW,
-      halfH,
-      width: host.clientWidth,
-      height: host.clientHeight,
-    });
-
-    // The dust follows the cursor lazily, so it drifts aside rather than scattering.
-    const mx = camera.position.x + (pointer.sx - 0.5) * 2 * halfW;
-    const my = camera.position.y - (pointer.sy - 0.5) * 2 * halfH;
-    if (mouseOn.value < 0.01) mouseWorld.set(mx, my);
-    mouseWorld.x += (mx - mouseWorld.x) * ease(2.1);
-    mouseWorld.y += (my - mouseWorld.y) * ease(2.1);
-    mouseOn.value += ((pointer.over ? 1 : 0) - mouseOn.value) * ease(1.8);
+    // The hero is sticky; as the page slides over it, the river dims toward the dark sections.
+    scrollEased += (clamp01(window.scrollY / window.innerHeight) - scrollEased) * ease(4);
+    uniforms.uDim.value = scrollEased * 0.55;
 
     renderer.render(scene, camera);
+
+    // If frames run long after the first second, drop the resolution a step.
+    if (t > 1 && pixelRatio > 0.6) {
+      sampled++;
+      if (dt > 1 / 40) slowFrames++;
+      if (sampled === 90) {
+        if (slowFrames > 45) {
+          pixelRatio = Math.max(0.6, pixelRatio * 0.8);
+          renderer.setPixelRatio(pixelRatio);
+          resize();
+        }
+        sampled = slowFrames = 0;
+      }
+    }
   };
 
   // Only animate while the hero is on screen.
   let visible = true;
-  const io = new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting;
-  });
+  const io = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting));
   io.observe(host);
-  if (reducedMotion) {
-    render(30);
-  } else {
-    renderer.setAnimationLoop(() => visible && render());
-  }
+  if (reducedMotion) still();
+  else renderer.setAnimationLoop(() => visible && render());
 
   const dispose = () => {
+    disposed = true;
+    treeTex?.dispose();
     renderer.setAnimationLoop(null);
     ro.disconnect();
     io.disconnect();
-    window.removeEventListener("pointermove", onPointer);
-    document.removeEventListener("pointerleave", onLeave);
-    scene.traverse((obj) => {
-      const o = obj as THREE.Mesh;
-      o.geometry?.dispose();
-      const mat = o.material as THREE.Material | undefined;
-      mat?.dispose();
-    });
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerdown", onPointerDown);
+    quadGeo.dispose();
+    mat.dispose();
+    simMat.dispose();
+    simRead?.dispose();
+    simWrite?.dispose();
     renderer.dispose();
     renderer.domElement.remove();
   };
 
-  return { dispose, releaseWish: wish.release };
+  return { dispose };
 };

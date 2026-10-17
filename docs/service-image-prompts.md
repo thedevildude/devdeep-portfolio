@@ -4,9 +4,9 @@ The hire pages pick these files up automatically. Drop them into `public/hire/<s
 
 | File | Size | Where it shows |
 | --- | --- | --- |
-| `overview.webp` | 1600×1200 (4:3) | Beside "How to hire …", turns that section into two columns |
-| `cta.webp` | 2100×900 (21:9), transparent or sky-blue background | Bottom of the closing call-to-action band |
-| `og.png` | 1200×630 | Social share preview (Open Graph) |
+| `overview.webp` | 1184×896 | Beside "How to hire …", turns that section into two columns |
+| `cta.png` (shared: `public/hire/cta.png`) | 1376×250 transparent PNG (cropped from 1376×768) | Bottom of the closing call-to-action band |
+| `og.png` | 1200×630 (cropped from 1376×768) | Social share preview (Open Graph) |
 
 Slugs: `hire-software-engineer-india`, `hire-react-nextjs-developer-india`, `hire-forward-deployed-engineer-india`.
 

@@ -1,0 +1,4 @@
+hauler.webp — 24-frame sprite sheet (6×4 grid, 690×402 px per frame) rendered from
+"Universal Animation Library" by Quaternius — https://quaternius.com/packs/universalanimationlibrary.html
+License: CC0 1.0 Universal (public domain).
+Mannequin + Jog_Fwd_Loop clip, recoloured, posed hauling a rope tied to a cardboard box, rendered with three.js.

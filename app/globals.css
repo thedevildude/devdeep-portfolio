@@ -173,3 +173,24 @@ html.lenis body {
 @theme inline {
   --font-accent: var(--font-barlow-italic), var(--font-barlow), sans-serif;
 }
+
+/* Diwali light dividers on the hire pages: each bulb's glow breathes on its own delay. */
+@keyframes diwali-twinkle {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.diwali-twinkle {
+  animation: diwali-twinkle 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diwali-twinkle {
+    animation: none;
+  }
+}

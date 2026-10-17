@@ -1,410 +1,439 @@
-import { IMG_H, IMG_W } from "./layout";
+/**
+ * GLSL for the hero: a still river at dusk in the site palette.
+ *
+ * Two passes. SIM_FRAG steps a height-field wave simulation of the water near the camera,
+ * which is where clicks and the cursor's "fish" disturb the surface. FRAG then ray traces
+ * every pixel: sky (gradient, clouds, stars, the rising lamp), layered hills, and the
+ * water, which mirrors both through the simulated ripples. Colours are display sRGB.
+ */
 
-/** GLSL for the hero scene. Every shader writes display-ready (sRGB) colours. */
-
-export const NOISE = /* glsl */ `
-  float hash(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 45.32);
-    return fract(p.x * p.y);
-  }
-  float noise(vec2 p) {
-    vec2 i = floor(p), f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x),
-               mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
-  }
-  float fbm(vec2 p) {
-    float v = 0.0, a = 0.5;
-    mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
-    for (int i = 0; i < 4; i++) { v += a * noise(p); p = m * p; a *= 0.5; }
-    return v;
-  }
-`;
-
-export const WORLD_VERT = /* glsl */ `
-  varying vec2 vPos;
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    vec4 world = modelMatrix * vec4(position, 1.0);
-    vPos = world.xy;
-    gl_Position = projectionMatrix * viewMatrix * world;
-  }
-`;
-
-/** The sky: smooth deep space easing to brand blue at the edges, a Milky Way, and the bang. */
-export const SKY_FRAG = /* glsl */ `
-  uniform float uTime;
-  uniform vec2 uCenter;
-  uniform float uBand;    // Milky Way angle
-  uniform float uReveal;  // shockwave radius
-  uniform float uFront;   // shockwave brightness
-  uniform float uFlash;   // white-out at the bang
-  varying vec2 vPos;
-  ${NOISE}
-
-  void main() {
-    float t = uTime;
-    vec2 rel = vPos - uCenter;
-
-    vec3 space = vec3(0.016, 0.035, 0.170);
-    vec3 glow  = vec3(0.070, 0.150, 0.560);
-    vec3 edge  = vec3(0.010, 0.110, 0.520); // deep #0145fd
-
-    // One smooth gradient: navy round the core, deepening blue toward the edges.
-    vec3 col = mix(space, edge, smoothstep(0.25, 1.4, length(rel / vec2(${IMG_W / 2}.0, ${IMG_H / 2}.0))));
-    col = mix(col, glow, exp(-length(rel / vec2(1.3, 1.0)) / 320.0));
-
-    // The Milky Way: a soft band with mottled light and a dark dust lane.
-    vec2 dir = vec2(cos(uBand), sin(uBand));
-    float along = dot(rel, dir);
-    float across = dot(rel, vec2(-dir.y, dir.x));
-    float wobble = (fbm(vec2(along * 0.004, 7.0)) - 0.5) * 120.0;
-    float band = exp(-pow((across - wobble) / 170.0, 2.0));
-    float mott = fbm(vec2(along * 0.006 + t * 0.01, across * 0.014));
-    float dustY = across - wobble + 12.0 + (fbm(vec2(along * 0.008, 3.0)) - 0.5) * 70.0;
-    float dust = exp(-pow(dustY / 26.0, 2.0)) * smoothstep(0.35, 0.6, fbm(vec2(along * 0.01, 9.0)));
-    float milky = band * (0.3 + mott) * (1.0 - dust * 0.75) * smoothstep(1700.0, 500.0, abs(along));
-    vec3 milkyCol = mix(vec3(0.35, 0.45, 1.0), vec3(1.0, 0.86, 0.96), smoothstep(0.4, 1.0, band * mott * 1.5));
-    col += milkyCol * milky * 0.4;
-
-    // Big bang: everything outside the shockwave is still empty space; the front glows.
-    float front = length(rel) - uReveal;
-    col = mix(col, space * 0.5, smoothstep(-30.0, 30.0, front));
-    col += vec3(0.75, 0.85, 1.0) * exp(-abs(front) / 40.0) * uFront;
-    col = mix(col, vec3(1.0, 0.97, 1.0), uFlash);
-
-    gl_FragColor = vec4(col, 1.0);
-  }
+export const VERT = /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
 `;
 
 /**
- * The starburst's rays: one instanced strip per ray, fanning out from behind the core planet.
- * Each strip spans x 0→1 along the ray and y ±0.5 across it, tapering toward the tip.
+ * One step of the wave simulation. r = surface height, g = its vertical velocity.
+ * Disturbances arrive as drops: (u, v, radius in world units, strength).
  */
-export const RAY_VERT = /* glsl */ `
-  attribute float aAngle;
-  attribute float aLength;
-  attribute float aWidth;
-  attribute float aPhase;
-  uniform float uTime;
-  uniform float uRadius; // where rays start: just inside the planet's rim
-  uniform float uGrow;   // 0 → 1 as the rays shoot out after the bang
-  varying float vAlong;
-  varying float vAcross;
-  varying float vShine;
-  void main() {
-    float a = aAngle + uTime * 0.04;
-    vec2 dir = vec2(cos(a), sin(a));
-    vec2 perp = vec2(-dir.y, dir.x);
-    // Each ray breathes and flickers on its own clock.
-    float breathe = 0.7 + 0.3 * sin(uTime * (0.6 + aPhase) + aPhase * 40.0);
-    float len = aLength * breathe * uGrow;
-    float width = aWidth * (1.0 - position.x * 0.8);
-    vec2 p = dir * (uRadius + position.x * len) + perp * position.y * width;
-    vAlong = position.x;
-    vAcross = position.y * 2.0;
-    vShine = (0.55 + 0.45 * sin(uTime * (1.5 + aPhase * 2.0) + aPhase * 90.0)) * breathe;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 0.0, 1.0);
+export const SIM_FRAG = /* glsl */ `
+precision highp float;
+uniform sampler2D uPrev;
+uniform vec2 uTexel;
+uniform vec2 uSize;
+uniform vec4 uDrops[12];
+uniform int uDropCount;
+varying vec2 vUv;
+
+void main() {
+  vec4 info = texture2D(uPrev, vUv);
+  float avg = (
+    texture2D(uPrev, vUv + vec2(uTexel.x, 0.0)).r +
+    texture2D(uPrev, vUv - vec2(uTexel.x, 0.0)).r +
+    texture2D(uPrev, vUv + vec2(0.0, uTexel.y)).r +
+    texture2D(uPrev, vUv - vec2(0.0, uTexel.y)).r) * 0.25;
+  // Slower-than-lattice waves read as calmer water; damping lets rings die away.
+  info.g += (avg - info.r) * 0.42;
+  info.g *= 0.988;
+  info.r += info.g;
+  info.r *= 0.9985;
+
+  for (int i = 0; i < 12; i++) {
+    if (i >= uDropCount) break;
+    vec4 d = uDrops[i];
+    float r = length((vUv - d.xy) * uSize) / d.z;
+    if (r < 1.0) info.r += d.w * (0.5 + 0.5 * cos(r * 3.14159265));
   }
+
+  // Soak up waves within a metre of the edges instead of bouncing them back.
+  vec2 band = 1.0 / uSize;
+  vec2 e = smoothstep(vec2(0.0), band, vUv) * (1.0 - smoothstep(1.0 - band, vec2(1.0), vUv));
+  info.rg *= mix(0.9, 1.0, e.x * e.y);
+  gl_FragColor = info;
+}
 `;
 
-export const RAY_FRAG = /* glsl */ `
-  varying float vAlong;
-  varying float vAcross;
-  varying float vShine;
-  void main() {
-    float fade = pow(1.0 - vAlong, 1.6) * (1.0 - vAcross * vAcross);
-    gl_FragColor = vec4(vec3(0.80, 0.92, 1.0) * fade * vShine * 0.9, 1.0);
+export const FRAG = /* glsl */ `
+precision highp float;
+
+uniform float uTime;
+uniform vec3 uCamPos;
+uniform mat3 uCamRot;
+uniform vec2 uTan;
+uniform vec3 uSun;
+uniform float uRise;
+uniform float uDim;
+uniform int uCloudOct;
+
+uniform sampler2D uSim;
+uniform float uSimOn;
+uniform vec4 uSimRect;
+uniform vec2 uSimTexel;
+
+// The fish: x, z, heading (radians), visibility; and its tail-beat phase.
+uniform vec4 uFish;
+uniform float uFishPhase;
+
+// Site palette.
+uniform vec3 uZenith;
+uniform vec3 uCobalt;
+uniform vec3 uLavender;
+uniform vec3 uPetal;
+uniform vec3 uGlow;
+uniform vec3 uDeep;
+uniform vec3 uForest;
+
+// Angular size of a pixel, for anti-aliased silhouettes.
+uniform float uPix;
+
+// Tree-line silhouette mask (white = tree), and whether it has loaded.
+uniform sampler2D uTrees;
+uniform float uTreesOn;
+uniform float uTreesAspect;
+uniform float uTreesTexH;
+
+varying vec2 vUv;
+
+
+float hash12(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+float vnoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash12(i), hash12(i + vec2(1.0, 0.0)), u.x),
+    mix(hash12(i + vec2(0.0, 1.0)), hash12(i + vec2(1.0, 1.0)), u.x),
+    u.y);
+}
+
+float fbm(vec2 p, int oct) {
+  float v = 0.0;
+  float a = 0.5;
+  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int i = 0; i < 6; i++) {
+    if (i >= oct) break;
+    v += a * vnoise(p);
+    p = r * p * 2.03 + 11.7;
+    a *= 0.5;
   }
-`;
+  return v;
+}
 
-/** A soft corona hugging the core planet's rim; before the bang it is the charging point. */
-export const CORONA_FRAG = /* glsl */ `
-  uniform float uTime;
-  uniform float uRadius;
-  uniform float uCharge; // 0 → 1 while charging, then swells at the bang and settles
-  uniform float uSettled; // 0 before the bang, 1 once the planet is out
-  varying vec2 vUv;
-  void main() {
-    float r = length((vUv * 2.0 - 1.0) * 300.0);
-    float pulse = 1.0 + 0.08 * sin(uTime * 1.4);
-    float point = exp(-r / (6.0 + 30.0 * uCharge)) * (1.0 - uSettled) * 1.6;
-    float rim = exp(-max(r - uRadius, 0.0) / (16.0 * pulse)) * smoothstep(uRadius * 0.7, uRadius, r);
-    float halo = exp(-r / (70.0 * pulse)) * 0.25;
-    // Fade to nothing well inside the quad, so its edges never show, even mid-bang.
-    float edge = 1.0 - smoothstep(220.0, 290.0, r);
-    vec3 col = vec3(0.78, 0.94, 1.0) * (point + (rim * 0.9 + halo) * uSettled * uCharge) * edge;
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
+// ---------------------------------------------------------------- sky
 
-/** A planet: lit disc with drifting surface patches, bright rim and a soft halo. */
-export const PLANET_FRAG = /* glsl */ `
-  uniform float uTime;
-  uniform vec3 uBase;
-  uniform vec3 uAccent;
-  uniform vec3 uAccent2;
-  uniform vec3 uRim;
-  uniform float uSeed;
-  uniform float uOpacity;
-  varying vec2 vUv;
-  ${NOISE}
-
-  void main() {
-    vec2 d = (vUv * 2.0 - 1.0) * 1.3;
-    float r = length(d);
-    float aa = fwidth(r) * 1.5;
-    float disc = 1.0 - smoothstep(1.0 - aa, 1.0, r);
-
-    vec3 n = vec3(d, sqrt(max(0.0, 1.0 - r * r)));
-    float light = dot(n, normalize(vec3(-0.45, 0.5, 0.75)));
-
-    vec2 sp = vec2(atan(n.x, n.z) + uTime * 0.04, n.y) * 1.6;
-    float s = fbm(sp * 2.0 + uSeed);
-    vec3 col = mix(uBase, uAccent, smoothstep(0.45, 0.58, s));
-    col = mix(col, uAccent2, smoothstep(0.62, 0.68, s));
-    col *= 0.65 + 0.45 * light;
-    col = mix(col, uRim, smoothstep(0.72, 1.0, r) * 0.8);
-
-    float halo = (1.0 - disc) * exp(-(r - 1.0) * 14.0) * 0.5;
-    float alpha = max(disc, halo) * uOpacity;
-    gl_FragColor = vec4(mix(uRim, col, disc), alpha);
-  }
-`;
-
-export const STAR_VERT = /* glsl */ `
-  attribute float aSize;
-  attribute float aPhase;
-  attribute float aSparkle;
-  uniform float uTime;
-  uniform float uScale;
-  uniform float uSince; // seconds since the bang
-  varying float vTwinkle;
-  varying float vSparkle;
-  void main() {
-    // Stars fly out from the bang, the farthest arriving last.
-    float k = clamp((uSince - length(position.xy) / 1800.0) / 0.9, 0.0, 1.0);
-    k = 1.0 - pow(1.0 - k, 3.0);
-    vTwinkle = (0.55 + 0.45 * sin(uTime * (0.8 + aPhase * 1.6) + aPhase * 30.0)) * k;
-    vSparkle = aSparkle;
-    gl_PointSize = aSize * uScale * (aSparkle > 0.5 ? 0.85 + 0.25 * vTwinkle : 1.0);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position * k, 1.0);
-  }
-`;
-
-export const STAR_FRAG = /* glsl */ `
-  varying float vTwinkle;
-  varying float vSparkle;
-  void main() {
-    vec2 c = gl_PointCoord * 2.0 - 1.0;
-    float dotGlow = exp(-dot(c, c) * (vSparkle > 0.5 ? 40.0 : 9.0));
-    float cross = (exp(-abs(c.x) * 45.0) * exp(-abs(c.y) * 2.5)
-                 + exp(-abs(c.y) * 45.0) * exp(-abs(c.x) * 2.5)) * vSparkle;
-    float i = (dotGlow + cross) * vTwinkle;
-    gl_FragColor = vec4(vec3(0.92, 0.95, 1.0) * i, 1.0);
-  }
-`;
-
-/** Glitter: fine shimmering motes that drift aside from the cursor, swept in by the bang. */
-export const GLITTER_VERT = /* glsl */ `
-  attribute float aSize;
-  attribute float aPhase;
-  attribute vec3 aColor;
-  uniform float uTime;
-  uniform float uScale;
-  uniform float uSince;
-  uniform vec2 uCenter;
-  uniform vec2 uMouse;   // cursor in world space
-  uniform float uMouseOn; // eases to 0 when the cursor leaves
-  varying float vShine;
-  varying vec3 vColor;
-  void main() {
-    vec2 rel = position.xy - uCenter;
-    float k = clamp((uSince - length(rel) / 1800.0) / 1.2, 0.0, 1.0);
-    k = 1.0 - pow(1.0 - k, 3.0);
-    // Drift slowly with the paint.
-    vec2 drift = vec2(sin(uTime * 0.3 + aPhase * 20.0), cos(uTime * 0.25 + aPhase * 13.0)) * 10.0;
-    vec2 p = uCenter + rel * k + drift;
-    // Drift softly aside from the cursor with a little swirl, and twinkle as it passes.
-    vec2 away = p - uMouse;
-    float near = exp(-dot(away, away) / (160.0 * 160.0)) * uMouseOn;
-    vec2 out_ = normalize(away + 1e-3);
-    p += (out_ * (18.0 + aPhase * 14.0) + vec2(-out_.y, out_.x) * 10.0) * near;
-    float flicker = pow(0.5 + 0.5 * sin(uTime * (2.0 + aPhase * 4.0) + aPhase * 60.0), 4.0);
-    vShine = (0.3 + 0.7 * flicker + near * 0.9) * k;
-    vColor = aColor;
-    gl_PointSize = aSize * uScale * (0.7 + 0.5 * flicker + near * 0.3);
-    gl_Position = projectionMatrix * viewMatrix * vec4(p, 0.0, 1.0);
-  }
-`;
-
-export const GLITTER_FRAG = /* glsl */ `
-  varying float vShine;
-  varying vec3 vColor;
-  void main() {
-    vec2 c = gl_PointCoord * 2.0 - 1.0;
-    float g = exp(-dot(c, c) * 7.0);
-    gl_FragColor = vec4(vColor * g * vShine, 1.0);
-  }
-`;
-
-/** A shooting star: a streak that brightens toward its head (uv.x = 1). */
-export const STREAK_FRAG = /* glsl */ `
-  uniform float uOpacity;
-  varying vec2 vUv;
-  void main() {
-    float body = pow(vUv.x, 3.0) * (1.0 - abs(vUv.y - 0.5) * 2.0);
-    gl_FragColor = vec4(vec3(0.9, 0.95, 1.0) * body * uOpacity, 1.0);
-  }
-`;
+vec2 clouds(vec3 rd, int oct) {
+  if (rd.y <= 0.01) return vec2(0.0);
+  float dist = (420.0 - uCamPos.y) / rd.y;
+  vec2 p = (uCamPos.xz + rd.xz * dist) * 0.0016;
+  p += vec2(uTime * 0.004, uTime * 0.0015);
+  vec2 q = vec2(p.x * 0.55, p.y * 1.3);
+  float warp = fbm(q * 0.7 + 3.0, 3);
+  float n = fbm(q + warp * 0.9, oct);
+  float d = smoothstep(0.5, 0.8, n);
+  d *= smoothstep(0.012, 0.09, rd.y) * (1.0 - smoothstep(0.2, 0.55, rd.y));
+  return vec2(d, clamp(n * 1.6 - 0.55, 0.0, 1.0));
+}
 
 /**
- * The asteroid belt: a tilted, foreshortened disc of specks orbiting the core, inner ones
- * faster. Drawn twice: the far half behind the core planet, the near half in front of it.
+ * Mountains: four ranges at increasing distance, each a silhouette in angle (azimuth ->
+ * elevation), falling away into a saddle around the lamp where the river runs out. The two
+ * far ranges are ridged multifractal noise (sharp peaks, saddles, erosion detail down to the
+ * pixel); the two near ones are wooded hills carrying the tree-line asset. Drifting mist
+ * banks hang between them.
  */
-export const BELT_VERT = /* glsl */ `
-  attribute float aRadius;
-  attribute float aAngle;
-  attribute float aSize;
-  attribute float aPhase;
-  uniform float uTime;
-  uniform float uScale;
-  uniform float uSince;
-  uniform float uTilt;
-  uniform float uSquash;
-  uniform float uNearHalf; // 1 draws the near half, 0 the far half
-  varying float vShine;
-  varying float vWarm;
-  void main() {
-    float a = aAngle + uTime * 0.07 * pow(260.0 / aRadius, 1.5);
-    float near = step(sin(a), 0.0);
-    float keep = mix(1.0 - near, near, uNearHalf);
-    vec2 p = vec2(cos(a), sin(a) * uSquash) * aRadius;
-    float c = cos(uTilt), s = sin(uTilt);
-    p = vec2(c * p.x - s * p.y, s * p.x + c * p.y);
-    float k = clamp((uSince - aRadius / 1800.0) / 0.9, 0.0, 1.0);
-    k = 1.0 - pow(1.0 - k, 3.0);
-    vShine = (0.9 + 0.4 * sin(uTime * (1.0 + aPhase) + aPhase * 20.0)) * k * mix(0.55, 1.0, near);
-    vWarm = aPhase;
-    gl_PointSize = aSize * uScale;
-    // Specks on the other half are pushed outside the clip volume.
-    gl_Position = keep > 0.5 ? projectionMatrix * modelViewMatrix * vec4(p * k, 0.0, 1.0) : vec4(2.0, 2.0, 2.0, 1.0);
-  }
-`;
 
-export const BELT_FRAG = /* glsl */ `
-  varying float vShine;
-  varying float vWarm;
-  void main() {
-    vec2 c = gl_PointCoord * 2.0 - 1.0;
-    float g = exp(-dot(c, c) * 6.0);
-    vec3 col = mix(vec3(0.72, 0.80, 1.0), vec3(1.0, 0.84, 0.92), step(0.6, vWarm));
-    gl_FragColor = vec4(col * g * vShine, 1.0);
-  }
-`;
+/** Tree cover (0-1) standing on a ridge whose ground is at elevation h. */
+float trees(float az, float e, float h, float height, float shift) {
+  if (uTreesOn < 0.5 || height <= 0.0) return 0.0;
+  // Around the lamp the trees sink into the far shore, leaving the valley open.
+  float sink = 0.18 + 0.75 * (1.0 - smoothstep(0.02, 0.22, abs(az)));
+  float v = (e - h) / height + sink;
+  float u = az / (height * uTreesAspect) + shift;
+  // Pick the mip level from the known pixel footprint: sampling inside branches leaves the
+  // GPU's own estimate undefined, which shows up as speckled outlines.
+  float lod = log2(max(1.0, uTreesTexH / height * uPix));
+  float cover = textureLod(uTrees, vec2(u, clamp(v, 0.0, 1.0)), lod).r;
+  return v < 0.0 ? 1.0 : v > 1.0 ? 0.0 : cover;
+}
 
-/** A planet's rings: banded, with a dark gap; drawn as a far half and a near half. */
-export const RING_FRAG = /* glsl */ `
-  uniform float uInner;    // inner edge, as a fraction of the plane's half-size
-  uniform float uTilt;
-  uniform float uSquash;
-  uniform float uNearHalf; // 1 draws the near half, 0 the far half
-  uniform float uOpacity;
-  uniform vec3 uColA;
-  uniform vec3 uColB;
-  varying vec2 vUv;
-  void main() {
-    vec2 d = vUv * 2.0 - 1.0;
-    float c = cos(-uTilt), s = sin(-uTilt);
-    d = vec2(c * d.x - s * d.y, s * d.x + c * d.y);
-    float near = step(d.y, 0.0);
-    float keep = mix(1.0 - near, near, uNearHalf);
-    d.y /= uSquash;
-    float r = length(d);
-    float aa = fwidth(r) * 1.5;
-    float band = smoothstep(uInner - aa, uInner + aa, r) * (1.0 - smoothstep(1.0 - aa * 2.0, 1.0, r));
-    float t = clamp((r - uInner) / (1.0 - uInner), 0.0, 1.0);
-    float stripes = 0.65 + 0.35 * sin(t * 46.0) * sin(t * 13.0 + 1.0);
-    float gap = 1.0 - 0.85 * exp(-pow((t - 0.62) / 0.035, 2.0));
-    vec3 col = mix(uColA, uColB, t);
-    gl_FragColor = vec4(col, band * stripes * gap * keep * uOpacity * mix(0.7, 1.0, near));
+/**
+ * Ridged multifractal profile (0-1): each octave folds noise into a crease, and is weighted
+ * by the one before it, so detail gathers on the peaks the way erosion leaves it. Octaves stop
+ * at the pixel, so edges stay crisp without shimmering.
+ */
+float ridged(float x, float seed, float scale, float maxOct) {
+  float octs = log2(1.0 / max(2.0 * uPix * scale, 1e-5)) / log2(2.07) + 1.0;
+  int oct = int(clamp(octs, 2.0, maxOct));
+  float sum = 0.0;
+  float amp = 0.5;
+  float prev = 1.0;
+  float f = 1.0;
+  float norm = 0.0;
+  for (int i = 0; i < 9; i++) {
+    if (i >= oct) break;
+    float n = 1.0 - abs(vnoise(vec2(x * f, seed + float(i) * 7.31)) * 2.0 - 1.0);
+    n *= n;
+    sum += n * amp * (0.3 + 0.7 * prev);
+    norm += amp;
+    prev = n;
+    f *= 2.07;
+    amp *= 0.5;
   }
-`;
+  return sum / norm;
+}
 
-/** A distant spiral galaxy: bright core, two turning arms, tilted into an ellipse. */
-export const GALAXY_FRAG = /* glsl */ `
-  uniform float uTime;
-  uniform float uTilt;
-  uniform float uSquash;
-  uniform float uSeed;
-  uniform float uOpacity;
-  uniform vec3 uTint;
-  varying vec2 vUv;
-  ${NOISE}
-  void main() {
-    vec2 d = vUv * 2.0 - 1.0;
-    float c = cos(-uTilt), s = sin(-uTilt);
-    d = vec2(c * d.x - s * d.y, s * d.x + c * d.y);
-    d.y /= uSquash;
-    float r = length(d);
-    float a = atan(d.y, d.x);
-    float arms = pow(0.5 + 0.5 * cos(2.0 * (a - log(r + 0.02) * 2.6 - uTime * 0.05)), 3.0);
-    float n = fbm(d * 7.0 + uSeed);
-    float lum = exp(-r * 16.0) * 1.3 + exp(-r * 3.4) * (0.2 + arms * 0.9) * (0.5 + 0.7 * n);
-    lum *= 1.0 - smoothstep(0.75, 1.0, r);
-    gl_FragColor = vec4(uTint * lum * uOpacity, 1.0);
+/**
+ * Elevation of each range's skyline at an azimuth (radians), far (0) to near (3). maxOct caps
+ * the rock detail: fewer octaves give the broad shape of the range.
+ */
+float skyline(int i, float az, float maxOct) {
+  float a = abs(az);
+  // Open around the lamp, rising toward the frame edges.
+  float open = smoothstep(0.03, 0.38, a);
+  if (i == 0) {
+    float x = az * 2.4 + 0.35 * vnoise(vec2(az * 1.3, 9.1)) + 3.1;
+    return 0.002 + (0.02 + 0.2 * open) * ridged(x, 1.3, 1.0 / 2.4, maxOct);
   }
-`;
+  if (i == 1) {
+    float x = az * 4.2 + 0.3 * vnoise(vec2(az * 2.1, 4.7)) + 17.0;
+    return 0.0005 + (0.01 + 0.13 * open) * ridged(x, 2.7, 1.0 / 4.2, maxOct) + 0.015 * a;
+  }
+  // The wooded hills and the banks are low and rounded; their trees do the rest.
+  float roll = fbm(vec2(az * (i == 2 ? 5.0 : 8.0), i == 2 ? 3.3 : 8.9), 3);
+  if (i == 2) return -0.0008 + (0.008 + 0.045 * a) * smoothstep(0.05, 0.3, a) * (0.55 + 0.7 * roll);
+  return max(-0.0035 + (0.005 + 0.028 * a) * smoothstep(0.04, 0.3, a) * (0.6 + 0.6 * roll), -0.0035);
+}
 
-/** A small soft light, for satellites travelling the orbit arcs. */
-export const DOT_FRAG = /* glsl */ `
-  uniform float uOpacity;
-  varying vec2 vUv;
-  void main() {
-    float r = length(vUv * 2.0 - 1.0);
-    float g = exp(-r * r * 18.0) + exp(-r * 5.0) * 0.25;
-    gl_FragColor = vec4(vec3(0.9, 0.95, 1.0) * g * uOpacity, 1.0);
-  }
-`;
+/** Drifting mist bank (0-1) hanging just above elevation foot. */
+float mist(float az, float e, float foot, float thick, float seed, bool cheap) {
+  float hgt = (e - foot) / thick;
+  if (hgt > 3.0) return 0.0;
+  float falloff = exp(-max(hgt, 0.0) * 1.15) * smoothstep(-0.6, 0.2, hgt);
+  vec2 q = vec2(az * 4.5 + uTime * (0.008 + seed * 0.003), e * 55.0 + seed * 13.0);
+  float warp = fbm(q * vec2(0.6, 0.9) + seed, cheap ? 2 : 3);
+  float w = fbm(q + vec2(warp * 1.5, warp * 0.8), cheap ? 3 : 4);
+  return falloff * smoothstep(0.32, 0.78, w);
+}
 
-/** The wish star's tail: a strip from the head (uv.x = 0) back along its path, tapering. */
-export const WISH_TAIL_VERT = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    vec3 p = position;
-    p.y *= 1.0 - uv.x * 0.9;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-  }
-`;
+/** Mist is lit by the lamp: pink-white near it, lavender away from it. */
+vec3 mistColour(float az) {
+  float near = exp(-abs(az) * 4.0);
+  return mix(uLavender, uPetal, (0.25 + 0.6 * near) * uRise) * (0.85 + 0.25 * near * uRise);
+}
 
-export const WISH_TAIL_FRAG = /* glsl */ `
-  uniform float uOpacity;
-  varying vec2 vUv;
-  void main() {
-    float along = pow(1.0 - vUv.x, 1.7);
-    float across = 1.0 - pow(abs(vUv.y - 0.5) * 2.0, 2.0);
-    vec3 col = mix(vec3(0.996, 0.80, 0.93), vec3(1.0), along * 0.6);
-    gl_FragColor = vec4(col * along * across * uOpacity, 1.0);
-  }
-`;
+vec3 hills(vec3 rd, vec3 col, out float cover, bool cheap) {
+  cover = 0.0;
+  float e = rd.y;
+  if (e > 0.16) return col;
+  float az = atan(rd.x, -rd.z);
+  float toward = pow(max(dot(normalize(vec3(rd.x, 0.0, rd.z)), normalize(vec3(uSun.x, 0.0, uSun.z))), 0.0), 6.0);
+  vec3 mistCol = mistColour(az);
 
-/** The wish star's head: a slowly turning four-point sparkle with a soft halo. */
-export const SPARKLE_FRAG = /* glsl */ `
-  uniform float uOpacity;
-  uniform float uSpin;
-  varying vec2 vUv;
-  void main() {
-    vec2 c = vUv * 2.0 - 1.0;
-    float s = sin(uSpin), co = cos(uSpin);
-    c = mat2(co, -s, s, co) * c;
-    float core = exp(-dot(c, c) * 40.0);
-    float cross = exp(-abs(c.x) * 26.0) * exp(-abs(c.y) * 2.4)
-                + exp(-abs(c.y) * 26.0) * exp(-abs(c.x) * 2.4);
-    float halo = exp(-length(c) * 4.5) * 0.4;
-    vec3 col = mix(vec3(0.996, 0.85, 0.95), vec3(1.0), core);
-    gl_FragColor = vec4(col * (core * 1.4 + cross + halo) * uOpacity, 1.0);
+  for (int i = 0; i < 4; i++) {
+    float fi = float(i);
+    float h = skyline(i, az, cheap ? 6.0 : 9.0);
+    float foot = i == 3 ? -0.0035 : -0.0008;
+    float ground = 1.0 - smoothstep(h - uPix, h + uPix, e);
+    float wood = i == 3 ? trees(az, e, h, 0.03, 0.0) : i == 2 ? trees(az, e, h, 0.012, 0.37) : 0.0;
+    float inside = max(ground, wood) * smoothstep(foot - uPix, foot + uPix, e);
+    if (inside > 0.0) {
+      // Aerial perspective: far ranges pale lavender-blue, near ones deep navy.
+      vec3 tone = i == 0 ? mix(uCobalt, uLavender, 0.42) * 0.82
+                : i == 1 ? mix(uZenith, uCobalt, 0.55)
+                : i == 2 ? mix(uZenith, uCobalt, 0.3)
+                : uForest;
+      // Slopes facing the lamp catch a soft glow below their crests; the far sides fall into
+      // shadow. The slope comes from the skyline a step further from the lamp.
+      if (i < 2) {
+        float step = 0.02 * sign(az + 1e-6);
+        float rise = (skyline(i, az + step, 3.0) - skyline(i, az, 3.0)) / abs(step);
+        float facing = clamp(rise * 1.6, -1.0, 1.0);
+        float below = exp(-max(h - e, 0.0) / (0.03 - fi * 0.01));
+        tone *= 1.0 - 0.18 * max(-facing, 0.0) * below;
+        tone += mix(uLavender, uPetal, 0.5) * max(facing, 0.0) * below * (0.16 - fi * 0.05) * uRise;
+      }
+      // Haze thickens toward each range's foot.
+      float depth = 1.0 - smoothstep(foot, foot + 0.05 - fi * 0.008, e);
+      vec3 c = mix(tone, mistCol, depth * (0.55 - fi * 0.12));
+      // The lamp, low behind the ranges, rims their crests.
+      float rim = exp(-max(h - e, 0.0) / (0.0012 + fi * 0.0006));
+      c += mix(uLavender, uPetal, 0.65) * rim * toward * (0.5 - fi * 0.11) * uRise;
+      col = mix(col, c, inside);
+      cover = max(cover, inside);
+    }
+    // A mist bank drifts in front of each range but the nearest.
+    if (i < 3) {
+      float m = mist(az, e, foot, 0.036 - fi * 0.007, fi * 2.3 + 1.0, cheap);
+      col = mix(col, mistCol, m * (0.6 - fi * 0.1));
+    }
   }
+  return col;
+}
+
+vec3 sky(vec3 rd, bool cheap) {
+  float y = max(rd.y, 0.0);
+  float s = max(dot(rd, uSun), 0.0);
+
+  vec3 col = mix(uLavender, uCobalt, smoothstep(0.0, 0.16, y));
+  col = mix(col, uZenith, smoothstep(0.12, 0.75, y));
+
+  float around = pow(s, 6.0) * exp(-y * 9.0) * 0.75 + pow(s, 40.0) * 0.35;
+  col = mix(col, uPetal, clamp(around * (0.25 + 0.75 * uRise), 0.0, 1.0));
+
+  vec2 c = clouds(rd, cheap ? 3 : uCloudOct);
+  vec3 shade = mix(uCobalt * 0.55, uLavender, 0.25);
+  vec3 lit = mix(uLavender, uPetal, clamp(pow(s, 3.0) * 1.4, 0.0, 1.0));
+  vec3 cloudCol = mix(shade, lit, c.y * (0.35 + 0.65 * uRise) * (0.5 + 0.5 * pow(s, 2.0)));
+  col = mix(col, cloudCol, c.x * 0.85);
+
+  // The lamp: a bright core, a soft halo and a faint four-point flare.
+  float halo = pow(s, 2600.0) * 1.4 + pow(s, 380.0) * 0.28 + pow(s, 60.0) * 0.07;
+  float disc = smoothstep(0.99975, 0.99992, s);
+  vec3 sr = normalize(cross(uSun, vec3(0.0, 1.0, 0.0)));
+  vec3 su = cross(sr, uSun);
+  float u = dot(rd, sr);
+  float v = dot(rd, su);
+  float flare = exp(-abs(u) * 1400.0) * exp(-abs(v) * 22.0) + exp(-abs(v) * 1400.0) * exp(-abs(u) * 16.0);
+  flare *= step(0.0, dot(rd, uSun));
+  col += uGlow * (halo + disc * 2.0 + flare * 0.8) * (1.0 - c.x * 0.7) * uRise;
+
+  // Stars, fading toward the lit horizon and behind clouds.
+  vec2 g = vec2(atan(rd.x, -rd.z), rd.y) * 260.0;
+  vec2 cell = floor(g);
+  float h = hash12(cell);
+  vec2 off = vec2(hash12(cell + 7.1), hash12(cell + 3.9)) - 0.5;
+  float star = step(0.985, h) * (1.0 - smoothstep(0.0, 0.09, length(fract(g) - 0.5 - off * 0.6)));
+  star *= 0.6 + 0.4 * sin(uTime * (1.5 + h * 4.0) + h * 40.0);
+  star *= smoothstep(0.08, 0.35, y) * (1.0 - c.x) * (1.0 - pow(s, 3.0));
+  col += uGlow * star * 0.9;
+
+  float cover;
+  col = hills(rd, col, cover, cheap);
+  return col;
+}
+
+/** What a ray off the water sees. */
+vec3 scene(vec3 rd) {
+  return sky(rd, true);
+}
+
+// ---------------------------------------------------------------- water
+
+/** Faint breeze ripples drifting downstream, so the surface is never perfectly still. */
+vec2 breeze(vec2 p, float dist) {
+  vec2 g = vec2(0.0);
+  float amp = 1.0;
+  float freq = 0.9;
+  float ang = 0.3;
+  for (int i = 0; i < 6; i++) {
+    vec2 dir = vec2(cos(ang), sin(ang));
+    float x = dot(dir, p) * freq + uTime * (0.6 + float(i) * 0.15) + float(i) * 1.7;
+    float fade = 1.0 - smoothstep(0.2, 1.0, freq * dist * 0.02);
+    g += amp * fade * cos(x) * freq * dir;
+    amp *= 0.7;
+    freq *= 1.45;
+    ang += 2.39996;
+  }
+  return g * 0.006;
+}
+
+/** Simulated ripple slope at a point on the water (zero outside the simulated patch). */
+vec2 ripples(vec2 p, float dist) {
+  vec2 uv = (p - uSimRect.xy) / uSimRect.zw;
+  if (uSimOn < 0.5 || uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) return vec2(0.0);
+  // Farther away, measure the slope over a wider span so fine rings blur instead of aliasing.
+  vec2 o = uSimTexel * (1.0 + dist * 0.12);
+  float hx = texture2D(uSim, uv + vec2(o.x, 0.0)).r - texture2D(uSim, uv - vec2(o.x, 0.0)).r;
+  float hz = texture2D(uSim, uv + vec2(0.0, o.y)).r - texture2D(uSim, uv - vec2(0.0, o.y)).r;
+  vec2 world = 2.0 * o * uSimRect.zw;
+  return vec2(hx / world.x, hz / world.y) * 0.3;
+}
+
+/** The fish's outline under the surface, soft-edged; 0-1. */
+float fishMask(vec2 p) {
+  if (uFish.w < 0.01) return 0.0;
+  vec2 d = p - uFish.xy;
+  vec2 fwd = vec2(cos(uFish.z), sin(uFish.z));
+  vec2 lat = vec2(-fwd.y, fwd.x);
+  float lx = dot(d, fwd);
+  float ly = dot(d, lat);
+  // The body flexes more toward the tail.
+  float tail = clamp(0.35 - lx, 0.0, 1.4);
+  ly -= sin(lx * 3.2 - uFishPhase) * 0.16 * tail;
+  float body = 0.24 * sqrt(max(0.0, 1.0 - pow((lx - 0.1) / 0.62, 2.0)));
+  float shape = (1.0 - smoothstep(body * 0.3, body + 0.08, abs(ly))) * step(-0.52, lx) * step(lx, 0.72);
+  // A fanned tail fin.
+  float fin = smoothstep(-0.92, -0.62, lx) * (1.0 - smoothstep(-0.62, -0.48, lx));
+  shape = max(shape, fin * (1.0 - smoothstep(0.06, 0.22, abs(ly))) * smoothstep(0.0, 0.12, abs(ly) + 0.05));
+  return shape * uFish.w;
+}
+
+void main() {
+  vec2 ndc = vUv * 2.0 - 1.0;
+  vec3 rd = normalize(uCamRot * vec3(ndc.x * uTan.x, ndc.y * uTan.y, -1.0));
+  vec3 ro = uCamPos;
+
+  vec3 col;
+  if (rd.y < 0.0) {
+    float tw = -ro.y / min(rd.y, -1e-5);
+    vec3 pos = ro + rd * tw;
+    // Far off, ripples are seen edge-on; soften them so they don't alias into streaks.
+    vec2 slope = ripples(pos.xz, tw) * mix(1.0, 0.2, smoothstep(6.0, 30.0, tw)) + breeze(pos.xz, tw);
+    // Real ripples on still water are shallow; capping the tilt keeps reflections from flipping.
+    slope /= max(1.0, length(slope) / mix(0.34, 0.18, smoothstep(2.0, 20.0, tw)));
+    vec3 n = normalize(vec3(-slope.x, 1.0, -slope.y));
+
+    vec3 view = -rd;
+    float cosv = max(dot(n, view), 0.0);
+    float fres = 0.06 + 0.94 * pow(1.0 - cosv, 4.0);
+    vec3 refl = reflect(rd, n);
+    refl.y = max(refl.y, 0.0005);
+    vec3 mirror = scene(normalize(refl));
+
+    // Below the surface: deep, still cobalt, with a pale koi glimpsed where the fish swims.
+    vec3 body = uDeep * (0.8 + 0.25 * fbm(pos.xz * 0.15, 2));
+    // Refraction bends the fish a little with the ripples above it.
+    float koi = fishMask(pos.xz + slope * 0.6);
+    body = mix(body, mix(uPetal, uLavender, 0.35) * 0.42, koi * 0.75);
+    // Slopes facing the lamp catch a little more light, so ripples read even looking down.
+    vec3 toLamp = normalize(vec3(uSun.x, 0.5, uSun.z));
+    body *= 0.55 + 0.9 * clamp(dot(n, toLamp) / dot(vec3(0.0, 1.0, 0.0), toLamp), 0.0, 1.6) * 0.5 + 0.0;
+    col = mix(body, mirror, clamp(fres + 0.42, 0.0, 1.0));
+
+    // Glints where ripples tilt the surface toward the lamp.
+    float sd = max(dot(normalize(refl), uSun), 0.0);
+    col += uGlow * (pow(sd, 3000.0) * 5.0 + pow(sd, 450.0) * 0.35) * uRise;
+
+    // Far out the surface settles into a clean mirror image.
+    col = mix(col, scene(normalize(vec3(rd.x, -rd.y, rd.z))), 1.0 - exp(-tw * 0.004));
+
+    // The far shore: the nearest ridge's foot sits just below the horizon, over the water.
+    float shore;
+    col = hills(rd, col, shore, false);
+
+    // Low mist lying on the water toward the far shore.
+    float az = atan(rd.x, -rd.z);
+    float low = mist(az, rd.y, -0.03, 0.02, 7.0, false) * smoothstep(12.0, 70.0, tw);
+    col = mix(col, mistColour(az), low * 0.45);
+  } else {
+    col = sky(rd, false);
+  }
+
+  // Gentle vignette, darker at the foot so the page below takes over smoothly.
+  col *= mix(0.72, 1.0, smoothstep(0.0, 0.45, vUv.y));
+  col *= 1.0 - 0.18 * pow(length(ndc * vec2(0.7, 0.9)), 2.0);
+  col *= mix(0.3, 1.0, uRise) * (1.0 - uDim);
+
+  // Dither to keep the smooth gradients free of banding.
+  col += (hash12(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) / 255.0;
+  gl_FragColor = vec4(col, 1.0);
+}
 `;

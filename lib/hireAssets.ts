@@ -9,3 +9,9 @@ export const hireAsset = (slug: string, file: string) => {
   const url = `/hire/${slug}/${file}`;
   return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
 };
+
+/** Optional artwork shared by every hire page, read from public/hire/<file>. */
+export const sharedHireAsset = (file: string) => {
+  const url = `/hire/${file}`;
+  return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
+};
