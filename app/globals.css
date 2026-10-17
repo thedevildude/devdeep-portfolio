@@ -140,3 +140,36 @@ html.lenis body {
     animation: none;
   }
 }
+
+/* Hire pages: a light, vibrant theme scoped to .theme-sky; the rest of the site stays dark. */
+.theme-sky {
+  --background: #ffffff;
+  --foreground: #050811;
+  --muted: #4e5058;
+  --border: #e3e6ec;
+  --surface: #f4f7fb;
+  --accent: #1030ae;
+  --accent-foreground: #ffffff;
+  color-scheme: light;
+}
+
+@theme {
+  --color-ink-blue: #1030ae;
+  --color-sky-1: #cbeeff;
+  --color-sky-2: #c2eafd;
+  --color-sky-3: #85cef2;
+  --color-kiwi: #00862e;
+  --color-kiwi-soft: #dcfbdc;
+  --color-ixia: #00808c;
+  --color-ixia-soft: #def7fd;
+  --color-plum: #c72a43;
+  --color-plum-soft: #ffe7e7;
+  --color-papaya: #b44700;
+  --color-papaya-soft: #ffeccd;
+  --color-pomelo: #b02f7c;
+  --color-pomelo-soft: #ffe6f4;
+}
+
+@theme inline {
+  --font-display-serif: var(--font-instrument), ui-serif, Georgia, serif;
+}
