@@ -19,11 +19,18 @@ const page: Service = {
   intro:
     "I build test suites that developers trust and bug reports that developers can act on. I built Verity, a QA platform that only reports a bug when it can prove it, and I bring that same standard of evidence to your product.",
   heroCta: "Hire me to test your product",
-  chips: ["Test automation", "Playwright", "Jest", "E2E testing", "Regression testing", "SDET"],
+  chips: [
+    "Test automation",
+    "Playwright",
+    "Jest",
+    "E2E testing",
+    "Regression testing",
+    "SDET",
+  ],
   overview: {
     title: "How to hire a QA engineer in India",
     paragraphs: [
-      "Bad QA looks busy. Hundreds of flaky tests that everyone reruns until they pass, and bug tickets that say \"it doesn't work\" with no steps to reproduce. Good QA is quieter: a focused suite that fails only when something is really broken, and reports that show exactly what happened.",
+      'Bad QA looks busy. Hundreds of flaky tests that everyone reruns until they pass, and bug tickets that say "it doesn\'t work" with no steps to reproduce. Good QA is quieter: a focused suite that fails only when something is really broken, and reports that show exactly what happened.',
       "Verity is my clearest proof. It is a serverless QA platform built on Lambda, DynamoDB, Step Functions and Playwright, tested to 92% coverage. An AI jury scores confidence and deduplicates findings by fingerprint, so a bug is reported only with evidence. I apply the same thinking when I own testing on your product.",
     ],
     gets: [
@@ -122,17 +129,32 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "End-to-end", items: ["Playwright", "Cross-browser testing", "Visual checks"] },
-    { category: "Unit and integration", items: ["Jest", "React Testing Library", "Supertest"] },
-    { category: "API testing", items: ["REST APIs", "Contract tests", "Postman"] },
+    {
+      category: "End-to-end",
+      items: ["Playwright", "Cross-browser testing", "Visual checks"],
+    },
+    {
+      category: "Unit and integration",
+      items: ["Jest", "React Testing Library", "Supertest"],
+    },
+    {
+      category: "API testing",
+      items: ["REST APIs", "Contract tests", "Postman"],
+    },
     { category: "CI", items: ["GitHub Actions", "CircleCI", "Docker"] },
     { category: "Languages", items: ["TypeScript", "JavaScript", "SQL"] },
-    { category: "Apps under test", items: ["React", "Next.js", "Node.js", "Electron", "React Native"] },
+    {
+      category: "Apps under test",
+      items: ["React", "Next.js", "Node.js", "Electron", "React Native"],
+    },
     {
       category: "Cloud",
       items: ["AWS Lambda", "Step Functions", "DynamoDB", "Cognito"],
     },
-    { category: "Reporting", items: ["Traces", "Screenshots", "Test reports", "Coverage"] },
+    {
+      category: "Reporting",
+      items: ["Traces", "Screenshots", "Test reports", "Coverage"],
+    },
   ],
   faqs: [
     {

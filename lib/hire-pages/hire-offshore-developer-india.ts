@@ -5,7 +5,8 @@ const page: Service = {
   seoTitle: "Hire an Offshore Developer in India — Direct | Devdeep",
   h1: "Hire an Offshore Developer in India",
   role: "Offshore Developer",
-  headline: "Hire an offshore developer in India, *with nothing lost in between*",
+  headline:
+    "Hire an offshore developer in India, *with nothing lost in between*",
   description:
     "Hire an offshore developer in India and work directly with the senior engineer writing your code. No agency layer, no hand-offs, clear accountability.",
   keywords: [
@@ -132,7 +133,7 @@ const page: Service = {
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
     {
       category: "Back end",
-      items: ["Node.js", "Express", "Django", "Prisma", "Sequelize"],
+      items: ["Node.js", "Express", "Prisma", "Sequelize"],
     },
     {
       category: "Databases",
@@ -150,7 +151,10 @@ const page: Service = {
       category: "Integrations",
       items: ["Stripe", "Salesforce", "Microsoft Graph", "GoHighLevel"],
     },
-    { category: "Quality", items: ["Playwright", "Jest", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Quality",
+      items: ["Playwright", "Jest", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {

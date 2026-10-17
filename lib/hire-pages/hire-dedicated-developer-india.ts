@@ -5,7 +5,8 @@ const page: Service = {
   seoTitle: "Hire a Dedicated Developer in India — Long Term | Devdeep",
   h1: "Hire a Dedicated Developer in India",
   role: "Dedicated Developer",
-  headline: "Hire a dedicated developer in India, *who stays with your product*",
+  headline:
+    "Hire a dedicated developer in India, *who stays with your product*",
   description:
     "Hire a dedicated developer in India: one senior engineer committed to your product long term, owning the codebase, the hard roadmap work and its context.",
   keywords: [
@@ -127,12 +128,19 @@ const page: Service = {
     },
     {
       category: "Front end",
-      items: ["React", "Next.js", "Angular", "Redux Toolkit", "Zustand", "Tailwind CSS"],
+      items: [
+        "React",
+        "Next.js",
+        "Angular",
+        "Redux Toolkit",
+        "Zustand",
+        "Tailwind CSS",
+      ],
     },
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
     {
       category: "Back end",
-      items: ["Node.js", "Express", "Django", "Prisma", "Sequelize"],
+      items: ["Node.js", "Express", "Prisma", "Sequelize"],
     },
     {
       category: "Databases",
@@ -140,7 +148,15 @@ const page: Service = {
     },
     {
       category: "Cloud",
-      items: ["AWS Lambda", "Step Functions", "S3", "CloudFront", "Cognito", "Azure", "Google Cloud"],
+      items: [
+        "AWS Lambda",
+        "Step Functions",
+        "S3",
+        "CloudFront",
+        "Cognito",
+        "Azure",
+        "Google Cloud",
+      ],
     },
     {
       category: "AI",

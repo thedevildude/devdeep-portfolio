@@ -19,7 +19,14 @@ const page: Service = {
   intro:
     "Vue rewards a light touch: small single-file components, composables for shared logic and just enough state management. I build Vue 3 and Nuxt applications in that style, with TypeScript throughout, and I move older Vue 2 codebases onto the Composition API without stopping your roadmap.",
   heroCta: "Hire me for your Vue.js app",
-  chips: ["Vue 3", "Nuxt", "Composition API", "Pinia", "Vue 2 to Vue 3", "Vite"],
+  chips: [
+    "Vue 3",
+    "Nuxt",
+    "Composition API",
+    "Pinia",
+    "Vue 2 to Vue 3",
+    "Vite",
+  ],
   overview: {
     title: "How to hire a Vue.js developer in India",
     paragraphs: [
@@ -75,7 +82,7 @@ const page: Service = {
     {
       icon: "server",
       title: "API alongside",
-      body: "Build the Node.js or Laravel endpoints your Vue screens need, so features do not wait on another team.",
+      body: "Build the Node.js endpoints your Vue screens need, so features do not wait on another team.",
     },
   ],
   whyTitle: "Why hire a Vue.js developer in India, *and why me*",
@@ -121,14 +128,23 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Core", items: ["Vue 3", "Vue 2", "Composition API", "Options API", "TypeScript"] },
+    {
+      category: "Core",
+      items: ["Vue 3", "Vue 2", "Composition API", "Options API", "TypeScript"],
+    },
     { category: "Meta-framework", items: ["Nuxt", "Vue Router"] },
     { category: "State", items: ["Pinia", "Vuex"] },
     { category: "Build tooling", items: ["Vite", "ESLint", "Prettier"] },
     { category: "Styling", items: ["Tailwind CSS", "SCSS"] },
     { category: "Testing", items: ["Vitest", "Vue Test Utils", "Playwright"] },
-    { category: "Backend", items: ["Node.js", "Express", "Laravel", "PostgreSQL", "Prisma"] },
-    { category: "Other front ends", items: ["React", "Next.js (App Router)", "Angular"] },
+    {
+      category: "Backend",
+      items: ["Node.js", "Express", "PostgreSQL", "Prisma"],
+    },
+    {
+      category: "Other front ends",
+      items: ["React", "Next.js (App Router)", "Angular"],
+    },
     { category: "DevOps", items: ["Docker", "Git", "GitHub Actions", "AWS"] },
   ],
   faqs: [
@@ -154,7 +170,7 @@ const page: Service = {
     },
     {
       q: "Can you build the backend for our Vue front end?",
-      a: "Yes. I build Node.js and Express APIs and can work in Laravel too, so the Vue screens and the endpoints behind them can come from one person.",
+      a: "Yes. I build the Node.js and Express APIs too, so the Vue screens and the endpoints behind them can come from one person.",
     },
     {
       q: "When can you start?",

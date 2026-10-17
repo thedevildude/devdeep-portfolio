@@ -124,12 +124,19 @@ const page: Service = {
     { category: "Languages", items: ["TypeScript", "JavaScript", "SQL"] },
     {
       category: "Front end",
-      items: ["React", "Next.js", "Angular", "Tailwind CSS", "Redux Toolkit", "Zustand"],
+      items: [
+        "React",
+        "Next.js",
+        "Angular",
+        "Tailwind CSS",
+        "Redux Toolkit",
+        "Zustand",
+      ],
     },
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
     {
       category: "Back end",
-      items: ["Node.js", "Express", "Django", "Prisma"],
+      items: ["Node.js", "Express", "Prisma"],
     },
     {
       category: "Databases",
@@ -137,7 +144,14 @@ const page: Service = {
     },
     {
       category: "Cloud",
-      items: ["AWS Lambda", "Step Functions", "S3", "Cognito", "Azure", "Google Cloud"],
+      items: [
+        "AWS Lambda",
+        "Step Functions",
+        "S3",
+        "Cognito",
+        "Azure",
+        "Google Cloud",
+      ],
     },
     {
       category: "AI",

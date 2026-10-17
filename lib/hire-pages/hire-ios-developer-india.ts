@@ -35,7 +35,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *iOS developer*",
-  roleIntro: "The iPhone and iPad work you can hand to me, from Xcode project to App Store listing.",
+  roleIntro:
+    "The iPhone and iPad work you can hand to me, from Xcode project to App Store listing.",
   duties: [
     {
       icon: "layout",
@@ -121,15 +122,24 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Languages", items: ["Swift", "Objective-C", "C++", "TypeScript"] },
+    {
+      category: "Languages",
+      items: ["Swift", "Objective-C", "C++", "TypeScript"],
+    },
     { category: "Apple UI", items: ["SwiftUI", "UIKit", "Xcode"] },
-    { category: "Apple frameworks", items: ["Combine", "Core Data", "StoreKit", "Push notifications"] },
+    {
+      category: "Apple frameworks",
+      items: ["Combine", "Core Data", "StoreKit", "Push notifications"],
+    },
     { category: "Distribution", items: ["TestFlight", "App Store Connect"] },
     { category: "Back end", items: ["Node.js", "Express", "REST APIs"] },
     { category: "Cloud", items: ["AWS Lambda", "Cognito", "S3", "CloudFront"] },
     { category: "Databases", items: ["PostgreSQL", "DynamoDB", "Supabase"] },
     { category: "Payments", items: ["Stripe", "In-app purchases"] },
-    { category: "Testing and CI", items: ["XCTest", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Testing and CI",
+      items: ["XCTest", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {

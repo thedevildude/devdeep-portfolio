@@ -19,7 +19,14 @@ const page: Service = {
   intro:
     "Shipping should be the boring part of building software. I set up the pipelines, containers, environments and monitoring that let your team merge with confidence and release on any day of the week.",
   heroCta: "Hire me to fix your release process",
-  chips: ["CI/CD", "GitHub Actions", "Docker", "Infrastructure as code", "Kubernetes", "Monitoring"],
+  chips: [
+    "CI/CD",
+    "GitHub Actions",
+    "Docker",
+    "Infrastructure as code",
+    "Kubernetes",
+    "Monitoring",
+  ],
   overview: {
     title: "How to hire a DevOps engineer in India",
     paragraphs: [
@@ -123,11 +130,21 @@ const page: Service = {
   ],
   stack: [
     { category: "CI/CD", items: ["GitHub Actions", "CircleCI", "Git"] },
-    { category: "Containers", items: ["Docker", "Docker Compose", "Kubernetes"] },
+    {
+      category: "Containers",
+      items: ["Docker", "Docker Compose", "Kubernetes"],
+    },
     { category: "Infrastructure as code", items: ["Terraform", "AWS CDK"] },
     {
       category: "AWS",
-      items: ["Lambda", "Step Functions", "S3", "CloudFront", "Cognito", "CloudWatch"],
+      items: [
+        "Lambda",
+        "Step Functions",
+        "S3",
+        "CloudFront",
+        "Cognito",
+        "CloudWatch",
+      ],
     },
     { category: "Other clouds", items: ["Azure", "Google Cloud"] },
     {

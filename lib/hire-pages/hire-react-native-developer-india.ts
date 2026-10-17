@@ -18,7 +18,14 @@ const page: Service = {
   intro:
     "One TypeScript codebase, two app stores and a backend that both apps rely on. I build React Native apps alongside the APIs, auth and data they need, so your mobile product is owned end to end by one person you talk to directly.",
   heroCta: "Hire me for your mobile app",
-  chips: ["React Native", "iOS", "Android", "TypeScript", "Mobile apps", "Node.js"],
+  chips: [
+    "React Native",
+    "iOS",
+    "Android",
+    "TypeScript",
+    "Mobile apps",
+    "Node.js",
+  ],
   overview: {
     title: "How to hire a React Native developer in India",
     paragraphs: [
@@ -34,7 +41,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *react native developer*",
-  roleIntro: "The mobile work, and the work behind it, that you can hand over to me.",
+  roleIntro:
+    "The mobile work, and the work behind it, that you can hand over to me.",
   duties: [
     {
       icon: "layout",
@@ -120,7 +128,10 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Languages", items: ["TypeScript", "JavaScript", "Objective-C", "C++"] },
+    {
+      category: "Languages",
+      items: ["TypeScript", "JavaScript", "Objective-C", "C++"],
+    },
     { category: "Mobile", items: ["React Native", "iOS", "Android"] },
     { category: "State", items: ["Redux Toolkit", "Zustand"] },
     { category: "Web and desktop", items: ["React", "Next.js", "Electron"] },
@@ -134,7 +145,10 @@ const page: Service = {
       items: ["PostgreSQL", "MongoDB", "Supabase", "Prisma"],
     },
     { category: "Integrations", items: ["Stripe"] },
-    { category: "Testing and CI", items: ["Jest", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Testing and CI",
+      items: ["Jest", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {

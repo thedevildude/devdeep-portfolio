@@ -19,7 +19,14 @@ const page: Service = {
   intro:
     "Shopify handles hosting, checkout and payments well, so the real work is everything around them. I build custom Online Store 2.0 themes, private and public Shopify apps, and headless storefronts in Next.js when your brand needs a front end Shopify themes cannot give you.",
   heroCta: "Hire me for your Shopify store",
-  chips: ["Shopify theme", "Shopify Liquid", "Shopify app", "Headless Shopify", "Shopify Plus", "Storefront API"],
+  chips: [
+    "Shopify theme",
+    "Shopify Liquid",
+    "Shopify app",
+    "Headless Shopify",
+    "Shopify Plus",
+    "Storefront API",
+  ],
   overview: {
     title: "How to hire a Shopify developer in India",
     paragraphs: [
@@ -35,7 +42,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *Shopify developer*",
-  roleIntro: "The Shopify theme, app and storefront work you can hand over to me.",
+  roleIntro:
+    "The Shopify theme, app and storefront work you can hand over to me.",
   duties: [
     {
       icon: "layout",
@@ -121,14 +129,43 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Themes", items: ["Liquid", "Online Store 2.0", "Dawn", "Theme sections and blocks"] },
-    { category: "Shopify APIs", items: ["Storefront API", "Admin GraphQL API", "Webhooks"] },
-    { category: "Apps", items: ["Shopify CLI", "Polaris", "App Bridge", "Node.js"] },
-    { category: "Checkout", items: ["Checkout UI extensions", "Shopify Functions", "Shopify Plus"] },
-    { category: "Headless", items: ["Next.js (App Router)", "Hydrogen", "React", "TypeScript"] },
-    { category: "Data and content", items: ["Metafields", "Metaobjects", "PostgreSQL", "Prisma"] },
-    { category: "Integrations", items: ["Salesforce", "GoHighLevel", "Stripe", "n8n"] },
-    { category: "Quality and DevOps", items: ["Playwright", "Lighthouse", "Git", "GitHub Actions", "AWS"] },
+    {
+      category: "Themes",
+      items: [
+        "Liquid",
+        "Online Store 2.0",
+        "Dawn",
+        "Theme sections and blocks",
+      ],
+    },
+    {
+      category: "Shopify APIs",
+      items: ["Storefront API", "Admin GraphQL API", "Webhooks"],
+    },
+    {
+      category: "Apps",
+      items: ["Shopify CLI", "Polaris", "App Bridge", "Node.js"],
+    },
+    {
+      category: "Checkout",
+      items: ["Checkout UI extensions", "Shopify Functions", "Shopify Plus"],
+    },
+    {
+      category: "Headless",
+      items: ["Next.js (App Router)", "Hydrogen", "React", "TypeScript"],
+    },
+    {
+      category: "Data and content",
+      items: ["Metafields", "Metaobjects", "PostgreSQL", "Prisma"],
+    },
+    {
+      category: "Integrations",
+      items: ["Salesforce", "GoHighLevel", "Stripe", "n8n"],
+    },
+    {
+      category: "Quality and DevOps",
+      items: ["Playwright", "Lighthouse", "Git", "GitHub Actions", "AWS"],
+    },
   ],
   faqs: [
     {

@@ -18,7 +18,14 @@ const page: Service = {
   intro:
     "Node.js runs most of what I build, from Express APIs to Lambda functions to the processes that drive FFmpeg and LLM agents. I write it in strict TypeScript and treat the event loop, memory and error handling as first-class concerns, not afterthoughts.",
   heroCta: "Hire me for your Node.js work",
-  chips: ["Node.js", "Express", "TypeScript", "AWS Lambda", "Prisma", "MongoDB"],
+  chips: [
+    "Node.js",
+    "Express",
+    "TypeScript",
+    "AWS Lambda",
+    "Prisma",
+    "MongoDB",
+  ],
   overview: {
     title: "How to hire a Node.js developer in India",
     paragraphs: [
@@ -122,16 +129,35 @@ const page: Service = {
   stack: [
     { category: "Languages", items: ["TypeScript", "JavaScript", "SQL"] },
     { category: "Node.js frameworks", items: ["Node.js", "Express"] },
-    { category: "Data access", items: ["Prisma", "Sequelize", "PostgreSQL", "MongoDB", "DynamoDB", "Supabase"] },
-    { category: "Serverless", items: ["AWS Lambda", "Step Functions", "S3", "Cognito"] },
+    {
+      category: "Data access",
+      items: [
+        "Prisma",
+        "Sequelize",
+        "PostgreSQL",
+        "MongoDB",
+        "DynamoDB",
+        "Supabase",
+      ],
+    },
+    {
+      category: "Serverless",
+      items: ["AWS Lambda", "Step Functions", "S3", "Cognito"],
+    },
     { category: "Media", items: ["FFmpeg", "HLS streaming"] },
-    { category: "AI", items: ["LangChain", "LangGraph", "LLM agents", "RAG", "n8n"] },
+    {
+      category: "AI",
+      items: ["LangChain", "LangGraph", "LLM agents", "RAG", "n8n"],
+    },
     {
       category: "Integrations",
       items: ["Stripe", "Salesforce", "Microsoft Graph", "GoHighLevel"],
     },
     { category: "Testing", items: ["Jest", "Playwright"] },
-    { category: "Delivery", items: ["Docker", "GitHub Actions", "CircleCI", "Azure", "Google Cloud"] },
+    {
+      category: "Delivery",
+      items: ["Docker", "GitHub Actions", "CircleCI", "Azure", "Google Cloud"],
+    },
   ],
   faqs: [
     {

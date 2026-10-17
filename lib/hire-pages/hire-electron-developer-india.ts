@@ -5,7 +5,8 @@ const page: Service = {
   seoTitle: "Hire an Electron Developer in India — Desktop Apps | Devdeep",
   h1: "Hire an Electron Desktop App Developer in India",
   role: "Electron Desktop App Developer",
-  headline: "Hire an Electron developer in India, *who goes native when needed*",
+  headline:
+    "Hire an Electron developer in India, *who goes native when needed*",
   description:
     "Hire a senior Electron desktop app developer in India for macOS, Windows and Linux apps, native C++ and Objective-C addons, and media pipelines. Remote.",
   keywords: [
@@ -34,7 +35,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *electron developer*",
-  roleIntro: "The desktop work you can hand over to me, from window to operating system.",
+  roleIntro:
+    "The desktop work you can hand over to me, from window to operating system.",
   duties: [
     {
       icon: "cube",
@@ -124,17 +126,37 @@ const page: Service = {
       category: "Languages",
       items: ["TypeScript", "JavaScript", "C++", "Objective-C", "Rust"],
     },
-    { category: "Desktop", items: ["Electron", "Native addons", "macOS", "Windows", "Linux"] },
+    {
+      category: "Desktop",
+      items: ["Electron", "Native addons", "macOS", "Windows", "Linux"],
+    },
     {
       category: "Media",
-      items: ["FFmpeg", "GStreamer", "GStreamer Editing Services", "HLS / DASH streaming"],
+      items: [
+        "FFmpeg",
+        "GStreamer",
+        "GStreamer Editing Services",
+        "HLS / DASH streaming",
+      ],
     },
-    { category: "Interface", items: ["React", "Next.js", "Zustand", "Tailwind CSS"] },
-    { category: "Back end", items: ["Node.js", "Express", "PostgreSQL", "Prisma"] },
+    {
+      category: "Interface",
+      items: ["React", "Next.js", "Zustand", "Tailwind CSS"],
+    },
+    {
+      category: "Back end",
+      items: ["Node.js", "Express", "PostgreSQL", "Prisma"],
+    },
     { category: "Cloud", items: ["AWS", "S3", "CloudFront"] },
-    { category: "AI", items: ["Transcription", "Summarisation", "Dubbing", "Auto-zoom"] },
+    {
+      category: "AI",
+      items: ["Transcription", "Summarisation", "Dubbing", "Auto-zoom"],
+    },
     { category: "Billing", items: ["Stripe usage-based billing"] },
-    { category: "CI and testing", items: ["GitHub Actions", "CircleCI", "Jest", "Playwright"] },
+    {
+      category: "CI and testing",
+      items: ["GitHub Actions", "CircleCI", "Jest", "Playwright"],
+    },
   ],
   faqs: [
     {

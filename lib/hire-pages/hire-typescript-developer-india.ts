@@ -5,7 +5,8 @@ const page: Service = {
   seoTitle: "Hire a TypeScript Developer in India — Senior | Devdeep",
   h1: "Hire a TypeScript Developer in India",
   role: "TypeScript Developer",
-  headline: "Hire a TypeScript developer in India, *who makes types do the work*",
+  headline:
+    "Hire a TypeScript developer in India, *who makes types do the work*",
   description:
     "Hire a senior TypeScript developer in India for type-safe React, Next.js and Node.js code, shared types across the stack and safe JavaScript migrations.",
   keywords: [
@@ -22,11 +23,11 @@ const page: Service = {
   overview: {
     title: "How to hire a TypeScript developer in India",
     paragraphs: [
-      "Many codebases use TypeScript in name only: loose settings, \"any\" scattered through the code and types that drift away from what the API really returns. That gives you the overhead of a type system without the safety.",
+      'Many codebases use TypeScript in name only: loose settings, "any" scattered through the code and types that drift away from what the API really returns. That gives you the overhead of a type system without the safety.',
       "I use TypeScript as a design tool. Types shared between the database, the API and the interface mean a renamed field breaks the build, not production. You hire me directly, and I bring that discipline to new projects and to existing JavaScript code that needs to grow up.",
     ],
     gets: [
-      "Strict compiler settings, with \"any\" treated as a decision, not a habit",
+      'Strict compiler settings, with "any" treated as a decision, not a habit',
       "One source of truth for types across database, API and interface",
       "Runtime validation at the edges where outside data enters your system",
       "Gradual JavaScript to TypeScript migration with no feature freeze",
@@ -69,7 +70,7 @@ const page: Service = {
     {
       icon: "search",
       title: "Type audits",
-      body: "Find unsafe casts, stray \"any\" types and drifting interfaces, then fix them in a planned order.",
+      body: 'Find unsafe casts, stray "any" types and drifting interfaces, then fix them in a planned order.',
     },
     {
       icon: "workflow",
@@ -120,13 +121,25 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Languages", items: ["TypeScript", "JavaScript", "Rust", "SQL"] },
+    {
+      category: "Languages",
+      items: ["TypeScript", "JavaScript", "Rust", "SQL"],
+    },
     {
       category: "Front end",
-      items: ["React", "Next.js (App Router)", "Angular", "Redux Toolkit", "Zustand"],
+      items: [
+        "React",
+        "Next.js (App Router)",
+        "Angular",
+        "Redux Toolkit",
+        "Zustand",
+      ],
     },
     { category: "Back end", items: ["Node.js", "Express", "AWS Lambda"] },
-    { category: "Typed data access", items: ["Prisma", "Sequelize", "PostgreSQL", "DynamoDB", "Supabase"] },
+    {
+      category: "Typed data access",
+      items: ["Prisma", "Sequelize", "PostgreSQL", "DynamoDB", "Supabase"],
+    },
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
     { category: "AI", items: ["LangChain", "LangGraph", "LLM agents"] },
     { category: "Testing", items: ["Jest", "Playwright"] },

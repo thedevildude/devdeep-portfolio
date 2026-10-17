@@ -138,7 +138,7 @@ const page: Service = {
     },
     {
       category: "Back end",
-      items: ["Node.js", "Express", "Django", "REST APIs"],
+      items: ["Node.js", "Express", "REST APIs"],
     },
     {
       category: "Databases",
@@ -148,7 +148,14 @@ const page: Service = {
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
     {
       category: "Cloud",
-      items: ["AWS Lambda", "S3", "CloudFront", "Cognito", "Azure", "Google Cloud"],
+      items: [
+        "AWS Lambda",
+        "S3",
+        "CloudFront",
+        "Cognito",
+        "Azure",
+        "Google Cloud",
+      ],
     },
     {
       category: "Integrations",

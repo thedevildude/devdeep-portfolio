@@ -6,7 +6,8 @@ const page: Service = {
   seoTitle: "Hire a Mobile App Developer in India — Senior | Devdeep",
   h1: "Hire a Mobile App Developer in India",
   role: "Mobile App Developer",
-  headline: "Hire a mobile app developer in India, *who starts with the product*",
+  headline:
+    "Hire a mobile app developer in India, *who starts with the product*",
   description:
     "Hire a senior mobile app developer in India to choose native or cross-platform, scope the first release and build the app plus the API behind it. Remote.",
   keywords: [
@@ -19,7 +20,14 @@ const page: Service = {
   intro:
     "Before anyone writes a line of code, your app needs a few honest decisions: native or cross-platform, what goes into version one, and what the server has to do. I help you make those calls, then build the app and the backend myself so nothing is lost between them.",
   heroCta: "Hire me to build your app",
-  chips: ["Mobile apps", "iOS and Android", "Cross-platform", "Native apps", "MVP", "App backend"],
+  chips: [
+    "Mobile apps",
+    "iOS and Android",
+    "Cross-platform",
+    "Native apps",
+    "MVP",
+    "App backend",
+  ],
   overview: {
     title: "How to hire a mobile app developer in India",
     paragraphs: [
@@ -35,7 +43,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *mobile app developer*",
-  roleIntro: "The product, technical and release decisions behind a mobile app, plus the building.",
+  roleIntro:
+    "The product, technical and release decisions behind a mobile app, plus the building.",
   duties: [
     {
       icon: "search",
@@ -123,13 +132,31 @@ const page: Service = {
   stack: [
     { category: "Cross-platform", items: ["React Native", "Flutter"] },
     { category: "Native", items: ["Swift", "Kotlin", "Objective-C"] },
-    { category: "Languages", items: ["TypeScript", "JavaScript", "Dart", "C++"] },
+    {
+      category: "Languages",
+      items: ["TypeScript", "JavaScript", "Dart", "C++"],
+    },
     { category: "State", items: ["Redux Toolkit", "Zustand"] },
-    { category: "Back end", items: ["Node.js", "Express", "REST APIs", "Prisma"] },
-    { category: "Cloud", items: ["AWS Lambda", "Cognito", "S3", "Step Functions"] },
-    { category: "Databases", items: ["PostgreSQL", "DynamoDB", "Supabase", "MongoDB"] },
-    { category: "Services", items: ["Firebase", "Stripe", "Push notifications"] },
-    { category: "Testing and CI", items: ["Jest", "Playwright", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Back end",
+      items: ["Node.js", "Express", "REST APIs", "Prisma"],
+    },
+    {
+      category: "Cloud",
+      items: ["AWS Lambda", "Cognito", "S3", "Step Functions"],
+    },
+    {
+      category: "Databases",
+      items: ["PostgreSQL", "DynamoDB", "Supabase", "MongoDB"],
+    },
+    {
+      category: "Services",
+      items: ["Firebase", "Stripe", "Push notifications"],
+    },
+    {
+      category: "Testing and CI",
+      items: ["Jest", "Playwright", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {

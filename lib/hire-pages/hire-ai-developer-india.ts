@@ -123,7 +123,13 @@ const page: Service = {
   stack: [
     {
       category: "AI frameworks",
-      items: ["LangChain", "LangGraph", "RAG", "LLM agents", "Agentic workflows"],
+      items: [
+        "LangChain",
+        "LangGraph",
+        "RAG",
+        "LLM agents",
+        "Agentic workflows",
+      ],
     },
     {
       category: "Automation",
@@ -155,7 +161,7 @@ const page: Service = {
     },
     {
       category: "Back end",
-      items: ["TypeScript", "Node.js", "Express", "Django"],
+      items: ["TypeScript", "Node.js", "Express"],
     },
     {
       category: "Front end",

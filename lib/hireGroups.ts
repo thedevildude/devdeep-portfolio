@@ -26,6 +26,7 @@ const GROUPS: { title: string; slugs: string[] }[] = [
       "hire-typescript-developer-india",
       "hire-angular-developer-india",
       "hire-vuejs-developer-india",
+      "hire-shopify-developer-india",
     ],
   },
   {
@@ -33,13 +34,6 @@ const GROUPS: { title: string; slugs: string[] }[] = [
     slugs: [
       "hire-backend-developer-india",
       "hire-nodejs-developer-india",
-      "hire-python-developer-india",
-      "hire-java-developer-india",
-      "hire-dotnet-developer-india",
-      "hire-golang-developer-india",
-      "hire-ruby-on-rails-developer-india",
-      "hire-php-developer-india",
-      "hire-laravel-developer-india",
       "hire-cpp-developer-india",
     ],
   },
@@ -53,29 +47,16 @@ const GROUPS: { title: string; slugs: string[] }[] = [
       "hire-ios-developer-india",
       "hire-kotlin-developer-india",
       "hire-electron-developer-india",
-      "hire-unity-developer-india",
     ],
   },
   {
     title: "AI, data & cloud",
     slugs: [
       "hire-ai-developer-india",
-      "hire-machine-learning-engineer-india",
-      "hire-data-engineer-india",
-      "hire-data-scientist-india",
       "hire-aws-developer-india",
       "hire-devops-engineer-india",
       "hire-qa-engineer-india",
       "hire-blockchain-developer-india",
-    ],
-  },
-  {
-    title: "Commerce & CMS",
-    slugs: [
-      "hire-shopify-developer-india",
-      "hire-woocommerce-developer-india",
-      "hire-wordpress-developer-india",
-      "hire-magento-developer-india",
     ],
   },
 ];

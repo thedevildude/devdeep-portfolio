@@ -6,7 +6,8 @@ const page: Service = {
   seoTitle: "Hire an Android Developer in India — Kotlin Apps | Devdeep",
   h1: "Hire an Android Developer in India",
   role: "Android Developer",
-  headline: "Hire an Android developer in India, *for the phones people really carry*",
+  headline:
+    "Hire an Android developer in India, *for the phones people really carry*",
   description:
     "Hire a senior Android developer in India for native Kotlin apps with Jetpack Compose, offline data, background work and Play Store releases. Remote, direct.",
   keywords: [
@@ -19,7 +20,14 @@ const page: Service = {
   intro:
     "Android runs on thousands of devices, from flagship phones to entry-level handsets with tight memory and aggressive battery savers. I build native Android apps that behave well across that range, and I own the APIs and cloud services they talk to as well.",
   heroCta: "Hire me for your Android app",
-  chips: ["Android", "Kotlin", "Jetpack Compose", "Google Play", "Android SDK", "Firebase"],
+  chips: [
+    "Android",
+    "Kotlin",
+    "Jetpack Compose",
+    "Google Play",
+    "Android SDK",
+    "Firebase",
+  ],
   overview: {
     title: "How to hire an Android developer in India",
     paragraphs: [
@@ -35,7 +43,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *Android developer*",
-  roleIntro: "The Android work, from first screen to Play Store, that you can hand to me.",
+  roleIntro:
+    "The Android work, from first screen to Play Store, that you can hand to me.",
   duties: [
     {
       icon: "layout",
@@ -122,14 +131,29 @@ const page: Service = {
   ],
   stack: [
     { category: "Languages", items: ["Kotlin", "Java", "TypeScript", "C++"] },
-    { category: "Android", items: ["Android SDK", "Jetpack Compose", "Android Studio", "Gradle"] },
-    { category: "Jetpack", items: ["ViewModel", "Room", "WorkManager", "Navigation"] },
-    { category: "Networking", items: ["Retrofit", "OkHttp", "Kotlin Coroutines"] },
-    { category: "Services", items: ["Firebase", "Google Play Console", "Stripe"] },
+    {
+      category: "Android",
+      items: ["Android SDK", "Jetpack Compose", "Android Studio", "Gradle"],
+    },
+    {
+      category: "Jetpack",
+      items: ["ViewModel", "Room", "WorkManager", "Navigation"],
+    },
+    {
+      category: "Networking",
+      items: ["Retrofit", "OkHttp", "Kotlin Coroutines"],
+    },
+    {
+      category: "Services",
+      items: ["Firebase", "Google Play Console", "Stripe"],
+    },
     { category: "Back end", items: ["Node.js", "Express", "REST APIs"] },
     { category: "Cloud", items: ["AWS Lambda", "Cognito", "S3", "DynamoDB"] },
     { category: "Databases", items: ["PostgreSQL", "MongoDB", "Supabase"] },
-    { category: "Testing and CI", items: ["JUnit", "Espresso", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Testing and CI",
+      items: ["JUnit", "Espresso", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {

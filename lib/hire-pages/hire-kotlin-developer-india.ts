@@ -6,9 +6,10 @@ const page: Service = {
   seoTitle: "Hire a Kotlin Developer in India — Android, Server | Devdeep",
   h1: "Hire a Kotlin Developer in India",
   role: "Kotlin Developer",
-  headline: "Hire a Kotlin developer in India, *on the phone and on the server*",
+  headline:
+    "Hire a Kotlin developer in India, *on the phone and on the server*",
   description:
-    "Hire a senior Kotlin developer in India for Android apps, Ktor and Spring Boot services, coroutines and Java-to-Kotlin migration. Remote, hired directly.",
+    "Hire a senior Kotlin developer in India for Android apps, Ktor backend services, coroutines and Java-to-Kotlin migration. Remote, hired directly.",
   keywords: [
     "hire kotlin developer india",
     "kotlin developer for hire",
@@ -19,7 +20,14 @@ const page: Service = {
   intro:
     "Kotlin is no longer only an Android language. Teams use it for mobile apps, backend services and shared logic across both. I write idiomatic Kotlin wherever it runs, and I help teams move from Java without stopping feature work.",
   heroCta: "Hire me for your Kotlin code",
-  chips: ["Kotlin", "Android", "Ktor", "Spring Boot", "Coroutines", "Kotlin Multiplatform"],
+  chips: [
+    "Kotlin",
+    "Android",
+    "Ktor",
+    "Jetpack Compose",
+    "Coroutines",
+    "Kotlin Multiplatform",
+  ],
   overview: {
     title: "How to hire a Kotlin developer in India",
     paragraphs: [
@@ -35,7 +43,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *Kotlin developer*",
-  roleIntro: "Kotlin work across Android, the JVM backend and the code shared between them.",
+  roleIntro:
+    "Kotlin work across Android, the JVM backend and the code shared between them.",
   duties: [
     {
       icon: "layout",
@@ -45,7 +54,7 @@ const page: Service = {
     {
       icon: "server",
       title: "Kotlin services",
-      body: "Write REST APIs in Ktor or Spring Boot with typed request models and clear error handling.",
+      body: "Write REST APIs in Ktor with typed request models and clear error handling.",
     },
     {
       icon: "loop",
@@ -123,26 +132,29 @@ const page: Service = {
   stack: [
     { category: "Languages", items: ["Kotlin", "Java", "TypeScript", "SQL"] },
     { category: "Android", items: ["Android SDK", "Jetpack Compose", "Room"] },
-    { category: "Server", items: ["Ktor", "Spring Boot", "REST APIs"] },
+    { category: "Server", items: ["Ktor", "REST APIs"] },
     { category: "Concurrency", items: ["Kotlin Coroutines", "Flow"] },
     { category: "Shared code", items: ["Kotlin Multiplatform"] },
     { category: "Build", items: ["Gradle", "Gradle Kotlin DSL"] },
     { category: "Databases", items: ["PostgreSQL", "DynamoDB", "MongoDB"] },
     { category: "Cloud and DevOps", items: ["AWS", "Docker", "Google Cloud"] },
-    { category: "Testing and CI", items: ["JUnit", "MockK", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Testing and CI",
+      items: ["JUnit", "MockK", "GitHub Actions", "CircleCI"],
+    },
   ],
   faqs: [
     {
       q: "Do you only do Kotlin for Android?",
-      a: "No. I write Kotlin for Android apps and for backend services on Ktor or Spring Boot, and I can share code between them where it helps.",
+      a: "No. I write Kotlin for Android apps and for backend services on Ktor, and I can share code between them where it helps.",
     },
     {
       q: "Can you migrate our Java codebase to Kotlin?",
       a: "Yes, gradually. Kotlin and Java interoperate well, so I convert the modules that change most often first and leave stable code alone until there's a reason to touch it.",
     },
     {
-      q: "Ktor or Spring Boot for a Kotlin backend?",
-      a: "Spring Boot suits teams that want its large ecosystem and conventions, while Ktor is lighter and more Kotlin-first. I'll recommend one based on your team and what the service needs to do.",
+      q: "Should we share code between Android and iOS with Kotlin Multiplatform?",
+      a: "Where it pays off. Models, networking and business rules share well, while screens usually stay native. I'll suggest a split after reading your codebase.",
     },
     {
       q: "Is Kotlin Multiplatform ready for production?",

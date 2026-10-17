@@ -18,7 +18,14 @@ const page: Service = {
   intro:
     "The backend is where a product either stays dependable or quietly falls apart. I design the APIs, data models, background workflows and cloud infrastructure behind your app, and I make sure they keep working when traffic, data and the team all grow.",
   heroCta: "Hire me for your backend",
-  chips: ["Node.js", "PostgreSQL", "AWS Lambda", "DynamoDB", "REST APIs", "Docker"],
+  chips: [
+    "Node.js",
+    "PostgreSQL",
+    "AWS Lambda",
+    "DynamoDB",
+    "REST APIs",
+    "Docker",
+  ],
   overview: {
     title: "How to hire a backend developer in India",
     paragraphs: [
@@ -120,8 +127,14 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Languages", items: ["TypeScript", "JavaScript", "SQL", "Rust", "C++"] },
-    { category: "Runtimes and frameworks", items: ["Node.js", "Express", "Django"] },
+    {
+      category: "Languages",
+      items: ["TypeScript", "JavaScript", "SQL", "Rust", "C++"],
+    },
+    {
+      category: "Runtimes and frameworks",
+      items: ["Node.js", "Express"],
+    },
     {
       category: "Databases",
       items: ["PostgreSQL", "MongoDB", "DynamoDB", "Supabase"],
@@ -129,10 +142,20 @@ const page: Service = {
     { category: "ORMs", items: ["Prisma", "Sequelize"] },
     {
       category: "AWS",
-      items: ["Lambda", "Step Functions", "DynamoDB", "S3", "CloudFront", "Cognito"],
+      items: [
+        "Lambda",
+        "Step Functions",
+        "DynamoDB",
+        "S3",
+        "CloudFront",
+        "Cognito",
+      ],
     },
     { category: "Other clouds", items: ["Azure", "Google Cloud"] },
-    { category: "Media processing", items: ["FFmpeg", "GStreamer", "HLS streaming"] },
+    {
+      category: "Media processing",
+      items: ["FFmpeg", "GStreamer", "HLS streaming"],
+    },
     {
       category: "Integrations",
       items: ["Stripe", "Salesforce", "Microsoft Graph", "GoHighLevel"],

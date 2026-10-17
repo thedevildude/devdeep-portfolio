@@ -6,7 +6,8 @@ const page: Service = {
   seoTitle: "Hire a Flutter Developer in India — Dart, Senior | Devdeep",
   h1: "Hire a Flutter Developer in India",
   role: "Flutter Developer",
-  headline: "Hire a Flutter developer in India, *for one design on every screen*",
+  headline:
+    "Hire a Flutter developer in India, *for one design on every screen*",
   description:
     "Hire a senior Flutter developer in India to build iOS, Android and web apps in Dart from one codebase, with custom UI, clean state and a solid backend.",
   keywords: [
@@ -35,7 +36,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *Flutter developer*",
-  roleIntro: "The Flutter and Dart work you can hand over, from widget tree to release build.",
+  roleIntro:
+    "The Flutter and Dart work you can hand over, from widget tree to release build.",
   duties: [
     {
       icon: "pen",
@@ -122,14 +124,34 @@ const page: Service = {
   ],
   stack: [
     { category: "Languages", items: ["Dart", "TypeScript", "Kotlin", "Swift"] },
-    { category: "Flutter", items: ["Flutter SDK", "Material", "Cupertino widgets"] },
+    {
+      category: "Flutter",
+      items: ["Flutter SDK", "Material", "Cupertino widgets"],
+    },
     { category: "State", items: ["Riverpod", "Bloc", "Provider"] },
-    { category: "Native bridges", items: ["Platform channels", "iOS", "Android"] },
-    { category: "Backend services", items: ["Firebase", "Supabase", "Node.js", "REST APIs"] },
-    { category: "Cloud", items: ["AWS Lambda", "S3", "Cognito", "Google Cloud"] },
+    {
+      category: "Native bridges",
+      items: ["Platform channels", "iOS", "Android"],
+    },
+    {
+      category: "Backend services",
+      items: ["Firebase", "Supabase", "Node.js", "REST APIs"],
+    },
+    {
+      category: "Cloud",
+      items: ["AWS Lambda", "S3", "Cognito", "Google Cloud"],
+    },
     { category: "Databases", items: ["PostgreSQL", "MongoDB", "DynamoDB"] },
     { category: "Payments", items: ["Stripe"] },
-    { category: "Testing and CI", items: ["flutter_test", "Integration tests", "GitHub Actions", "CircleCI"] },
+    {
+      category: "Testing and CI",
+      items: [
+        "flutter_test",
+        "Integration tests",
+        "GitHub Actions",
+        "CircleCI",
+      ],
+    },
   ],
   faqs: [
     {

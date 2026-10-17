@@ -18,12 +18,19 @@ const page: Service = {
   intro:
     "I write Solidity smart contracts, test them properly with Hardhat and connect them to front ends people can use. My blockchain work on DoctorWeb3 was published at IEEE IEMECON 2024, and I bring the same rigour to production dApps.",
   heroCta: "Hire me for your dApp",
-  chips: ["Solidity", "Ethereum", "Smart contracts", "Hardhat", "Ethers.js", "IPFS"],
+  chips: [
+    "Solidity",
+    "Ethereum",
+    "Smart contracts",
+    "Hardhat",
+    "Ethers.js",
+    "IPFS",
+  ],
   overview: {
     title: "How to hire a blockchain developer in India",
     paragraphs: [
       "A smart contract is hard to change once it is deployed, so mistakes are expensive and public. The work that matters happens before deployment: deciding what belongs on-chain at all, keeping sensitive data off it and testing every access path.",
-      "DoctorWeb3 is where I learned that in depth. Patients own their medical records and share them with verified doctors and hospitals on Ethereum. Records sit password-protected on IPFS, integrity is proven with on-chain hashes and access can be revoked. I co-authored the paper \"Doctor Web3.0\" on the design, presented at IEEE IEMECON 2024 in Jaipur.",
+      'DoctorWeb3 is where I learned that in depth. Patients own their medical records and share them with verified doctors and hospitals on Ethereum. Records sit password-protected on IPFS, integrity is proven with on-chain hashes and access can be revoked. I co-authored the paper "Doctor Web3.0" on the design, presented at IEEE IEMECON 2024 in Jaipur.',
     ],
     gets: [
       "Solidity contracts with clear access control and tested edge cases",
@@ -156,7 +163,7 @@ const page: Service = {
     },
     {
       q: "Can I read your published research?",
-      a: "Yes. The paper \"Doctor Web3.0\" was presented at IEEE IEMECON 2024 in Jaipur, and the DoctorWeb3 case study on my blog explains the architecture.",
+      a: 'Yes. The paper "Doctor Web3.0" was presented at IEEE IEMECON 2024 in Jaipur, and the DoctorWeb3 case study on my blog explains the architecture.',
     },
     {
       q: "How quickly can you start?",

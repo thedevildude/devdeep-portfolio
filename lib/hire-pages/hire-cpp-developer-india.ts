@@ -19,7 +19,14 @@ const page: Service = {
   intro:
     "C++ is what you reach for when a higher-level language runs out of headroom: frame-accurate media, tight memory limits or direct access to the operating system. I write modern C++ for those hot paths and expose it cleanly to the rest of your product, so the fast part does not become the part nobody dares to touch.",
   heroCta: "Hire me for your native code",
-  chips: ["C++", "Modern C++", "CMake", "Native modules", "FFmpeg", "Performance optimisation"],
+  chips: [
+    "C++",
+    "Modern C++",
+    "CMake",
+    "Native modules",
+    "FFmpeg",
+    "Performance optimisation",
+  ],
   overview: {
     title: "How to hire a C++ developer in India",
     paragraphs: [
@@ -35,7 +42,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *C++ developer*",
-  roleIntro: "The native work I take on where performance or platform access matters.",
+  roleIntro:
+    "The native work I take on where performance or platform access matters.",
   duties: [
     {
       icon: "gauge",
@@ -121,15 +129,27 @@ const page: Service = {
     },
   ],
   stack: [
-    { category: "Languages", items: ["C++", "Objective-C", "Rust", "TypeScript"] },
+    {
+      category: "Languages",
+      items: ["C++", "Objective-C", "Rust", "TypeScript"],
+    },
     { category: "Standards", items: ["C++17", "C++20", "STL"] },
     { category: "Build and tooling", items: ["CMake", "Clang", "GCC", "MSVC"] },
     { category: "Media", items: ["FFmpeg", "GStreamer", "HLS streaming"] },
-    { category: "Interop", items: ["Node-API", "Native addons", "Electron", "Rust FFI"] },
+    {
+      category: "Interop",
+      items: ["Node-API", "Native addons", "Electron", "Rust FFI"],
+    },
     { category: "Platforms", items: ["macOS", "Windows", "Linux"] },
-    { category: "Debugging and profiling", items: ["AddressSanitizer", "ThreadSanitizer", "GDB", "LLDB"] },
+    {
+      category: "Debugging and profiling",
+      items: ["AddressSanitizer", "ThreadSanitizer", "GDB", "LLDB"],
+    },
     { category: "Testing", items: ["GoogleTest"] },
-    { category: "Delivery", items: ["Git", "GitHub Actions", "CircleCI", "Docker"] },
+    {
+      category: "Delivery",
+      items: ["Git", "GitHub Actions", "CircleCI", "Docker"],
+    },
   ],
   faqs: [
     {

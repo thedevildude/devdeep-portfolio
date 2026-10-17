@@ -5,7 +5,8 @@ const page: Service = {
   seoTitle: "Hire a JavaScript Developer in India — Senior | Devdeep",
   h1: "Hire a JavaScript Developer in India",
   role: "JavaScript Developer",
-  headline: "Hire a JavaScript developer in India, *who knows the language deeply*",
+  headline:
+    "Hire a JavaScript developer in India, *who knows the language deeply*",
   description:
     "Hire a senior JavaScript developer in India for TypeScript, Node.js and React work across browser, server and desktop. Direct, remote and quick to start.",
   keywords: [
@@ -123,7 +124,13 @@ const page: Service = {
     { category: "Languages", items: ["JavaScript", "TypeScript", "SQL"] },
     {
       category: "Browser",
-      items: ["React", "Next.js (App Router)", "Angular", "Tailwind CSS", "SCSS"],
+      items: [
+        "React",
+        "Next.js (App Router)",
+        "Angular",
+        "Tailwind CSS",
+        "SCSS",
+      ],
     },
     { category: "State", items: ["Redux Toolkit", "Zustand"] },
     { category: "Server", items: ["Node.js", "Express", "REST APIs"] },

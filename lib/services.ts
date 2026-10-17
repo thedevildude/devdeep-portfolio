@@ -336,13 +336,7 @@ const CORE_SERVICES: Service[] = [
       },
       {
         category: "Back end",
-        items: [
-          "Node.js",
-          "Express",
-          "Django",
-          "REST APIs",
-          "Serverless functions",
-        ],
+        items: ["Node.js", "Express", "REST APIs", "Serverless functions"],
       },
       {
         category: "Databases",
@@ -453,7 +447,12 @@ const CORE_SERVICES: Service[] = [
   },
   {
     slug: "hire-react-nextjs-developer-india",
-    layout: { theme: "peach", duties: "bento", why: "numbered", process: "timeline" },
+    layout: {
+      theme: "peach",
+      duties: "bento",
+      why: "numbered",
+      process: "timeline",
+    },
     seoTitle: "Hire a React & Next.js Developer in India | Devdeep",
     h1: "Hire a React & Next.js Developer in India",
     role: "React & Next.js Developer",
@@ -817,14 +816,7 @@ const CORE_SERVICES: Service[] = [
       },
       {
         category: "Back end",
-        items: [
-          "Node.js",
-          "TypeScript",
-          "Rust",
-          "Express",
-          "Django",
-          "REST APIs",
-        ],
+        items: ["Node.js", "TypeScript", "Rust", "Express", "REST APIs"],
       },
       { category: "Front end", items: ["React", "Next.js", "Tailwind CSS"] },
       { category: "DevOps", items: ["Docker", "GitHub Actions", "CI/CD"] },

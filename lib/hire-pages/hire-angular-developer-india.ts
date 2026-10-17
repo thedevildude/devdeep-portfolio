@@ -126,7 +126,10 @@ const page: Service = {
       items: ["Angular", "React", "Next.js (App Router)"],
     },
     { category: "Styling", items: ["SCSS", "Tailwind CSS"] },
-    { category: "Back end", items: ["Node.js", "Express", "Django", "REST APIs"] },
+    {
+      category: "Back end",
+      items: ["Node.js", "Express", "REST APIs"],
+    },
     {
       category: "Databases",
       items: ["PostgreSQL", "MongoDB", "Prisma", "Sequelize"],

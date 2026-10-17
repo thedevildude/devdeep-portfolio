@@ -18,7 +18,14 @@ const page: Service = {
   intro:
     "The interface is the only part of your product most users ever see. I build it with the same rigour as a backend: clear state, typed props, measured performance and accessibility checked before launch, so it feels fast and finished on every device.",
   heroCta: "Hire me for your interface",
-  chips: ["React", "Angular", "TypeScript", "Tailwind CSS", "Accessibility", "Responsive design"],
+  chips: [
+    "React",
+    "Angular",
+    "TypeScript",
+    "Tailwind CSS",
+    "Accessibility",
+    "Responsive design",
+  ],
   overview: {
     title: "How to hire a frontend developer in India",
     paragraphs: [
@@ -128,10 +135,16 @@ const page: Service = {
     { category: "State management", items: ["Redux Toolkit", "Zustand"] },
     { category: "Styling", items: ["Tailwind CSS", "SCSS"] },
     { category: "Desktop and mobile", items: ["Electron", "React Native"] },
-    { category: "AI interfaces", items: ["LangChain", "RAG", "Human-in-the-loop approvals"] },
+    {
+      category: "AI interfaces",
+      items: ["LangChain", "RAG", "Human-in-the-loop approvals"],
+    },
     { category: "Web3 front ends", items: ["Ethers.js", "IPFS"] },
     { category: "Testing", items: ["Jest", "Playwright"] },
-    { category: "Tooling", items: ["Git", "GitHub Actions", "CircleCI", "Docker"] },
+    {
+      category: "Tooling",
+      items: ["Git", "GitHub Actions", "CircleCI", "Docker"],
+    },
   ],
   faqs: [
     {

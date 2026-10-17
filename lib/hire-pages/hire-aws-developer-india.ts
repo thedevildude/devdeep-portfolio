@@ -18,7 +18,14 @@ const page: Service = {
   intro:
     "I build products on serverless AWS: Lambda for compute, Step Functions for long workflows, DynamoDB for data and Cognito for access. Verity and SignalFoundry both run this way in production, and I designed and shipped them end to end.",
   heroCta: "Hire me for your AWS build",
-  chips: ["AWS Lambda", "Step Functions", "DynamoDB", "Serverless", "Cognito", "S3"],
+  chips: [
+    "AWS Lambda",
+    "Step Functions",
+    "DynamoDB",
+    "Serverless",
+    "Cognito",
+    "S3",
+  ],
   overview: {
     title: "How to hire an AWS developer in India",
     paragraphs: [
@@ -34,7 +41,8 @@ const page: Service = {
     ],
   },
   roleTitle: "What I do as your *aws developer*",
-  roleIntro: "The cloud work you can hand over to me, from first function to production.",
+  roleIntro:
+    "The cloud work you can hand over to me, from first function to production.",
   duties: [
     {
       icon: "cube",
@@ -124,10 +132,16 @@ const page: Service = {
       category: "Compute and workflows",
       items: ["AWS Lambda", "Step Functions", "Serverless functions"],
     },
-    { category: "Data", items: ["DynamoDB", "PostgreSQL", "MongoDB", "Supabase"] },
+    {
+      category: "Data",
+      items: ["DynamoDB", "PostgreSQL", "MongoDB", "Supabase"],
+    },
     { category: "Storage and delivery", items: ["S3", "CloudFront"] },
     { category: "Identity", items: ["Cognito", "Role-based access control"] },
-    { category: "Languages", items: ["TypeScript", "JavaScript", "Rust", "SQL"] },
+    {
+      category: "Languages",
+      items: ["TypeScript", "JavaScript", "Rust", "SQL"],
+    },
     { category: "Back end", items: ["Node.js", "Express", "REST APIs"] },
     { category: "Testing", items: ["Jest", "Playwright", "Integration tests"] },
     {
