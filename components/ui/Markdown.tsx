@@ -11,10 +11,31 @@ export const headingId = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+/** Blocks are separated by blank lines, except inside ``` fences, which stay whole. */
+const toBlocks = (source: string) => {
+  const blocks: string[] = [];
+  let current: string[] = [];
+  let fenced = false;
+  const flush = () => {
+    if (current.length) blocks.push(current.join("\n"));
+    current = [];
+  };
+  for (const line of source.split("\n")) {
+    if (line.startsWith("```")) {
+      if (!fenced) flush();
+      fenced = !fenced;
+      current.push(line);
+      if (!fenced) flush();
+    } else if (!fenced && line.trim() === "") flush();
+    else current.push(line);
+  }
+  flush();
+  return blocks;
+};
+
 /** The post's `##` headings, in order, for the table of contents. */
 export const getHeadings = (source: string) =>
-  source
-    .split(/\n{2,}/)
+  toBlocks(source)
     .filter((b) => b.startsWith("## "))
     .map((b) => {
       const text = b.slice(3).trim();
@@ -58,14 +79,44 @@ const inline = (text: string): ReactNode[] =>
 
 /**
  * A deliberately small renderer for the blog's posts: `##` / `###` headings, paragraphs,
- * `-` lists, `>` quotes and the inline styles above, plus `{{chart:id}}` for a chart from lib/charts.ts.
- * Blocks are separated by blank lines.
+ * `-` and `1.` lists, `>` quotes, ``` code fences and the inline styles above, plus `{{chart:id}}`
+ * for a chart from lib/charts.ts. Blocks are separated by blank lines.
  */
 const Markdown = ({ source }: { source: string }) => (
-  <div className="space-y-6 font-slab text-lg leading-[1.8] text-foreground/85">
-    {source.split(/\n{2,}/).map((block, i) => {
+  <div className="space-y-6 font-slab text-lg leading-[1.8] text-foreground/85 wrap-break-word">
+    {toBlocks(source).map((block, i) => {
       const chart = /^\{\{chart:([a-z0-9-]+)\}\}$/.exec(block.trim());
       if (chart) return <Chart key={i} id={chart[1]} />;
+      if (block.startsWith("```")) {
+        const lines = block.split("\n");
+        const code = lines.slice(1, lines[lines.length - 1].startsWith("```") ? -1 : undefined).join("\n");
+        return (
+          // contain: the longest line must not widen the article column on a phone.
+          <pre
+            key={i}
+            style={{ contain: "inline-size" }}
+            className="overflow-x-auto rounded-2xl bg-[#0b1020] p-5 font-mono text-[14px] leading-relaxed tracking-normal text-[#e6ecff]"
+          >
+            <code>{code}</code>
+          </pre>
+        );
+      }
+      if (/^\d+\. /.test(block) && block.split("\n").every((l) => /^\d+\. /.test(l)))
+        return (
+          <ol key={i} className="space-y-3">
+            {block.split("\n").map((li, j) => (
+              <li key={j} className="relative pl-9">
+                <span
+                  aria-hidden
+                  className="absolute top-0 left-0 w-7 font-sans font-semibold text-ink-blue tabular-nums"
+                >
+                  {j + 1}.
+                </span>
+                {inline(li.replace(/^\d+\. /, ""))}
+              </li>
+            ))}
+          </ol>
+        );
       if (block.startsWith("### "))
         return (
           <h3

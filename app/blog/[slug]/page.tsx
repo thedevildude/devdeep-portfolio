@@ -187,7 +187,7 @@ const BlogPost = async ({ params }: PageProps<"/blog/[slug]">) => {
                     {post.readMinutes} min read
                   </span>
                 </p>
-                <h1 className="mt-5 pb-1 text-4xl leading-[1.1] font-semibold tracking-normal text-balance sm:text-5xl lg:text-6xl">
+                <h1 className="mt-5 pb-1 text-4xl leading-[1.1] font-semibold tracking-normal text-balance wrap-anywhere sm:text-5xl lg:text-6xl">
                   <Accent text={accentTitle(post.title)} />
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-relaxed text-pretty text-foreground/70 sm:text-xl">

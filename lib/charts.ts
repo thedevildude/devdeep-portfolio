@@ -72,7 +72,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "bars",
     title: "Seconds per 1024px step",
     caption:
-      "Qwen-Image 2.1 Turbo on an M5 MacBook Air, cool machine. A lighter band shows the measured range. Int8 is opt-in; over a whole image it was worth 12 to 20 percent.",
+      "Qwen-Image 2.1 Turbo at 1024px on an M5 MacBook Air with 16GB, cool machine. A lighter band shows the measured range. Int8 is opt-in, and over a whole image it was worth 12 to 20 percent.",
     alt: "Horizontal bars of seconds per step: PyTorch GGUF 15.4, MLX port 9.4, with fused kernels 8.3 to 8.5, with int8 matmuls 5.7 to 6.0.",
     unit: "s",
     rows: [
@@ -86,7 +86,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "bars",
     title: "Seconds per step with two reference images",
     caption:
-      "The attention cache held every layer's full keys and values. Copying the slice and evaluating each layer as it finished removed the swap.",
+      "Step time with two reference images. The attention cache kept every layer's full keys and values alive; copying the slice and evaluating each layer as it finished removed the swapping.",
     alt: "Before the cache fix a step took 35 to 58 seconds; after, 10.8 seconds.",
     unit: "s",
     rows: [
@@ -112,7 +112,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "columns",
     title: "Four transformer blocks, seconds per pass",
     caption:
-      "Krea 2 on the M5 Air, alternating the two paths each round with a pause between. The ratio held between 1.43 and 1.57 in every round.",
+      "Krea 2 on an M5 MacBook Air, alternating the two paths each round with a pause between. The ratio stayed between 1.43 and 1.57.",
     alt: "Four rounds of timings. The 4-bit path took 2.3 to 2.6 seconds each round; the int8 path took 1.6 to 1.7.",
     unit: "s",
     yLabel: "seconds",
@@ -127,7 +127,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "columns",
     title: "Seconds per image, four prompts",
     caption:
-      "MOSS-Image Turbo, a whole image each, before and after turning int8 on. The average fell about 18 percent. Later images ran slower in both series, so the pairs are not like for like.",
+      "MOSS-Image Turbo, one whole image per prompt, before and after enabling int8. The average fell about 18 percent. Later images ran slower in both series, so the pairs are not like for like.",
     alt: "Four prompts timed before and after int8: 115.7 to 97.8, 130.3 to 118.6, 139.8 to 115.3, and 160.1 to 118.4 seconds.",
     unit: "s",
     yLabel: "seconds",
@@ -142,7 +142,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "stack",
     title: "Memory needed to run Krea 2, in GB",
     caption:
-      "Budgets from component sizes. The MLX transformer's 7.21 GB was measured with every array evaluated; the other figures are estimates, and real peaks move with the OS and what else is open.",
+      "Budgets from component sizes. The 7.21 GB MLX transformer was measured with every array evaluated; the other figures are estimates, and real peaks move with the OS and what else is open.",
     alt: "The GGUF build needs 7.5 GB of transformer plus 8.3 GB of text encoder and VAE, 15.8 GB in total. The MLX build needs 7.21 GB plus 3.4 GB, about 10.6 GB. The machine has 16 GB.",
     unit: "GB",
     max: 18,
@@ -168,7 +168,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "lines",
     title: "How close the 4-bit text encoder is to bf16",
     caption:
-      "Cosine similarity of each of the twelve tapped layers against Krea's own bf16 PyTorch encoder, one prompt. The vertical axis starts at 0.98. The bf16 weights in my MLX code were measured at three taps, which isolates 4-bit rounding from porting bugs.",
+      "Cosine similarity of each tapped layer against the reference bf16 PyTorch encoder, one prompt. The vertical axis starts at 0.98. Running the same MLX code with bf16 weights, measured at three layers, separates 4-bit rounding from porting bugs.",
     alt: "The 4-bit MLX encoder scores 0.988 to 0.994 across twelve layers. The same MLX code with bf16 weights scores 0.9999 or better at the three layers measured.",
     unit: "",
     yLabel: "cosine similarity",
@@ -228,7 +228,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "columns",
     title: "Peak memory of six decodes in one process, in run order",
     caption:
-      "Same latent every time, Conv3d decoder. Whichever tile size ran first peaked near 15 GB; a table of tile sizes alone would have blamed the wrong thing.",
+      "Same latent every time, Conv3d decoder. Whichever tile size ran first peaked near 15 GB, so a table of tile sizes alone points at the wrong cause.",
     alt: "Six decodes in order: 512px tiles peaked 15.4 GB, then 256px 3.4, 384px 4.1, 512px 5.5, 768px 8.1 and 256px 8.0 GB.",
     unit: "GB",
     yLabel: "GB above baseline",
@@ -247,7 +247,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "lines",
     title: "The same forward pass, timed again and again",
     caption:
-      "Krea 2 on the M5 Air, same input and weights, nothing changed between timings. The two paths alternated, so the crossing lines are noise from the machine, not a result.",
+      "Krea 2 on an M5 MacBook Air, same input and weights. The two paths alternated, so the crossing lines show machine noise, not a result.",
     alt: "The 4-bit path took 19.6, 23.9, 30.1 and 41.2 seconds on four timings. The int8 path took 19.1, 40.5 and 29.5 on timings two to four.",
     unit: "s",
     yLabel: "seconds",
@@ -265,7 +265,7 @@ export const CHARTS: Record<string, ChartSpec> = {
     kind: "lines",
     title: "Colour difference from the original, across the mask edge",
     caption:
-      "Mean over 21 rows and the three colour channels, for the moon edit. Zero means the pixel matches the original. Left of the line is inside the mask.",
+      "Mean over 21 rows and the three colour channels, for an edit that adds a moon to a sky. Zero means the pixel matches the original. Left of the line is inside the mask.",
     alt: "With a plain paste-back the area inside the mask sits about 20 levels darker than the original, ramping in over about 40 pixels. With the tone correction it stays within about 2 levels near the edge and 7 at the far left.",
     unit: "levels",
     yLabel: "levels (0 to 255)",
