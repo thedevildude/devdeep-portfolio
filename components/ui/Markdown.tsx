@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import Chart from "@/components/blog/Chart";
 
 /** Inline: `code`, **bold**, *italic*, [text](url). */
 const INLINE = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
@@ -57,11 +58,14 @@ const inline = (text: string): ReactNode[] =>
 
 /**
  * A deliberately small renderer for the blog's posts: `##` / `###` headings, paragraphs,
- * `-` lists, `>` quotes and the inline styles above. Blocks are separated by blank lines.
+ * `-` lists, `>` quotes and the inline styles above, plus `{{chart:id}}` for a chart from lib/charts.ts.
+ * Blocks are separated by blank lines.
  */
 const Markdown = ({ source }: { source: string }) => (
   <div className="space-y-6 font-slab text-lg leading-[1.8] text-foreground/85">
     {source.split(/\n{2,}/).map((block, i) => {
+      const chart = /^\{\{chart:([a-z0-9-]+)\}\}$/.exec(block.trim());
+      if (chart) return <Chart key={i} id={chart[1]} />;
       if (block.startsWith("### "))
         return (
           <h3
