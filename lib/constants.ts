@@ -29,12 +29,9 @@ export const HOMEPAGE_METADATA = {
 } as const;
 
 const EMAIL = process.env.NEXT_PUBLIC_EMAIL ?? "";
-const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
 
 export const CONTACT = {
   email: EMAIL,
-  phone: PHONE,
-  phoneHref: `tel:${PHONE.replace(/[^+\d]/g, "")}`,
   emailHref: `mailto:${EMAIL}`,
   contactUs: `mailto:${EMAIL}?subject=Hello%20Devdeep`,
 } as const;

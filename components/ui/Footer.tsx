@@ -11,7 +11,6 @@ const HEADING =
 
 const CONNECT = [
   { label: "Email", href: CONTACT.emailHref },
-  { label: "Phone", href: CONTACT.phoneHref },
   { label: "LinkedIn", href: LINKS.linkedin, external: true },
   { label: "GitHub", href: LINKS.github, external: true },
   { label: "X (Twitter)", href: LINKS.twitter, external: true },

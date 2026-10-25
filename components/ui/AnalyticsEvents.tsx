@@ -21,7 +21,6 @@ const linkEvent = (a: HTMLAnchorElement) => {
     location: locationOf(a),
   };
   if (href.startsWith("mailto:")) return ["click_email", params] as const;
-  if (href.startsWith("tel:")) return ["click_phone", params] as const;
   if (href.startsWith("#")) {
     return href.length > 1
       ? (["click_nav", { ...params, target: href.slice(1) }] as const)
@@ -43,7 +42,7 @@ const linkEvent = (a: HTMLAnchorElement) => {
 };
 
 /**
- * Site-wide GA4 events that need no per-component wiring: link clicks (nav / email / phone /
+ * Site-wide GA4 events that need no per-component wiring: link clicks (nav / email /
  * outbound), section views and scroll depth. Component-specific events call `track` directly.
  */
 const AnalyticsEvents = () => {
