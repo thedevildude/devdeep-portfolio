@@ -62,6 +62,8 @@ const inline = (text: string): ReactNode[] =>
     if (part.startsWith("*")) return <em key={i}>{part.slice(1, -1)}</em>;
     const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
     if (link) {
+      // Only web, mail and in-site links; anything else (javascript:, data:) stays plain text.
+      if (!/^(https?:\/\/|mailto:|\/|#)/i.test(link[2])) return <Fragment key={i}>{link[1]}</Fragment>;
       const external = /^https?:/.test(link[2]);
       return (
         <a
